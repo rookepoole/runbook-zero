@@ -13,12 +13,12 @@
     "workflowComplete": 62696
   },
   "scriptTimingModel": {
-    "quotedWords": 203,
-    "speechSecondsAt130Wpm": 93.7,
-    "speechSecondsAt150Wpm": 81.2,
+    "quotedWords": 210,
+    "speechSecondsAt130Wpm": 96.9,
+    "speechSecondsAt150Wpm": 84,
     "projectedTotalSecondsBeforeOverlap": {
-      "at130Wpm": 156.4,
-      "at150Wpm": 143.9
+      "at130Wpm": 159.6,
+      "at150Wpm": 146.7
     }
   },
   "observations": {

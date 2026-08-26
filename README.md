@@ -24,7 +24,7 @@ Open the live site in a supported WebMCP client, select **Reset Scenario**, and 
 4. **Recover** — “Apply the approved mitigation and verify recovery.”
 5. **Close** — “Add a note that we restored the inventory DB pool after the v2.7.0 regression.”
 
-The deterministic result is `M-POOL-RESTORE`, restoring `dbPoolSize` from 12 to 80. Recovery finishes through five fixed frames at 420 ms checkout P95, 0.8% checkout errors, and 68% inventory database saturation.
+The deterministic result is `M-POOL-RESTORE`, restoring `dbPoolSize` from 12 to 80. Recovery finishes through five fixed frames at 420 ms checkout P95, 0.8% checkout errors, and 55% inventory database saturation.
 
 ## Why WebMCP is fundamental
 

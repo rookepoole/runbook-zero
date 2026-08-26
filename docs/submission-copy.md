@@ -26,7 +26,7 @@ The application then stops. The agent has no approval tool and `apply_approved_m
 
 ## How it uses WebMCP
 
-WebMCP is the application's control plane, not an add-on. Runbook Zero registers 12 real `document.modelContext` tools and derives the active subset from 11 state-machine phases. Stale registrations are aborted on every phase change. Tool calls focus and update the same topology, telemetry, change record, mitigation card, and provenance timeline the human sees. The tool surface itself communicates authority: stage and discard exist before approval; apply exists only in `APPROVED`; verify and notes remain during recovery.
+WebMCP is the application's control plane, not an add-on. Runbook Zero registers 12 real `document.modelContext` tools and derives the active subset from 11 state-machine phases. Stale registrations are aborted on every phase change. Tool calls focus and update the same connected topology, baseline-and-trend telemetry, exact change evidence, mitigation card, and provenance timeline the human sees. The tool surface itself communicates authority: stage and discard exist before approval; apply exists only in `APPROVED`; verify and notes remain during recovery.
 
 ## How it was built
 
@@ -35,6 +35,7 @@ WebMCP is the application's control plane, not an add-on. Runbook Zero registers
 - Pure guarded domain commands and queries
 - Deterministic `INC-042` simulation and five-frame recovery engine
 - Dynamic AbortController-based tool registration
+- Three-depth operational information model and shared contextual Focus Mode
 - Vitest and Testing Library for domain, registry, safety, and UI coverage
 - Playwright for reset-to-resolved browser, keyboard, viewport, reduced-motion, and console checks
 - ChatGPT Sites with a thin Cloudflare Worker-compatible asset entry point
@@ -51,7 +52,7 @@ The hardest part was preserving human authority as a runtime capability invarian
 - Visible, exact, human-only approval boundary
 - Deterministic recovery and one-click reset
 - Public ChatGPT Sites deployment and AGPL-3.0 repository
-- 40 unit/component tests, 2 browser tests, clean typecheck/lint/build, and zero npm audit findings
+- 42 unit/component tests, 2 browser tests, clean typecheck/lint/build, and zero npm audit findings
 
 ## What we learned
 

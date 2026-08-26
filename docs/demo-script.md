@@ -4,7 +4,7 @@ Target: **2:20–2:40**. Hard stop: **2:55**.
 
 Measured live rehearsal: **62.696 seconds** of deployed WebMCP tool/control time from reset through resolution note, leaving roughly 77–97 seconds inside the target window for prompt entry, narration, and readable holds.
 
-The complete quoted narration and prompts contain **203 words**. At a clear 130–150 words per minute, speech takes approximately 81–94 seconds; combined with the measured interaction path, the unreduced run projects to roughly **2:24–2:37** before natural overlap.
+The complete quoted narration and prompts contain **210 words**. At a clear 130–150 words per minute, speech takes approximately 84–97 seconds; combined with the measured interaction path, the unreduced run projects to roughly **2:27–2:40** before natural overlap.
 
 ## Before recording
 
@@ -20,7 +20,7 @@ Narration:
 
 > Runbook Zero is a WebMCP-native incident command console where a browser agent and a human work on the same live operational surface. The page gives the agent structured tools while the human keeps context and control.
 
-Show `INC-042`, the critical checkout path, and the WebMCP status.
+Show `INC-042`, the Depth-0 impact metrics, connected checkout path, and WebMCP status.
 
 ## 0:15–0:55 — Diagnose
 
@@ -32,7 +32,7 @@ Expected chain: snapshot → checkout trace → inventory-db signals/config → 
 
 Narration bridge:
 
-> The agent traced checkout to inventory-db, found 97% saturation, and connected it to the v2.7.0 pool reduction from 80 to 12. Every call updates the same page I am looking at.
+> The agent traced checkout to inventory-db, found 97% saturation, and connected it to the v2.7.0 pool reduction from 80 to 12. Each call focuses the topology, telemetry, or evidence region on the same page I am looking at.
 
 ## 0:55–1:25 — Stage under constraint
 
@@ -62,7 +62,7 @@ Prompt:
 
 > Apply the approved mitigation and verify recovery.
 
-Let all five deterministic recovery frames complete. Hold on `RESOLVED`, 420 ms P95, 0.8% errors, and 68% database saturation.
+Let all five deterministic recovery frames complete. Hold on `RESOLVED`, 0 unhealthy services, 420 ms worst P95, 0.8% worst errors, and the completed evidence timeline.
 
 Narration:
 
