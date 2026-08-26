@@ -1,0 +1,56 @@
+{
+  "gate": 0,
+  "status": "IMPLEMENTED / BLOCKED",
+  "date": "2026-08-25",
+  "candidateCommit": "f919de76061406481a1d3db264700a1ce7eef65d",
+  "officialSubmissionPeriodStartUtc": "2026-08-25T18:00:00Z",
+  "requirements": {
+    "eligiblePeriodCreation": {
+      "status": "TESTED",
+      "repositoryCreatedAt": "2026-08-25T23:27:02Z",
+      "firstCommit": "9c4d813b4d772dbbe6fd580c6df1f7e6b2f21670",
+      "firstCommitAt": "2026-08-25T18:27:03-05:00"
+    },
+    "publicRepository": {
+      "status": "TESTED",
+      "url": "https://github.com/rookepoole/runbook-zero",
+      "private": false
+    },
+    "openSourceLicense": {
+      "status": "TESTED",
+      "spdx": "AGPL-3.0",
+      "githubDetected": true
+    },
+    "liveUrl": {
+      "status": "TESTED",
+      "url": "https://runbook-zero.rookepoole.chatgpt.site",
+      "anonymousHttpStatus": 200,
+      "signInRedirect": false
+    },
+    "webMcpCode": {
+      "status": "TESTED",
+      "registration": "modelContext.registerTool",
+      "deployedOriginEvidence": "docs/evidence/gate-8-deployment-receipt.json"
+    },
+    "submissionFields": {
+      "status": "IMPLEMENTED",
+      "artifact": "docs/submission-copy.md"
+    },
+    "testingInstructions": {
+      "status": "IMPLEMENTED",
+      "artifact": "README.md"
+    },
+    "freezePlan": {
+      "status": "IMPLEMENTED",
+      "tag": "submission-v1.0",
+      "tagPresent": false
+    },
+    "demoVideo": {
+      "status": "BLOCKED",
+      "required": "public YouTube video under three minutes with clear audio",
+      "script": "docs/demo-script.md",
+      "url": null
+    }
+  },
+  "claimBoundary": "All Gate 0 requirements except the public audio demo are established; submission and freeze are not claimed."
+}

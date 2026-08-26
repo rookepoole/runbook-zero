@@ -61,6 +61,10 @@ WebMCP is most powerful when capability discovery is also policy. A browser agen
 
 After the judged Challenge Edition is frozen, future work can add more deterministic scenarios and carefully designed adapters for real observability and remediation systems without weakening the same stage → human approval → exact apply → verification boundary.
 
+## Testing instructions
+
+No account or credentials are required. Open the live app in ChatGPT's in-app browser or Chrome 149+ with WebMCP testing enabled, select **Reset Scenario**, and follow the five-step canonical flow in the repository README. Before clicking the visible human approval button, confirm the page shows `STAGED — NOT APPLIED`, 10 active tools, and no `apply_approved_mitigation`. After clicking approval, apply becomes available for the exact staged mitigation. The deterministic flow ends at `RESOLVED` and can be repeated from reset.
+
 ## Links
 
 - Live app: <https://runbook-zero.rookepoole.chatgpt.site>

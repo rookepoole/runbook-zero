@@ -1,5 +1,35 @@
 # Runbook Zero judging evidence
 
+## Gate 0 — Rule compliance
+
+Status: **IMPLEMENTED / BLOCKED**
+
+Date: 2026-08-25
+
+Candidate commit: `f919de76061406481a1d3db264700a1ce7eef65d`
+
+### Verified requirements
+
+| Requirement                               | Status      | Evidence                                                                                                                                                      |
+| ----------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Eligible-period creation                  | TESTED      | GitHub repository created `2026-08-25T23:27:02Z`; first commit `2026-08-25T18:27:03-05:00`, after the official `2026-08-25T18:00:00Z` submission-period start |
+| Public repository                         | TESTED      | GitHub API reports `private: false` for `rookepoole/runbook-zero`                                                                                             |
+| Visible open-source license               | TESTED      | GitHub API detects `AGPL-3.0`; canonical text is in `LICENSE`                                                                                                 |
+| Working live URL                          | TESTED      | public ChatGPT Sites origin returns anonymous HTTPS `200` without a sign-in redirect                                                                          |
+| WebMCP implementation                     | TESTED      | production registry calls `modelContext.registerTool`; local and deployed supported-browser receipts are recorded below                                       |
+| Submission fields                         | IMPLEMENTED | paste-ready narrative and links are in `docs/submission-copy.md`                                                                                              |
+| Testing instructions                      | IMPLEMENTED | README contains installation, browser, validation, and canonical judging steps                                                                                |
+| No-touch freeze plan                      | IMPLEMENTED | `submission-v1.0` will be created only after video, final deployment, Devpost, and confirmation; no judged artifact will change afterward                     |
+| Public YouTube demo under 3:00 with audio | BLOCKED     | exact 2:20–2:40 recording script is ready; entrant recording/upload URL is still required                                                                     |
+
+The official rules require the demo to be publicly visible on YouTube, shorter than three minutes, and accompanied by clear audio explaining the product and WebMCP use. Gate 0 therefore remains non-passing until that external artifact exists.
+
+Artifact: `docs/evidence/gate-0-rule-compliance-receipt.json`
+
+### Claim boundary
+
+This receipt proves every locally or publicly verifiable Gate 0 requirement except the required video. It does not claim submission, final tag, or post-deadline freeze.
+
 ## Gate 1 — First real WebMCP round trip
 
 Status: **TESTED**  
