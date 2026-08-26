@@ -1,0 +1,79 @@
+{
+  "gate": 1,
+  "title": "First real WebMCP round trip",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "implementationCommit": "b4b2115a5248b845f3d7157712caf9f740ed6e5d",
+  "environment": {
+    "browser": "ChatGPT Codex in-app browser",
+    "origin": "http://127.0.0.1:4173/",
+    "node": "v24.18.0",
+    "npm": "11.16.0"
+  },
+  "discoveredTool": {
+    "name": "get_system_snapshot",
+    "title": "Get system snapshot",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "untrustedContentHint": false
+    }
+  },
+  "invocationResult": {
+    "incident": {
+      "id": "INC-042",
+      "status": "open",
+      "severity": "SEV-2",
+      "customerImpact": "Checkout requests are slow and intermittently fail during inventory reservation."
+    },
+    "unhealthyServices": [
+      {
+        "serviceId": "checkout",
+        "health": "critical",
+        "p95LatencyMs": 4700,
+        "errorRatePct": 17
+      },
+      {
+        "serviceId": "inventory",
+        "health": "critical",
+        "p95LatencyMs": 3910,
+        "errorRatePct": 14.2
+      },
+      {
+        "serviceId": "inventory-db",
+        "health": "critical",
+        "p95LatencyMs": 3420,
+        "errorRatePct": 11.8
+      },
+      {
+        "serviceId": "gateway",
+        "health": "degraded",
+        "p95LatencyMs": 1910,
+        "errorRatePct": 5.8
+      }
+    ]
+  },
+  "visiblePostconditions": [
+    "WebMCP Connected",
+    "1 tool active",
+    "AGENT FOCUS",
+    "Agent inspected the live system snapshot.",
+    "Invocation 1"
+  ],
+  "checks": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "tests": "PASS — 5 files / 7 tests",
+    "build": "PASS",
+    "realWebMCP": "PASS"
+  },
+  "artifacts": {
+    "screenshot": "docs/screenshots/gate-1-real-webmcp.png",
+    "screenshotSha256": "a8dcdeb5b20b119383719af54e0852a49cbee2270ae49caf457a0cbbef905a4b"
+  },
+  "claimBoundary": "Establishes Gate 1 on a real supported local browser origin. Does not establish deployed-origin WebMCP or Gates 2-9."
+}
