@@ -1,0 +1,44 @@
+{
+  "gate": 3,
+  "title": "Dynamic WebMCP state",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "implementationCommit": "04e82bc70448fd3958b940eec968277c0ade0e81",
+  "criticalAssertions": {
+    "awaitingHumanApprovalExcludesApply": "PASS",
+    "approvedIncludesApply": "PASS",
+    "applyExecutionExitsApproved": "PASS",
+    "applyRegistrationAbortedAfterExecution": "PASS",
+    "approvalToolDoesNotExist": "PASS"
+  },
+  "phaseCoverage": [
+    "BOOT",
+    "HEALTHY",
+    "INCIDENT_OPEN",
+    "INVESTIGATING",
+    "MITIGATION_CANDIDATES",
+    "MITIGATION_STAGED",
+    "AWAITING_HUMAN_APPROVAL",
+    "APPROVED",
+    "MITIGATING",
+    "RESOLVED",
+    "POSTMORTEM_READY"
+  ],
+  "realWebMCP": {
+    "environment": "ChatGPT Codex in-app browser",
+    "origin": "http://127.0.0.1:4173/",
+    "phase": "INCIDENT_OPEN",
+    "discoveredToolCount": 9,
+    "visibleStatus": ["WebMCP Connected", "9 tools active"],
+    "applyExposed": false
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "format": "PASS",
+    "lint": "PASS",
+    "tests": "PASS — 10 files / 37 tests",
+    "build": "PASS",
+    "diffCheck": "PASS"
+  },
+  "claimBoundary": "Establishes exact dynamic registry behavior in automated lifecycle tests and real initial-phase registration. Does not establish real-browser J1-J2 or the visible human approval transition."
+}

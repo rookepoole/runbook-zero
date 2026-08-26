@@ -95,3 +95,44 @@ git diff --check      PASS
 ### Claim boundary
 
 Gate 2 establishes the deterministic domain, state-machine, command, query, and recovery foundations under automated tests. Dynamic WebMCP registration and the full J1–J4 interface remain subsequent gates and are not claimed here.
+
+## Gate 3 — Dynamic WebMCP state
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Implementation commit: `04e82bc70448fd3958b940eec968277c0ade0e81`
+
+### Commands run
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm run test          PASS — 10 files, 37 tests
+npm run build         PASS — Vite production build
+git diff --check      PASS
+```
+
+### Acceptance evidence
+
+| Property                              | Status | Evidence                                                                                          |
+| ------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| Exact phase-derived registry          | TESTED | table-driven assertions cover all 11 application phases                                           |
+| Awaiting approval excludes apply      | TESTED | exact negative assertion for `AWAITING_HUMAN_APPROVAL`                                            |
+| Approved phase includes apply         | TESTED | exact positive assertion for `APPROVED`                                                           |
+| Human approval remains outside WebMCP | TESTED | the 12-name canonical registry contains no approval tool                                          |
+| Stale registration cleanup            | TESTED | all prior `AbortSignal`s become aborted when phase changes                                        |
+| Apply immediately removes itself      | TESTED | invoking the approved tool moves state to `MITIGATING`; its registration is aborted and not added |
+| Real incident-state registration      | TESTED | ChatGPT Codex in-app browser discovered the exact 9-tool `INCIDENT_OPEN` surface                  |
+| Visible active-tool synchronization   | TESTED | the same browser page visibly reported `WebMCP Connected` and `9 tools active`                    |
+| Gate 1 and Gate 2 regression          | TESTED | all prior capability, UI, registry, domain, safety, and recovery tests remain green               |
+
+### Artifacts
+
+- `docs/evidence/gate-3-registry-receipt.json`
+
+### Claim boundary
+
+Gate 3 proves the exact dynamic registry and its cleanup behavior in automated lifecycle tests, plus real WebMCP registration for the initial incident phase. Real-browser J1–J2 diagnosis and the visible human approval transition remain Gates 4–5.
