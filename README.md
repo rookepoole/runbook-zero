@@ -2,7 +2,7 @@
 
 **A WebMCP-native incident platform where humans and browser agents investigate, stage, approve, apply, and verify mitigations on the same live surface.**
 
-[Open the live Challenge Edition](https://runbook-zero.rookepoole.chatgpt.site) · [Judging evidence](docs/judging-evidence.md) · [Demo script](docs/demo-script.md) · [Submission stills](docs/submission-assets.md)
+[Open the live Challenge Edition](https://runbook-zero.rookepoole.chatgpt.site) · [Judging evidence](docs/judging-evidence.md) · [Fresh-viewer test](docs/fresh-viewer-acceptance.md) · [Demo script](docs/demo-script.md) · [Submission stills](docs/submission-assets.md)
 
 ![Runbook Zero staging an exact mitigation for visible human review](docs/screenshots/submission-staged-not-applied.png)
 

@@ -2,7 +2,7 @@
 
 Target: **2:20–2:40**. Hard stop: **2:55**.
 
-Measured live rehearsal: **62.696 seconds** of deployed WebMCP tool/control time from reset through resolution note, leaving roughly 77–97 seconds inside the target window for prompt entry, narration, and readable holds.
+Prior measured live rehearsal: **62.696 seconds** of deployed WebMCP tool/control time from reset through resolution note, leaving roughly 77–97 seconds inside the target window for prompt entry, narration, and readable holds. Repeat the timed rehearsal on public version 6 after [fresh-viewer acceptance](fresh-viewer-acceptance.md) and before recording.
 
 The complete quoted narration and prompts contain **210 words**. At a clear 130–150 words per minute, speech takes approximately 84–97 seconds; combined with the measured interaction path, the unreduced run projects to roughly **2:27–2:40** before natural overlap.
 

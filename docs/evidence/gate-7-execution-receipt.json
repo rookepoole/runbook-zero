@@ -2,9 +2,10 @@
   "gate": 7,
   "title": "Execution and polish",
   "status": "IMPLEMENTED_REOPENED_FOR_ACCEPTANCE",
-  "date": "2026-08-25",
+  "date": "2026-08-26",
   "implementationCommit": "aaa8ba77d76125b71edcb46e373276ce56d6e4fc",
   "agentHandoffCorrectionCommit": "e2734ae",
+  "deployedSourceCommit": "ae316febb75efe74a5c52fe911a834e43884226c",
   "reconstruction": {
     "evidence": "Project-owner review rejected the earlier interface as insufficiently usable and too shallow relative to the frozen design research.",
     "impact": "The earlier uncorroborated 5/5 judge-first claim was withdrawn and Gate 7 was reopened.",
@@ -36,11 +37,11 @@
       "replace dead-end Agent and Human filter messages with next-action guidance"
     ],
     "architectureChanged": false,
-    "browserReview": "PASS — public Sites version 5 exposed the exact nine-tool document.modelContext surface and rendered the cue and filtered guidance"
+    "browserReview": "PASS — public Sites version 6 exposed real document.modelContext tools, retained the cue and filtered guidance, and added the visible Capability Firewall plus three Incident Packs"
   },
   "browserAutomation": {
     "runner": "Playwright Chromium",
-    "testCount": 2,
+    "testCount": 3,
     "canonicalResetToResolved": "PASS",
     "consoleAndPageErrors": 0,
     "viewports": ["1280x720", "1440x900"],
@@ -55,18 +56,19 @@
   },
   "judgeFirstAcceptance": {
     "priorClaim": "WITHDRAWN",
-    "currentStatus": "PENDING_FRESH_VIEWER_ON_PUBLIC_VERSION_5",
+    "currentStatus": "PENDING_FRESH_VIEWER_ON_PUBLIC_VERSION_6",
+    "protocol": "docs/fresh-viewer-acceptance.md",
     "requiredScore": "4/5"
   },
   "checks": {
     "typecheck": "PASS",
     "format": "PASS",
     "lint": "PASS",
-    "unitAndComponentTests": "PASS — 12 files / 43 tests",
-    "browserE2E": "PASS — 2 tests",
+    "unitAndComponentTests": "PASS — 15 files / 57 tests",
+    "browserE2E": "PASS — 3 tests",
     "build": "PASS",
     "npmAudit": "PASS — 0 vulnerabilities",
     "diffCheck": "PASS"
   },
-  "claimBoundary": "The UX reconstruction and agent-handoff correction at e2734ae are deployed and validated as Sites version 5. Gate 7 remains reopened until independent fresh-viewer acceptance is repeated against version 5."
+  "claimBoundary": "The UX reconstruction, agent-handoff correction, Incident Pack launcher, and Capability Firewall are deployed and technically validated as public Sites version 6. Gate 7 remains reopened until an independent reviewer completes docs/fresh-viewer-acceptance.md against version 6 and scores at least 4/5."
 }
