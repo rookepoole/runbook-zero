@@ -196,3 +196,39 @@ Artifact: `docs/evidence/gate-5-approval-receipt.json`
 ### Claim boundary
 
 Gates 4–5 establish local real-browser J1–J3 through visible approval. They do not yet claim applied recovery, the full reset-to-resolved J1–J4 E2E, deployment, or final visual/accessibility acceptance.
+
+## Gate 6 — End-to-end resolution
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Implementation commit: `b3f241e3305044871b43c572826c8be3f07cd140`
+
+### Real WebMCP J4 replay
+
+1. From the visibly human-approved state, the real page-defined `apply_approved_mitigation({ mitigationId: "M-POOL-RESTORE" })` tool returned `MITIGATING` and recovery frame 0 of 5.
+2. The registry immediately changed to seven tools without `apply_approved_mitigation`; a second invocation attempt was rejected as unavailable.
+3. The shared UI advanced through five fixed one-second telemetry frames without random jitter and reached `RESOLVED`.
+4. `verify_recovery` remained read-only and returned all checks passing: checkout P95 420 ≤ 500 ms, checkout errors 0.8 ≤ 1%, and inventory-db saturation 68 ≤ 70%.
+5. `add_incident_note` recorded: “Pool size restored to 80; checkout P95 and errors returned below recovery thresholds.”
+6. The resolved page visibly showed all topology nodes healthy, checkout P95 420 ms, errors 0.8%, the applied mitigation, a resolved checklist message, five system recovery events, and the agent note.
+
+### Automated checks
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm run test          PASS — 12 files, 40 tests
+npm run build         PASS
+git diff --check      PASS
+```
+
+The UI recovery test uses fake time to assert frame 1, frame 4, exact final telemetry, the five-second duration, and the resolved state. Domain replay tests independently verify deterministic equality.
+
+Artifact: `docs/evidence/gate-6-resolution-receipt.json`
+
+### Claim boundary
+
+Gate 6 establishes the complete local real-browser J1–J4 workflow. Gate 7 execution/polish, full browser E2E automation, deployed-origin behavior, and submission freeze remain outstanding.

@@ -1,0 +1,55 @@
+{
+  "gate": 6,
+  "title": "End-to-end resolution",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "implementationCommit": "b3f241e3305044871b43c572826c8be3f07cd140",
+  "environment": {
+    "browser": "ChatGPT Codex in-app browser",
+    "origin": "http://127.0.0.1:4173/",
+    "transport": "real page-defined WebMCP"
+  },
+  "apply": {
+    "mitigationId": "M-POOL-RESTORE",
+    "initialResult": {
+      "phase": "MITIGATING",
+      "recovery": { "step": 0, "totalSteps": 5 }
+    },
+    "repeatApplyBlocked": true,
+    "applyToolPresentAfterInvocation": false
+  },
+  "recovery": {
+    "durationSeconds": 5,
+    "frameCount": 5,
+    "randomJitter": false,
+    "finalPhase": "RESOLVED",
+    "verification": {
+      "recovered": true,
+      "checkoutP95Ms": { "value": 420, "threshold": 500, "pass": true },
+      "checkoutErrorRatePct": { "value": 0.8, "threshold": 1, "pass": true },
+      "inventoryDbSaturationPct": { "value": 68, "threshold": 70, "pass": true }
+    }
+  },
+  "resolutionNote": {
+    "actor": "agent",
+    "text": "Pool size restored to 80; checkout P95 and errors returned below recovery thresholds."
+  },
+  "visiblePostconditions": [
+    "RESOLVED",
+    "all service nodes HEALTHY",
+    "checkout P95 420 ms",
+    "checkout errors 0.8%",
+    "APPLIED",
+    "Recovery thresholds satisfied",
+    "five SYSTEM recovery events",
+    "agent resolution note"
+  ],
+  "checks": {
+    "typecheck": "PASS",
+    "format": "PASS",
+    "lint": "PASS",
+    "tests": "PASS — 12 files / 40 tests",
+    "build": "PASS",
+    "diffCheck": "PASS"
+  }
+}
