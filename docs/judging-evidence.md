@@ -280,3 +280,56 @@ Artifact: `docs/evidence/gate-7-execution-receipt.json`
 ### Claim boundary
 
 Gate 7 establishes local execution and presentation readiness. Deployment, deployed-origin WebMCP validation, submission documentation, final SHA/tag, and artifact freeze remain Gates 8–9.
+
+## Gate 8 — Public deployment
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Deployment implementation commit: `cb105921fec5425c4f0a2d9136362f65e44aaf0c`
+
+Live URL: <https://runbook-zero.rookepoole.chatgpt.site>
+
+### ChatGPT Sites deployment
+
+The validated React/Vite application is deployed on ChatGPT Sites as public version 1. An anonymous HTTPS request returned `200` directly from the live URL with no sign-in redirect. The deployment source was the exact pushed commit above, and the production build contains the Cloudflare Worker-compatible Sites entry point plus the same client bundle used by local validation.
+
+### Real deployed-origin WebMCP evidence
+
+The supported ChatGPT Codex in-app browser loaded the production URL and discovered 9 real page-defined `document.modelContext` tools from origin `https://runbook-zero.rookepoole.chatgpt.site`.
+
+The deployed browser then completed the canonical `INC-042` flow:
+
+- gathered the system snapshot, checkout trace, inventory-db configuration/signals, and the `80 → 12` recent change;
+- recorded the high-confidence pool-saturation hypothesis;
+- compared mitigations with rollback excluded and staged `M-POOL-RESTORE`;
+- observed the 10-tool staged surface with no apply tool;
+- directly attempted `apply_approved_mitigation` before approval and received a tool-unavailable failure;
+- clicked the visible **Approve staged mitigation** control as the human operator;
+- observed `HUMAN APPROVED` and the apply tool appearing only afterward;
+- applied the exact approved mitigation and observed apply disappear immediately;
+- verified deterministic recovery at 420 ms checkout P95, 0.8% checkout errors, and 68% inventory-db saturation;
+- added an agent-authored recovery note;
+- reset through the visible UI and returned to 4,700 ms checkout P95, the exact 9-tool initial surface, and no apply tool.
+
+### Final deployment checks
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm run test          PASS — 12 files, 40 tests
+npm run test:e2e      PASS — 2 Chromium tests
+npm run build         PASS
+npm audit             PASS — 0 vulnerabilities
+git diff --check      PASS
+anonymous HTTPS       PASS — 200, no sign-in redirect
+deployed WebMCP       PASS — canonical J1–J4 and reset
+```
+
+Artifact: `docs/evidence/gate-8-deployment-receipt.json`
+
+### Claim boundary
+
+Gate 8 establishes a public, direct-link ChatGPT Sites deployment and real supported-browser WebMCP behavior on that deployed origin. Submission documentation, demo assets, final SHA/tag, and the immutable `submission-v1.0` freeze remain Gate 9.

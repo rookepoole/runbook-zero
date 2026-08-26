@@ -1,0 +1,62 @@
+{
+  "gate": 8,
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "deployment": {
+    "platform": "ChatGPT Sites",
+    "url": "https://runbook-zero.rookepoole.chatgpt.site",
+    "access": "public",
+    "version": 1,
+    "sourceCommit": "cb105921fec5425c4f0a2d9136362f65e44aaf0c",
+    "anonymousHttp": {
+      "status": 200,
+      "signInRedirect": false
+    }
+  },
+  "supportedBrowserEvidence": {
+    "environment": "ChatGPT Codex in-app browser",
+    "origin": "https://runbook-zero.rookepoole.chatgpt.site",
+    "initialToolCount": 9,
+    "initialApplyAvailable": false,
+    "canonicalIncident": "INC-042",
+    "stagedMitigation": "M-POOL-RESTORE",
+    "stagedToolCount": 10,
+    "preApprovalApply": {
+      "available": false,
+      "directCallBlocked": true,
+      "message": "WebMCP tool apply_approved_mitigation is not available in this snapshot."
+    },
+    "approval": {
+      "mechanism": "visible human UI button",
+      "humanApprovedVisible": true,
+      "applyAvailableAfterApproval": true
+    },
+    "application": {
+      "phaseAfterCall": "MITIGATING",
+      "applyRemovedImmediately": true,
+      "exactApprovedMitigationApplied": true
+    },
+    "verification": {
+      "recovered": true,
+      "checkoutP95Ms": 420,
+      "checkoutErrorRatePct": 0.8,
+      "inventoryDatabaseSaturationPct": 68
+    },
+    "reset": {
+      "checkoutP95Ms": 4700,
+      "toolCount": 9,
+      "applyAvailable": false
+    }
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "format": "PASS",
+    "lint": "PASS",
+    "unit": "PASS — 12 files, 40 tests",
+    "browserE2E": "PASS — 2 Chromium tests",
+    "build": "PASS",
+    "audit": "PASS — 0 vulnerabilities",
+    "diffCheck": "PASS"
+  },
+  "claimBoundary": "Submission documentation, demo assets, final SHA/tag, and submission-v1.0 freeze remain Gate 9."
+}
