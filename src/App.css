@@ -1621,7 +1621,146 @@ main {
   margin-right: 0.35rem;
 }
 
+.live-site-bridge {
+  align-items: center;
+  background:
+    linear-gradient(110deg, rgba(91, 140, 255, 0.12), transparent 58%),
+    var(--panel);
+  border: 1px solid rgba(91, 140, 255, 0.45);
+  border-radius: 0.55rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 1fr) auto;
+  margin: 0.9rem clamp(1rem, 2.2vw, 2rem) 0;
+  padding: 1rem;
+}
+
+.live-site-bridge--connected {
+  border-color: rgba(51, 211, 153, 0.55);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1.2fr);
+}
+
+.live-site-bridge h1,
+.live-site-bridge p {
+  margin: 0;
+}
+
+.live-site-bridge h1 {
+  color: var(--text-primary);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+}
+
+.live-site-bridge p,
+.live-site-bridge a {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.live-site-bridge a {
+  display: inline-block;
+  margin-top: 0.3rem;
+}
+
+.live-site-bridge button {
+  background: var(--agent);
+  border: 0;
+  border-radius: 0.35rem;
+  color: #07101f;
+  cursor: pointer;
+  font-weight: 750;
+  padding: 0.7rem 0.9rem;
+}
+
+.install-command,
+.live-site-bridge__facts,
+.live-import-guide__commands {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.install-command code,
+.live-site-bridge__facts code,
+.live-import-guide__commands code {
+  background: rgba(5, 9, 14, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 0.3rem;
+  color: var(--text-primary);
+  font-size: 0.64rem;
+  overflow-wrap: anywhere;
+  padding: 0.45rem 0.55rem;
+}
+
+.live-site-bridge__facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.live-site-bridge__facts > span {
+  color: var(--healthy);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 800;
+  grid-column: 1 / -1;
+  letter-spacing: 0.1em;
+}
+
+.live-import-guide {
+  background: rgba(91, 140, 255, 0.08);
+  border: 1px solid rgba(91, 140, 255, 0.35);
+  border-radius: 0.5rem;
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
+  margin: 1rem 0;
+  padding: 0.9rem;
+}
+
+.live-import-guide h3,
+.live-import-guide p,
+.live-import-guide blockquote {
+  margin: 0.4rem 0 0;
+}
+
+.live-import-guide p,
+.live-import-guide small {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+.live-import-guide small {
+  grid-column: 1 / -1;
+}
+
+.live-import-guide blockquote {
+  border-left: 2px solid var(--agent);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.external-execution-receipt {
+  background: rgba(91, 140, 255, 0.08);
+  border: 1px solid rgba(91, 140, 255, 0.38);
+  border-radius: 0.35rem;
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding: 0.7rem;
+}
+
+.external-execution-receipt code,
+.external-execution-receipt p {
+  margin: 0;
+}
+
 @media (max-width: 1100px) {
+  .live-site-bridge {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .live-site-bridge button {
+    grid-column: 1 / -1;
+  }
+
   .capability-firewall {
     grid-template-columns: 0.8fr 1.2fr;
   }
@@ -1650,6 +1789,16 @@ main {
 }
 
 @media (max-width: 800px) {
+  .live-site-bridge,
+  .live-site-bridge--connected,
+  .live-import-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .live-import-guide small {
+    grid-column: auto;
+  }
+
   .app-header {
     grid-template-columns: 1fr auto;
   }

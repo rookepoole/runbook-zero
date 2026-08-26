@@ -1,5 +1,7 @@
 import type {
   IncidentPack,
+  JsonValue,
+  MitigationExecution,
   PrimitiveConfigValue,
   ServiceTelemetry,
 } from "../domain/types";
@@ -82,6 +84,51 @@ const primitive = (value: unknown, path: string): PrimitiveConfigValue => {
   return value as PrimitiveConfigValue;
 };
 
+const jsonValue = (value: unknown, path: string, depth = 0): JsonValue => {
+  if (depth > 8) fail(path, "must not exceed 8 levels of nesting");
+  if (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "boolean"
+  ) {
+    return value;
+  }
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) fail(path, "numbers must be finite");
+    return value;
+  }
+  if (Array.isArray(value)) {
+    if (value.length > 100) fail(path, "arrays must contain at most 100 items");
+    return value.map((item, index) =>
+      jsonValue(item, `${path}[${index}]`, depth + 1),
+    );
+  }
+  const input = record(value, path);
+  if (Object.keys(input).length > 100) {
+    fail(path, "objects must contain at most 100 keys");
+  }
+  return Object.fromEntries(
+    Object.entries(input).map(([key, item]) => [
+      text(key, `${path} key`, 120),
+      jsonValue(item, `${path}.${key}`, depth + 1),
+    ]),
+  );
+};
+
+const webUrl = (value: unknown, path: string): URL => {
+  const raw = text(value, path, 2_000);
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    return fail(path, "must be an absolute URL");
+  }
+  if (!["https:", "http:"].includes(parsed.protocol)) {
+    fail(path, "must use http or https");
+  }
+  return parsed;
+};
+
 const rejectUnsafeKeys = (value: unknown, path = "pack"): void => {
   if (Array.isArray(value)) {
     value.forEach((item, index) => rejectUnsafeKeys(item, `${path}[${index}]`));
@@ -143,6 +190,57 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
   text(pack.topologyTitle, "pack.topologyTitle", 200);
   timestamp(pack.eventBaseTimestamp, "pack.eventBaseTimestamp");
   timestamp(pack.recoveryTimestamp, "pack.recoveryTimestamp");
+
+  let liveOrigin: string | undefined;
+  if (pack.source !== undefined) {
+    const source = record(pack.source, "pack.source");
+    const kind = enumValue(
+      source.kind,
+      ["bundled-simulation", "imported-simulation", "live-site"],
+      "pack.source.kind",
+    );
+    if (kind === "live-site") {
+      const targetUrl = webUrl(source.url, "pack.source.url");
+      liveOrigin = webUrl(source.origin, "pack.source.origin").origin;
+      if (targetUrl.origin !== liveOrigin || source.origin !== liveOrigin) {
+        fail("pack.source.origin", "must exactly match the target URL origin");
+      }
+      text(source.title, "pack.source.title", 240);
+      timestamp(source.capturedAt, "pack.source.capturedAt");
+      enumValue(
+        source.capturedBy,
+        ["codex-browser-extension", "codex-browser", "manual"],
+        "pack.source.capturedBy",
+      );
+      enumValue(
+        source.baselineKind,
+        ["reference-budget", "measured-baseline"],
+        "pack.source.baselineKind",
+      );
+      list(
+        source.observedWebMCPTools,
+        "pack.source.observedWebMCPTools",
+        0,
+        100,
+      ).forEach((toolValue, index) => {
+        const path = `pack.source.observedWebMCPTools[${index}]`;
+        const tool = record(toolValue, path);
+        text(tool.name, `${path}.name`, 160);
+        if (tool.title !== undefined) text(tool.title, `${path}.title`, 240);
+        if (tool.description !== undefined) {
+          text(tool.description, `${path}.description`, 700);
+        }
+        if (typeof tool.readOnly !== "boolean") {
+          fail(`${path}.readOnly`, "must be boolean");
+        }
+        if (typeof tool.destructive !== "boolean") {
+          fail(`${path}.destructive`, "must be boolean");
+        }
+      });
+    } else {
+      text(source.label, "pack.source.label", 240);
+    }
+  }
 
   const incident = record(pack.incident, "pack.incident");
   text(incident.id, "pack.incident.id", 80);
@@ -292,7 +390,7 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
     fail("pack.defaultFlow", "must reference a known flow");
   }
 
-  list(pack.changes, "pack.changes", 1, 20).forEach((changeValue, index) => {
+  list(pack.changes, "pack.changes", 0, 20).forEach((changeValue, index) => {
     const path = `pack.changes[${index}]`;
     const change = record(changeValue, path);
     text(change.id, `${path}.id`, 80);
@@ -327,7 +425,7 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
       text(evidence.id, `${path}.id`, 120);
       enumValue(
         evidence.kind,
-        ["telemetry", "change", "trace", "configuration"],
+        ["telemetry", "change", "trace", "configuration", "browser", "webmcp"],
         `${path}.kind`,
       );
       text(evidence.summary, `${path}.summary`, 500);
@@ -372,6 +470,8 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
         "cache-degrade-mode",
         "traffic-shift",
         "capacity-adjustment",
+        "site-action",
+        "operator-handoff",
       ],
       `${path}.kind`,
     );
@@ -416,6 +516,66 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
       },
     );
 
+    let executionMode: MitigationExecution["mode"] = "simulation";
+    if (candidate.execution !== undefined) {
+      const execution = record(candidate.execution, `${path}.execution`);
+      executionMode = enumValue(
+        execution.mode,
+        ["simulation", "external-webmcp", "operator-handoff"],
+        `${path}.execution.mode`,
+      );
+      if (executionMode !== "simulation") {
+        const targetOrigin = webUrl(
+          execution.targetOrigin,
+          `${path}.execution.targetOrigin`,
+        ).origin;
+        if (execution.targetOrigin !== targetOrigin) {
+          fail(
+            `${path}.execution.targetOrigin`,
+            "must be an origin without a path",
+          );
+        }
+        if (liveOrigin === undefined || targetOrigin !== liveOrigin) {
+          fail(
+            `${path}.execution.targetOrigin`,
+            "must match the live-site source origin",
+          );
+        }
+      }
+      if (executionMode === "external-webmcp") {
+        text(execution.toolName, `${path}.execution.toolName`, 160);
+        jsonValue(execution.input, `${path}.execution.input`);
+        const observedTools = list(
+          record(pack.source, "pack.source").observedWebMCPTools,
+          "pack.source.observedWebMCPTools",
+          0,
+          100,
+        ).map((value, index) =>
+          text(
+            record(value, `pack.source.observedWebMCPTools[${index}]`).name,
+            `pack.source.observedWebMCPTools[${index}].name`,
+            160,
+          ),
+        );
+        if (!observedTools.includes(execution.toolName as string)) {
+          fail(
+            `${path}.execution.toolName`,
+            "must name a tool observed on the live target",
+          );
+        }
+      }
+      if (executionMode === "operator-handoff") {
+        list(
+          execution.instructions,
+          `${path}.execution.instructions`,
+          1,
+          12,
+        ).forEach((instruction, index) =>
+          text(instruction, `${path}.execution.instructions[${index}]`, 500),
+        );
+      }
+    }
+
     const effectValue = record(
       effects[mitigationId],
       `pack.mitigationEffects.${mitigationId}`,
@@ -427,7 +587,7 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
     list(
       effectValue.recoveryFrames,
       `pack.mitigationEffects.${mitigationId}.recoveryFrames`,
-      1,
+      executionMode === "simulation" ? 1 : 0,
       10,
     ).forEach((frameValue, frameIndex) => {
       const framePath = `pack.mitigationEffects.${mitigationId}.recoveryFrames[${frameIndex}]`;

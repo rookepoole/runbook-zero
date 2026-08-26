@@ -1,20 +1,33 @@
 # Runbook Zero
 
-**A WebMCP-native incident platform where humans and browser agents investigate, stage, approve, apply, and verify mitigations on the same live surface.**
+**An installable WebMCP incident product where Codex investigates the site you are using, Runbook Zero governs exact actions, and humans keep the final approval.**
 
 [Open the live Challenge Edition](https://runbook-zero.rookepoole.chatgpt.site) · [Judging evidence](docs/judging-evidence.md) · [Fresh-viewer test](docs/fresh-viewer-acceptance.md) · [Demo script](docs/demo-script.md) · [Submission stills](docs/submission-assets.md)
 
 ![Runbook Zero staging an exact mitigation for visible human review](docs/screenshots/submission-staged-not-applied.png)
 
-Runbook Zero makes WebMCP part of the product's control plane. The page registers real `document.modelContext` tools, changes that tool surface as the incident moves through its state machine, and renders every agent action into the same topology, telemetry, change record, and incident timeline the human sees. A validated Incident Pack supplies the operational data, so the same domain and WebMCP contracts work across different failure modes instead of one scripted screen.
+Runbook Zero spans two explicit browser surfaces. Codex or the ChatGPT Chrome extension captures bounded evidence from the website an operator is actually using. The Runbook Zero workbench then registers real `document.modelContext` tools, changes that tool surface with state and authority, and renders every agent action into the same evidence, topology, telemetry, mitigation, and audit interface the human sees.
 
-> **Deployment status:** public Sites version 6 is live. The deployed build contains the generalized three-pack incident platform and was revalidated on its production origin with real WebMCP calls.
+The target website remains its own security origin. Runbook Zero does not pretend its page can silently control unrelated sites: after visible approval, it releases an exact origin/tool/input receipt that Codex carries back to the target. Sites without a matching WebMCP action still get evidence-backed diagnosis and an operator handoff, never fake automation.
 
 The central safety invariant is enforced at both the domain and registry layers:
 
 > `apply_approved_mitigation` does not exist on the WebMCP surface until a human visibly approves the exact staged mitigation.
 
 There is no WebMCP approval tool. Staging does not mutate production. Approval does not apply. Apply disappears immediately after use.
+
+## Install in Codex
+
+```bash
+codex plugin marketplace add rookepoole/runbook-zero
+codex plugin add runbook-zero@runbook-zero
+```
+
+Start a new Codex task so the installed skill is loaded. Open the site you want to investigate in Codex's browser or a connected ChatGPT Chrome extension, then ask:
+
+> Use Runbook Zero to investigate this site.
+
+The plugin captures only bounded incident evidence, writes a local Site Capture, builds a deterministic live Incident Pack, imports it into the public workbench, and drives diagnosis and staging. It stops for the human to approve in the visible Runbook Zero UI. See [Live-site product workflow](docs/live-site-product.md).
 
 ## Canonical judging flow
 
@@ -28,7 +41,18 @@ Open the live site in a supported WebMCP client, select **Reset Scenario**, and 
 
 The deterministic result is `M-POOL-RESTORE`, restoring `dbPoolSize` from 12 to 80. Recovery finishes through five fixed frames at 420 ms checkout P95, 0.8% checkout errors, and 55% inventory database saturation.
 
-## Incident platform
+## Product modes
+
+### Live sites
+
+- captures the exact URL, origin, visible symptom, browser signals, and current WebMCP capability inventory;
+- labels page-derived content as untrusted evidence and excludes browser secrets;
+- turns a matching target-site WebMCP action into an exact approval candidate;
+- releases the exact origin, tool name, and JSON input only after visible approval;
+- binds returned execution evidence to that receipt and resolves only when thresholds pass;
+- falls back to an honest operator handoff when the site has no applicable tool.
+
+### Deterministic incident lab
 
 Select **Incident Packs** to launch one of three complete deterministic incidents:
 
@@ -36,19 +60,21 @@ Select **Incident Packs** to launch one of three complete deterministic incident
 - **Payment event queue backlog** — `INC-117`, a consumer-concurrency regression delaying confirmations.
 - **Catalog cache stampede** — `INC-203`, a TTL regression amplifying cache misses and database load.
 
-Every pack supplies incident metadata, topology, services, baseline/current telemetry, changes, evidence, exact mitigation candidates, risks, reversibility, recovery thresholds, and fixed recovery frames. Service, flow, and mitigation enums in the WebMCP schemas change with the loaded pack, while the 12 tool names and safety semantics stay identical.
+Every pack supplies incident metadata, topology or observed browser surfaces, baseline/current telemetry, changes where known, evidence, exact mitigation candidates, risks, reversibility, and recovery thresholds. Bundled simulations include fixed recovery frames. Live packs include source provenance and either an external WebMCP execution contract or an operator handoff.
 
 The launcher can also download any bundled pack as JSON or import a local JSON pack. Imports are validated locally, never uploaded, limited to 1 MB, and rejected before activation if their shape or cross-references are invalid. See the [Incident Pack v1 contract](docs/incident-pack-schema.md).
 
 ## Why WebMCP is fundamental
 
-- **Real page-defined tools:** 12 non-overlapping tools use `document.modelContext.registerTool`.
+- **Real page-defined tools:** 13 non-overlapping contracts use `document.modelContext.registerTool`; the active subset is state- and execution-mode-aware.
 - **Dynamic capability surface:** tools are registered from the current application phase and stale registrations are aborted.
 - **Incident-aware contracts:** tool schemas expose only the active pack's service, flow, mitigation, and approved-action identifiers.
 - **Shared human/agent workspace:** tool calls focus and update the same interface the operator uses.
 - **Visible capability firewall:** active tools, locked consequential tools, application phase, and human authority state are continuously visible.
 - **Human authority:** approval is a visible human UI event, never an agent capability.
 - **Exact binding:** application is valid only for the mitigation ID that the human approved.
+- **Origin binding:** a live receipt also binds the target origin, target tool, exact JSON input, incident, and seed.
+- **Post-action synchronization:** `record_external_execution` appears only while a released live action is waiting for result evidence.
 - **Deterministic judging:** `INC-042` resets to the same incident, evidence, candidates, timeline, and recovery every time.
 
 See [Architecture](docs/architecture.md) for the state machine and [WebMCP tools](docs/webmcp-tools.md) for the complete lifecycle table.
@@ -79,7 +105,7 @@ npm audit
 
 The Playwright suite uses a test-only `document.modelContext` harness against the production registry and executors. It validates the browser workflow but does not replace the real supported-browser evidence recorded in [Judging evidence](docs/judging-evidence.md).
 
-Published version 6 baseline: 15 Vitest files / 57 tests, 3 Playwright Chromium tests, production build, zero known dependency vulnerabilities, and real in-app-browser WebMCP verification across all three bundled packs plus the complete canonical approval-and-recovery flow.
+Version 7 candidate baseline: 17 Vitest files / 65 tests, 4 Playwright Chromium tests, production build, plugin manifest validation, and a successful local Codex installation. The Chrome-extension live-origin acceptance check remains separate from the Playwright harness and requires a connected extension.
 
 ## Repository map
 
@@ -90,14 +116,15 @@ src/simulation/   pack-driven deterministic recovery engine
 src/state/        shared Zustand application state
 src/webmcp/       capability detection, tool contracts, dynamic registry
 src/components/   shared operator/agent workspace
+plugins/          installable Codex package, Site Capture contract, and builder
 tests/unit/       domain, registry, safety, simulation, and UI tests
 tests/browser/    canonical and multi-pack browser journeys
 docs/evidence/    bounded gate receipts
 worker/           thin ChatGPT Sites asset-serving entry point
 ```
 
-## Challenge Edition
+## Open product
 
-This public repository is the Runbook Zero Challenge Edition, created for the 2026 WebMCP Challenge. It contains the judged application, tests, reproducibility instructions, and evidence—not private planning, design research, continuation notes, credentials, or commercial infrastructure.
+This public repository is both the WebMCP Challenge submission and the installable Runbook Zero product foundation. It contains the application, Codex plugin, tests, reproducibility instructions, and evidence—not private planning, design research, continuation notes, credentials, or browser secrets.
 
-Runbook Zero Challenge Edition is licensed under the [GNU Affero General Public License v3.0](LICENSE). Copyright © 2026 Rooke Poole.
+Runbook Zero is licensed under the [GNU Affero General Public License v3.0](LICENSE). Copyright © 2026 Rooke Poole.

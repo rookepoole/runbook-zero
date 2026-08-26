@@ -135,16 +135,18 @@ export const IncidentCommand = () => {
               className={
                 staged.status === "approved"
                   ? "human-chip"
-                  : staged.status === "applied"
+                  : staged.status === "applied" || staged.status === "released"
                     ? "applied-chip"
                     : "staged-chip"
               }
             >
               {staged.status === "approved"
                 ? "✓ HUMAN APPROVED"
-                : staged.status === "applied"
-                  ? "APPLIED"
-                  : "STAGED — NOT APPLIED"}
+                : staged.status === "released"
+                  ? "RELEASED TO TARGET"
+                  : staged.status === "applied"
+                    ? "APPLIED"
+                    : "STAGED — NOT APPLIED"}
             </span>
             <span className="mono-label">{staged.id}</span>
           </div>
@@ -196,7 +198,12 @@ export const IncidentCommand = () => {
             </div>
           </dl>
           <div className="assumption-list">
-            <span className="section-label">Simulation assumptions</span>
+            <span className="section-label">
+              {staged.option.execution?.mode === "simulation" ||
+              staged.option.execution === undefined
+                ? "Simulation assumptions"
+                : "Evidence + execution assumptions"}
+            </span>
             {staged.option.assumptions.map((assumption) => (
               <p key={assumption}>• {assumption}</p>
             ))}
@@ -221,9 +228,28 @@ export const IncidentCommand = () => {
           )}
           {scenario.phase === "APPROVED" && (
             <p className="approval-boundary-note">
-              Human approval recorded. The agent may now apply this exact
-              mitigation.
+              Human approval recorded. The agent may now{" "}
+              {staged.option.execution?.mode === "external-webmcp"
+                ? "release this exact action receipt, then invoke it only on the captured origin."
+                : staged.option.execution?.mode === "operator-handoff"
+                  ? "release this exact operator handoff."
+                  : "apply this exact mitigation."}
             </p>
+          )}
+          {scenario.phase === "MITIGATING" && scenario.externalExecution && (
+            <div className="external-execution-receipt" aria-live="polite">
+              <span className="section-label">Approval-bound receipt</span>
+              <code>{scenario.externalExecution.receiptId}</code>
+              <strong>{scenario.externalExecution.targetOrigin}</strong>
+              {scenario.externalExecution.toolName && (
+                <code>{scenario.externalExecution.toolName}</code>
+              )}
+              <p>
+                {scenario.externalExecution.status === "released"
+                  ? "Waiting for Codex to execute the exact action on the target site and return verification evidence."
+                  : scenario.externalExecution.resultSummary}
+              </p>
+            </div>
           )}
           {scenario.phase === "MITIGATING" && scenario.recovery && (
             <div className="recovery-progress" aria-live="polite">

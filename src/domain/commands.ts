@@ -1,9 +1,10 @@
-import { rankMitigations } from "./queries";
+import { rankMitigations, verifyRecovery } from "./queries";
 import { transitionPhase } from "./state-machine";
 import type {
   MitigationId,
   MitigationKind,
   ScenarioState,
+  ServiceTelemetry,
   TimelineEvent,
 } from "./types";
 import { invariant } from "./validation";
@@ -296,6 +297,52 @@ export const applyApprovedMitigation = (
   );
 
   const transitioned = transitionPhase(state, "MITIGATING");
+  const execution = state.stagedMitigation.option.execution ?? {
+    mode: "simulation" as const,
+  };
+  if (execution.mode !== "simulation") {
+    const event = createEvent(state, {
+      actor: "agent",
+      type: "apply",
+      title: `${mitigationId} released for site execution`,
+      detail:
+        execution.mode === "external-webmcp"
+          ? `Approval-bound WebMCP action ${execution.toolName} may now be invoked on ${execution.targetOrigin}.`
+          : `Approval-bound operator handoff may now be carried out on ${execution.targetOrigin}.`,
+    });
+    return {
+      ...transitioned,
+      incident: { ...state.incident, status: "mitigating" },
+      stagedMitigation: {
+        ...state.stagedMitigation,
+        status: "released",
+        appliedAt: event.timestamp,
+      },
+      externalExecution: {
+        receiptId: `R0-${state.incident.id}-${mitigationId}-${state.seed}`,
+        incidentId: state.incident.id,
+        scenarioSeed: state.seed,
+        mitigationId,
+        targetOrigin: execution.targetOrigin,
+        mode: execution.mode,
+        toolName:
+          execution.mode === "external-webmcp" ? execution.toolName : undefined,
+        input:
+          execution.mode === "external-webmcp"
+            ? structuredClone(execution.input)
+            : undefined,
+        instructions:
+          execution.mode === "operator-handoff"
+            ? [...execution.instructions]
+            : undefined,
+        status: "released",
+        releasedAt: event.timestamp,
+      },
+      recovery: null,
+      timeline: [...state.timeline, event],
+    };
+  }
+
   const effect = state.mitigationEffects[mitigationId];
   invariant(
     effect,
@@ -322,6 +369,134 @@ export const applyApprovedMitigation = (
       step: 0,
       totalSteps: effect.recoveryFrames.length,
     },
+    externalExecution: null,
     timeline: [...state.timeline, event],
+  };
+};
+
+export const recordExternalExecution = (
+  state: ScenarioState,
+  observation: {
+    origin: string;
+    toolName?: string;
+    outcome: "succeeded" | "failed";
+    summary: string;
+    observedAt: string;
+    serviceUpdates?: Record<
+      string,
+      Partial<Omit<ServiceTelemetry, "serviceId" | "timestamp">>
+    >;
+  },
+): ScenarioState => {
+  invariant(
+    state.phase === "MITIGATING",
+    "INVALID_PHASE",
+    "External execution can only be recorded after approval is released.",
+  );
+  const receipt = state.externalExecution;
+  invariant(
+    receipt?.status === "released",
+    "INVALID_PHASE",
+    "No released external execution is waiting for evidence.",
+  );
+  invariant(
+    observation.origin === receipt.targetOrigin,
+    "INCIDENT_BINDING_MISMATCH",
+    "Execution evidence came from a different origin.",
+  );
+  if (receipt.mode === "external-webmcp") {
+    invariant(
+      observation.toolName === receipt.toolName,
+      "MITIGATION_ID_MISMATCH",
+      "Execution evidence must name the exact approved WebMCP tool.",
+    );
+  }
+  invariant(
+    !Number.isNaN(Date.parse(observation.observedAt)),
+    "INVALID_PHASE",
+    "Execution evidence must include an ISO timestamp.",
+  );
+  invariant(
+    observation.summary.trim().length > 0,
+    "INVALID_PHASE",
+    "Execution evidence must include a summary.",
+  );
+
+  let services = state.services;
+  for (const [serviceId, update] of Object.entries(
+    observation.serviceUpdates ?? {},
+  )) {
+    invariant(
+      services[serviceId],
+      "INVALID_PHASE",
+      `Execution evidence references unknown service ${serviceId}.`,
+    );
+    for (const [field, value] of Object.entries(update)) {
+      invariant(
+        [
+          "health",
+          "p50LatencyMs",
+          "p95LatencyMs",
+          "errorRatePct",
+          "requestsPerSecond",
+          "saturationPct",
+        ].includes(field),
+        "INVALID_PHASE",
+        `Execution evidence contains unsupported field ${field}.`,
+      );
+      if (field === "health") {
+        invariant(
+          value === "healthy" || value === "degraded" || value === "critical",
+          "INVALID_PHASE",
+          "Execution evidence contains an invalid health value.",
+        );
+      } else {
+        invariant(
+          typeof value === "number" && Number.isFinite(value) && value >= 0,
+          "INVALID_PHASE",
+          `Execution evidence contains an invalid ${field} value.`,
+        );
+      }
+    }
+    services = {
+      ...services,
+      [serviceId]: {
+        ...services[serviceId],
+        ...update,
+        serviceId,
+        timestamp: observation.observedAt,
+      },
+    };
+  }
+
+  const resultState: ScenarioState = appendEvent(
+    {
+      ...state,
+      services,
+      externalExecution: {
+        ...receipt,
+        status: observation.outcome,
+        observedAt: observation.observedAt,
+        resultSummary: observation.summary.trim(),
+      },
+    },
+    {
+      actor: "agent",
+      type: "recovery",
+      title:
+        observation.outcome === "succeeded"
+          ? "External execution evidence recorded"
+          : "External execution failed",
+      detail: observation.summary.trim(),
+    },
+  );
+
+  if (observation.outcome === "failed") return resultState;
+  const verification = verifyRecovery(resultState);
+  if (!verification.recovered) return resultState;
+  const resolved = transitionPhase(resultState, "RESOLVED");
+  return {
+    ...resolved,
+    incident: { ...resolved.incident, status: "resolved" },
   };
 };

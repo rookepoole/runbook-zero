@@ -4,6 +4,7 @@ import {
   beginInvestigation,
   compareMitigations,
   discardStagedMitigation,
+  recordExternalExecution,
   setWorkingHypothesis,
   stageMitigation,
 } from "../domain/commands";
@@ -38,6 +39,7 @@ export const TOOL_NAMES = [
   "stage_mitigation",
   "discard_staged_mitigation",
   "apply_approved_mitigation",
+  "record_external_execution",
   "verify_recovery",
   "add_incident_note",
 ] as const;
@@ -46,6 +48,7 @@ export type ToolName = (typeof TOOL_NAMES)[number];
 
 export const GET_SYSTEM_SNAPSHOT_TOOL_NAME = "get_system_snapshot";
 export const APPLY_APPROVED_MITIGATION_TOOL_NAME = "apply_approved_mitigation";
+export const RECORD_EXTERNAL_EXECUTION_TOOL_NAME = "record_external_execution";
 
 const BASE_TOOLS: ToolName[] = [
   "get_system_snapshot",
@@ -90,7 +93,13 @@ export const getActiveToolNames = (phase: ApplicationPhase): ToolName[] => {
 };
 
 export const getRegisteredToolNames = (state: ScenarioState): ToolName[] =>
-  getActiveToolNames(state.phase).filter(
+  [
+    ...getActiveToolNames(state.phase),
+    ...(state.phase === "MITIGATING" &&
+    state.externalExecution?.status === "released"
+      ? ([RECORD_EXTERNAL_EXECUTION_TOOL_NAME] as const)
+      : []),
+  ].filter(
     (name) =>
       name !== APPLY_APPROVED_MITIGATION_TOOL_NAME ||
       state.stagedMitigation?.status === "approved",
@@ -130,6 +139,17 @@ const commitAgentScenario = (
 
 const readOnlyAnnotations = {
   readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+  untrustedContentHint: false,
+};
+
+const consequentialAnnotations = {
+  readOnlyHint: false,
+  destructiveHint: true,
+  idempotentHint: false,
+  openWorldHint: true,
   untrustedContentHint: false,
 };
 
@@ -349,6 +369,8 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => {
                 "cache-degrade-mode",
                 "traffic-shift",
                 "capacity-adjustment",
+                "site-action",
+                "operator-handoff",
               ],
             },
           },
@@ -417,24 +439,114 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => {
     apply_approved_mitigation: {
       name: "apply_approved_mitigation",
       title: "Apply approved mitigation",
-      description: "Apply the exact mitigation visibly approved by the human.",
+      description:
+        "Apply the exact visibly approved simulation mitigation, or release an exact approval-bound receipt for execution on a captured external origin.",
       inputSchema: {
         type: "object",
         properties: { mitigationId: approvedMitigationSchema },
         required: ["mitigationId"],
         additionalProperties: false,
       },
+      annotations: consequentialAnnotations,
       execute: (raw) => {
         const mitigationId = requiredString(
           raw,
           "mitigationId",
         ) as MitigationId;
         const next = applyApprovedMitigation(currentScenario(), mitigationId);
+        const released = next.externalExecution?.status === "released";
         commitAgentScenario(
           next,
-          `Agent applied human-approved ${mitigationId}.`,
+          released
+            ? `Agent released human-approved ${mitigationId} to the target site.`
+            : `Agent applied human-approved ${mitigationId}.`,
         );
-        return { phase: next.phase, recovery: next.recovery };
+        return {
+          phase: next.phase,
+          recovery: next.recovery,
+          externalExecution: next.externalExecution,
+        };
+      },
+    },
+    record_external_execution: {
+      name: "record_external_execution",
+      title: "Record external execution evidence",
+      description:
+        "Synchronize the result of the exact approval-bound action executed on the target site. This records evidence in Runbook Zero; it does not invoke the target site.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          origin: {
+            type: "string",
+            enum: scenario.externalExecution
+              ? [scenario.externalExecution.targetOrigin]
+              : [],
+          },
+          toolName: {
+            type: "string",
+            enum: scenario.externalExecution?.toolName
+              ? [scenario.externalExecution.toolName]
+              : [],
+          },
+          outcome: { type: "string", enum: ["succeeded", "failed"] },
+          summary: { type: "string" },
+          observedAt: { type: "string", format: "date-time" },
+          serviceUpdates: {
+            type: "object",
+            additionalProperties: {
+              type: "object",
+              properties: {
+                health: {
+                  type: "string",
+                  enum: ["healthy", "degraded", "critical"],
+                },
+                p50LatencyMs: { type: "number", minimum: 0 },
+                p95LatencyMs: { type: "number", minimum: 0 },
+                errorRatePct: { type: "number", minimum: 0 },
+                requestsPerSecond: { type: "number", minimum: 0 },
+                saturationPct: { type: "number", minimum: 0 },
+              },
+              additionalProperties: false,
+            },
+          },
+        },
+        required: ["origin", "outcome", "summary", "observedAt"],
+        additionalProperties: false,
+      },
+      annotations: readOnlyAnnotations,
+      execute: (raw) => {
+        const origin = requiredString(raw, "origin");
+        const outcome = requiredString(raw, "outcome") as
+          "succeeded" | "failed";
+        invariant(
+          outcome === "succeeded" || outcome === "failed",
+          "INVALID_PHASE",
+          "outcome must be succeeded or failed.",
+        );
+        const summary = requiredString(raw, "summary");
+        const observedAt = requiredString(raw, "observedAt");
+        const toolName = raw.toolName as string | undefined;
+        const serviceUpdates = (raw.serviceUpdates ?? {}) as Parameters<
+          typeof recordExternalExecution
+        >[1]["serviceUpdates"];
+        const next = recordExternalExecution(currentScenario(), {
+          origin,
+          toolName,
+          outcome,
+          summary,
+          observedAt,
+          serviceUpdates,
+        });
+        commitAgentScenario(
+          next,
+          "Agent synchronized external execution evidence.",
+          "timeline",
+        );
+        return {
+          phase: next.phase,
+          externalExecution: next.externalExecution,
+          verification: verifyRecovery(next),
+        };
       },
     },
     verify_recovery: {

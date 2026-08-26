@@ -1,4 +1,4 @@
-import type { StagedMitigation } from "../../domain/types";
+import type { ScenarioState } from "../../domain/types";
 import { useRunbookStore } from "../../state/store";
 import { getRegisteredToolNames } from "../../webmcp/registry";
 import type { WebMCPConnectionState } from "../../webmcp/use-webmcp-registry";
@@ -7,7 +7,14 @@ interface CapabilityFirewallProps {
   connection: WebMCPConnectionState;
 }
 
-const authorityState = (status: StagedMitigation | null) => {
+const authorityState = (scenario: ScenarioState) => {
+  const status = scenario.stagedMitigation;
+  if (scenario.externalExecution?.status === "released") {
+    return "Exact site action released";
+  }
+  if (scenario.externalExecution?.status === "succeeded") {
+    return "Site execution verified";
+  }
   if (status?.status === "approved") return "Human approved exact stage";
   if (status?.status === "applied") return "Applied after approval";
   if (status?.status === "staged") return "Awaiting human decision";
@@ -19,11 +26,15 @@ export const CapabilityFirewall = ({ connection }: CapabilityFirewallProps) => {
   const activeNames =
     connection.status === "connected" ? getRegisteredToolNames(scenario) : [];
   const applyAvailable = activeNames.includes("apply_approved_mitigation");
+  const recordExternalAvailable = activeNames.includes(
+    "record_external_execution",
+  );
   const applyReason = applyAvailable
     ? `Available only for ${scenario.stagedMitigation?.id}.`
     : scenario.stagedMitigation?.status === "staged"
       ? "Locked until the visible human approval is recorded."
-      : scenario.stagedMitigation?.status === "applied"
+      : scenario.stagedMitigation?.status === "applied" ||
+          scenario.stagedMitigation?.status === "released"
         ? "Removed immediately after the approved action began."
         : "Locked because no exact staged mitigation has human approval.";
 
@@ -39,7 +50,7 @@ export const CapabilityFirewall = ({ connection }: CapabilityFirewallProps) => {
         </div>
         <div className="capability-authority">
           <span>phase · {scenario.phase.toLowerCase()}</span>
-          <strong>{authorityState(scenario.stagedMitigation)}</strong>
+          <strong>{authorityState(scenario)}</strong>
         </div>
       </div>
       <div
@@ -66,6 +77,23 @@ export const CapabilityFirewall = ({ connection }: CapabilityFirewallProps) => {
         <small>{applyReason}</small>
         <span className="capability-human-only">HUMAN ONLY</span>
         <code>approve staged mitigation</code>
+        {scenario.externalExecution && (
+          <>
+            <span
+              className={
+                recordExternalAvailable
+                  ? "capability-open"
+                  : "capability-locked"
+              }
+            >
+              {recordExternalAvailable ? "AVAILABLE" : "LOCKED"}
+            </span>
+            <code>record_external_execution</code>
+            <small>
+              Synchronizes result evidence; it cannot invoke the target site.
+            </small>
+          </>
+        )}
       </div>
     </section>
   );

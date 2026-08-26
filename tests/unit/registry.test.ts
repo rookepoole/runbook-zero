@@ -35,6 +35,9 @@ describe("Gate 1 WebMCP registry seam", () => {
     expect(registeredTool?.name).toBe(GET_SYSTEM_SNAPSHOT_TOOL_NAME);
     expect(registeredTool?.annotations).toEqual({
       readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
       untrustedContentHint: false,
     });
     expect(handle.names).toEqual([GET_SYSTEM_SNAPSHOT_TOOL_NAME]);

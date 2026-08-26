@@ -1,6 +1,6 @@
 # Submission copy
 
-Version 6 draft for the WebMCP Challenge submission. The application is published and production-revalidated; replace only the final video URL after recording and complete the final submission freeze.
+Version 7 candidate copy for the WebMCP Challenge submission. Publish and production-revalidate the candidate, then replace the final video URL and complete the submission freeze.
 
 ## Title
 
@@ -8,11 +8,11 @@ Runbook Zero
 
 ## Tagline
 
-Human-authorized incident response on a shared WebMCP surface.
+Human-authorized incident response for the site open in Codex.
 
 ## Short description
 
-Runbook Zero is a WebMCP-native incident platform where a browser agent and a human investigate failures, compare mitigations, stage exact changes, preserve a visible human-only approval boundary, apply only what was approved, and verify deterministic recovery in the same live interface.
+Runbook Zero is an installable WebMCP incident product. Codex captures evidence from the site an operator is using; the Runbook Zero workbench investigates, stages, and visibly approves an exact action; Codex executes only that approval-bound action on the target origin and synchronizes verification evidence back into the shared interface.
 
 ## Inspiration
 
@@ -20,7 +20,9 @@ Operations consoles contain the context needed to resolve incidents, but agents 
 
 ## What it does
 
-Runbook Zero loads validated Incident Packs through a user-facing launcher. The Challenge Edition includes three complete incidents: the canonical checkout database-pool regression, a payment event queue backlog caused by reduced consumer concurrency, and a catalog cache stampede caused by a TTL regression. Operators can also download a working pack as JSON, customize it, and import it locally without uploading the file.
+Runbook Zero installs into Codex from the public repository. Its live-site skill gathers bounded browser evidence, inventories target-site WebMCP capabilities, and turns that evidence into a locally validated Incident Pack. The workbench visibly identifies the exact URL/origin, capture method, evidence provenance, and available action contract. When the target exposes no applicable WebMCP action, the product produces an operator handoff instead of pretending automation exists.
+
+The deterministic incident lab remains available with three complete packs: the canonical checkout database-pool regression, a payment event queue backlog caused by reduced consumer concurrency, and a catalog cache stampede caused by a TTL regression. These keep the exact judging flow reproducible while the same domain now handles real-site packs.
 
 The canonical `INC-042` scenario begins with checkout latency at 4.7 seconds after an inventory deployment reduced the database pool from 80 to 12. The agent uses page-defined tools to trace the request path, inspect telemetry and configuration, connect the recent change to 97% database saturation, compare mitigations under a no-rollback constraint, and stage a low-risk pool restoration.
 
@@ -28,7 +30,7 @@ The application then stops. The agent has no approval tool and `apply_approved_m
 
 ## How it uses WebMCP
 
-WebMCP is the application's control plane, not an add-on. Runbook Zero registers 12 real `document.modelContext` tools and derives the active subset from 11 state-machine phases. Stale registrations are aborted on phase or pack changes. The same contracts run every incident while their service, flow, mitigation, and exact approved-action schemas derive from the active pack. Tool calls focus and update the same connected topology, baseline-and-trend telemetry, exact change evidence, mitigation card, provenance timeline, and Capability Firewall the human sees. The tool surface itself communicates authority: stage and discard exist before approval; apply exists only for an exactly approved stage; verify and notes remain during recovery.
+WebMCP is the product's control plane, not an add-on. Runbook Zero defines 13 real `document.modelContext` contracts and derives the active subset from phase, authority, active pack, and execution mode. Stale registrations are aborted. Tool calls focus and update the same topology/surfaces, telemetry, evidence, mitigation card, provenance timeline, and Capability Firewall the human sees. Stage and discard exist before approval; apply exists only for an exactly approved stage. A live apply releases a receipt bound to the exact incident, seed, origin, tool, and JSON input; it does not falsely claim the unrelated site changed. After release, only `record_external_execution` can synchronize result evidence, and recovery thresholds still decide resolution.
 
 ## How it was built
 
@@ -36,6 +38,9 @@ WebMCP is the application's control plane, not an add-on. Runbook Zero registers
 - Real page-defined WebMCP through `document.modelContext.registerTool`
 - Pure guarded domain commands and queries
 - Validated Incident Pack v1 domain with three bundled scenarios and safe local JSON import
+- Repository-hosted Codex marketplace and installable live-site skill
+- Site Capture v1 contract and deterministic live Incident Pack builder
+- Origin-bound external WebMCP receipts and operator-handoff fallback
 - Pack-driven deterministic recovery engine with incident-specific thresholds
 - Dynamic AbortController-based tool registration
 - Three-depth operational information model and shared contextual Focus Mode
@@ -52,12 +57,12 @@ The hardest part was preserving human authority as a runtime capability invarian
 - Complete canonical J1–J4 incident journey through real WebMCP
 - One shared tool/domain layer proven across three incident classes
 - Direct pre-approval apply attempt demonstrably blocked
-- Dynamic 5/9/10/10/7 phase-dependent tool surfaces
+- Dynamic 5/9/10/10/7 tool surfaces plus a receipt-only live evidence capability
 - Visible Capability Firewall synchronized with the live registry and authority state
 - Visible, exact, human-only approval boundary
 - Deterministic recovery and one-click reset
 - Public ChatGPT Sites deployment and AGPL-3.0 repository
-- 57 unit/component tests, 3 browser tests, clean typecheck/lint/build, and real local multi-pack WebMCP evidence
+- 65 unit/component tests, 4 browser tests, clean typecheck/lint/build, plugin validation, local Codex installation, and preserved real multi-pack WebMCP evidence
 
 ## What we learned
 
@@ -65,11 +70,11 @@ WebMCP is most powerful when capability discovery is also policy. A browser agen
 
 ## What's next
 
-After the judged Challenge Edition is frozen, future work can add carefully designed adapters for real observability and remediation systems without weakening the same stage → human approval → exact apply → verification boundary. No commercial backend or production integration is part of this Challenge candidate.
+The next product step is to validate the installed skill across additional real origins, package more capture adapters, and add production integrations only where their permissions can preserve the same stage → visible human approval → exact origin-bound action → verification boundary.
 
 ## Testing instructions
 
-No account or credentials are required. Open the live app in ChatGPT's in-app browser or Chrome 149+ with WebMCP testing enabled, select **Reset Scenario**, and follow the five-step canonical flow in the repository README. Before clicking the visible human approval button, confirm the page shows `STAGED — NOT APPLIED`, 10 active tools, and no `apply_approved_mitigation`. After clicking approval, apply becomes available for the exact staged mitigation. The deterministic flow ends at `RESOLVED` and can be repeated from reset.
+No account or credentials are required for the public workbench. Install the Codex plugin using the two README commands, start a new task, open a target site in Codex or a connected ChatGPT Chrome extension, and ask **“Use Runbook Zero to investigate this site.”** For deterministic judging, reset `INC-042` and follow the five-step canonical flow. Before visible approval, confirm no `apply_approved_mitigation` exists; after approval, apply is available only for the exact stage.
 
 ## Links
 

@@ -1,6 +1,6 @@
 # WebMCP tool surface
 
-Runbook Zero defines 12 page tools shared by every Incident Pack. The active subset is derived from application phase; stale registrations are cancelled with an `AbortController` whenever the phase or active pack changes.
+Runbook Zero defines 13 page-tool contracts. The active subset is derived from application phase, approval state, and execution mode; stale registrations are cancelled with an `AbortController` whenever the phase or active pack changes.
 
 | Tool                        | Responsibility                                         | Availability                              |
 | --------------------------- | ------------------------------------------------------ | ----------------------------------------- |
@@ -14,6 +14,7 @@ Runbook Zero defines 12 page tools shared by every Incident Pack. The active sub
 | `stage_mitigation`          | Stage one candidate without applying it                | Open/investigating/candidate phases       |
 | `discard_staged_mitigation` | Invalidate the staged change and approval binding      | Staged/awaiting-approval only             |
 | `apply_approved_mitigation` | Apply the exact visibly human-approved mitigation      | **Approved only**                         |
+| `record_external_execution` | Bind target-site result evidence to a released receipt | Released live action only                 |
 | `verify_recovery`           | Compare live values with recovery thresholds           | Approved, mitigating, and resolved phases |
 | `add_incident_note`         | Add an agent-authored timeline note                    | Incident and recovery phases              |
 
@@ -25,7 +26,8 @@ Runbook Zero defines 12 page tools shared by every Incident Pack. The active sub
 | `INCIDENT_OPEN`, `INVESTIGATING`, `MITIGATION_CANDIDATES` |     9 | Adds hypothesis, comparison, staging, and notes        |
 | `MITIGATION_STAGED`, `AWAITING_HUMAN_APPROVAL`            |    10 | Adds discard; apply remains absent                     |
 | `APPROVED`                                                |    10 | Adds apply and verify; removes stage/discard           |
-| `MITIGATING`, `RESOLVED`, `POSTMORTEM_READY`              |     7 | Apply is removed; base reads, verify, and notes remain |
+| `MITIGATING` with released live action                    |     8 | Adds external result synchronization; apply is removed |
+| Other `MITIGATING`, `RESOLVED`, `POSTMORTEM_READY`        |     7 | Apply is removed; base reads, verify, and notes remain |
 
 ## What is deliberately not a tool
 
@@ -39,6 +41,7 @@ Tool names and responsibilities do not change between packs. Their JSON schemas 
 - `trace_request_path` enumerates only active flow IDs;
 - `stage_mitigation` enumerates only candidates defined by the active pack;
 - `apply_approved_mitigation` is absent before approval and, when registered, enumerates only the exact approved mitigation ID.
+- `record_external_execution` is absent until a live action receipt is released and its schema narrows origin/tool identifiers to that exact receipt.
 
 Switching packs aborts the old registrations even if the new incident begins in the same phase. This prevents stale scenario schemas from remaining discoverable.
 
@@ -50,3 +53,5 @@ Switching packs aborts the old registrations even if the new incident begins in 
 - A contradictory state with phase `APPROVED` but no approved staged object still excludes apply.
 - Discard invalidates the staged object and any approval relationship.
 - Repeated apply is impossible because the state leaves `APPROVED` and the tool registration is aborted immediately.
+- External result evidence from a different origin or tool is rejected even if a client bypasses schema validation.
+- A successful external call does not resolve the incident unless the supplied post-action signals pass every recovery threshold.

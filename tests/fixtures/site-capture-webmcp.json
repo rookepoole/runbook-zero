@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "sessionId": "SITE-CHECKOUT-001",
+  "capturedAt": "2026-08-26T14:00:00.000Z",
+  "capturedBy": "codex-browser-extension",
+  "target": {
+    "url": "https://shop.example.test/orders/123",
+    "title": "Order 123",
+    "symptom": "Order confirmation remains pending.",
+    "customerImpact": "The operator cannot confirm whether the order completed.",
+    "severity": "SEV-2"
+  },
+  "signals": {
+    "pageLoadMs": 2800,
+    "resourceP95Ms": 1100,
+    "failedRequests": 2,
+    "resourceCount": 40,
+    "consoleErrorCount": 1,
+    "interactiveElementCount": 20
+  },
+  "webMcpTools": [
+    {
+      "name": "retry_order_confirmation",
+      "title": "Retry order confirmation",
+      "description": "Retry confirmation for one order.",
+      "readOnly": false,
+      "destructive": true
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-PENDING",
+      "kind": "browser",
+      "summary": "The visible order status is pending confirmation.",
+      "surface": "page-runtime"
+    }
+  ],
+  "candidateActions": [
+    {
+      "id": "M-RETRY-CONFIRMATION",
+      "title": "Retry this order confirmation",
+      "description": "Invoke the site's existing retry tool for order 123.",
+      "risk": "medium",
+      "reversible": false,
+      "targetSurface": "page-runtime",
+      "webMcp": {
+        "toolName": "retry_order_confirmation",
+        "input": {
+          "orderId": "123"
+        }
+      },
+      "expected": {
+        "pageLoadMs": 1500,
+        "errorRatePct": 0
+      },
+      "assumptions": [
+        "The tool remains registered after approval.",
+        "The order status can be read again after the retry."
+      ]
+    }
+  ]
+}

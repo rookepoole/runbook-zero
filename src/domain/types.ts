@@ -15,6 +15,8 @@ export interface ServiceTelemetry {
 
 export type PrimitiveConfigValue = string | number | boolean | null;
 export type ServiceConfig = Record<string, PrimitiveConfigValue>;
+export type JsonValue =
+  PrimitiveConfigValue | JsonValue[] | { [key: string]: JsonValue };
 
 export interface ChangeDiffValue {
   from: PrimitiveConfigValue;
@@ -35,10 +37,49 @@ export interface ChangeRecord {
 
 export interface EvidenceRecord {
   id: string;
-  kind: "telemetry" | "change" | "trace" | "configuration";
+  kind:
+    "telemetry" | "change" | "trace" | "configuration" | "browser" | "webmcp";
   summary: string;
   serviceIds: ServiceId[];
 }
+
+export interface SiteToolDescriptor {
+  name: string;
+  title?: string;
+  description?: string;
+  readOnly: boolean;
+  destructive: boolean;
+}
+
+export type IncidentSource =
+  | {
+      kind: "bundled-simulation" | "imported-simulation";
+      label: string;
+    }
+  | {
+      kind: "live-site";
+      url: string;
+      origin: string;
+      title: string;
+      capturedAt: string;
+      capturedBy: "codex-browser-extension" | "codex-browser" | "manual";
+      baselineKind: "reference-budget" | "measured-baseline";
+      observedWebMCPTools: SiteToolDescriptor[];
+    };
+
+export type MitigationExecution =
+  | { mode: "simulation" }
+  | {
+      mode: "external-webmcp";
+      targetOrigin: string;
+      toolName: string;
+      input: Record<string, JsonValue>;
+    }
+  | {
+      mode: "operator-handoff";
+      targetOrigin: string;
+      instructions: string[];
+    };
 
 export interface Incident {
   id: string;
@@ -65,7 +106,9 @@ export type MitigationKind =
   | "config-restore"
   | "cache-degrade-mode"
   | "traffic-shift"
-  | "capacity-adjustment";
+  | "capacity-adjustment"
+  | "site-action"
+  | "operator-handoff";
 
 export type MitigationId = string;
 
@@ -89,6 +132,7 @@ export interface MitigationOption {
   risk: "low" | "medium" | "high";
   reversible: boolean;
   assumptions: string[];
+  execution?: MitigationExecution;
 }
 
 export type TelemetryUpdate = Partial<
@@ -107,12 +151,28 @@ export interface MitigationEffect {
 export interface StagedMitigation {
   id: MitigationId;
   option: MitigationOption;
-  status: "staged" | "approved" | "applied" | "discarded";
+  status: "staged" | "approved" | "applied" | "released" | "discarded";
   incidentId: string;
   scenarioSeed: number;
   stagedAt: string;
   approvedAt?: string;
   appliedAt?: string;
+}
+
+export interface ExternalExecutionReceipt {
+  receiptId: string;
+  incidentId: string;
+  scenarioSeed: number;
+  mitigationId: MitigationId;
+  targetOrigin: string;
+  mode: "external-webmcp" | "operator-handoff";
+  toolName?: string;
+  input?: Record<string, JsonValue>;
+  instructions?: string[];
+  status: "released" | "succeeded" | "failed";
+  releasedAt: string;
+  observedAt?: string;
+  resultSummary?: string;
 }
 
 export interface TimelineEvent {
@@ -186,6 +246,7 @@ export interface IncidentPack {
   defaultFlow: UserFlow;
   eventBaseTimestamp: string;
   recoveryTimestamp: string;
+  source?: IncidentSource;
   incident: Omit<
     Incident,
     | "status"
@@ -218,6 +279,7 @@ export interface IncidentPackMetadata {
   agentPrompt: string;
   impactPath: string;
   topologyTitle: string;
+  source: IncidentSource;
 }
 
 export interface MitigationComparison {
@@ -253,6 +315,7 @@ export interface ScenarioState {
   mitigationEffects: Record<MitigationId, MitigationEffect>;
   mitigationComparison: MitigationComparison | null;
   stagedMitigation: StagedMitigation | null;
+  externalExecution: ExternalExecutionReceipt | null;
   configTargetServiceId: ServiceId;
   systemConfig: ServiceConfig;
   baselineConfig: ServiceConfig;

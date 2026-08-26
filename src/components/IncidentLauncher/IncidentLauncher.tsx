@@ -103,6 +103,28 @@ export const IncidentLauncher = ({ open, onClose }: IncidentLauncherProps) => {
           Every pack runs through the same domain commands, WebMCP tools,
           capability firewall, and human approval boundary.
         </p>
+        <section className="live-import-guide" aria-label="Connect a live site">
+          <div>
+            <span className="agent-chip">LIVE SITE · CODEX PLUGIN</span>
+            <h3>Bring the website you are actually using</h3>
+            <p>
+              The installable plugin captures bounded evidence from the site
+              open in Codex or the Chrome extension, then builds a locally
+              importable pack with the target origin and exact available
+              actions.
+            </p>
+          </div>
+          <div className="live-import-guide__commands">
+            <code>codex plugin marketplace add rookepoole/runbook-zero</code>
+            <code>codex plugin add runbook-zero@runbook-zero</code>
+            <blockquote>Use Runbook Zero to investigate this site.</blockquote>
+          </div>
+          <small>
+            Site content is treated as untrusted evidence. Cross-origin action
+            execution remains in Codex and is released only after visible human
+            approval here.
+          </small>
+        </section>
         <details className="pack-contract">
           <summary>Incident Pack v1 contract</summary>
           <p>
@@ -120,8 +142,18 @@ export const IncidentLauncher = ({ open, onClose }: IncidentLauncherProps) => {
               key={pack.packId}
             >
               <div>
-                <span className={pack.canonical ? "agent-chip" : "mono-label"}>
-                  {pack.canonical ? "CANONICAL DEMO" : "INCIDENT PACK"}
+                <span
+                  className={
+                    pack.canonical || pack.source?.kind === "live-site"
+                      ? "agent-chip"
+                      : "mono-label"
+                  }
+                >
+                  {pack.source?.kind === "live-site"
+                    ? "LIVE SITE"
+                    : pack.canonical
+                      ? "CANONICAL DEMO"
+                      : "INCIDENT PACK"}
                 </span>
                 {pack.packId === activePackId && (
                   <span className="active-pack-chip">ACTIVE</span>
@@ -133,6 +165,9 @@ export const IncidentLauncher = ({ open, onClose }: IncidentLauncherProps) => {
                 {pack.incident.id} · seed {pack.seed} ·{" "}
                 {Object.keys(pack.services).length} services
               </small>
+              {pack.source?.kind === "live-site" && (
+                <small>{pack.source.origin}</small>
+              )}
               <div className="pack-card-actions">
                 <button type="button" onClick={() => downloadPack(pack)}>
                   Download JSON
@@ -153,7 +188,7 @@ export const IncidentLauncher = ({ open, onClose }: IncidentLauncherProps) => {
         <div className="incident-import">
           <div>
             <span className="section-label">Local JSON import</span>
-            <strong>Bring your own deterministic Incident Pack</strong>
+            <strong>Import a generated live-site or deterministic pack</strong>
             <small>
               Validated locally in this browser. The file is never uploaded.
             </small>

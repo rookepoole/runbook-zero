@@ -182,7 +182,11 @@ export const TelemetryPanel = () => {
         </div>
         <div>
           <span className="section-label">Baseline model</span>
-          <code>known-good deterministic seed {scenario.seed}</code>
+          <code>
+            {scenario.pack.source.kind === "live-site"
+              ? `${scenario.pack.source.baselineKind.replaceAll("-", " ")} · capture ${scenario.seed}`
+              : `known-good deterministic seed ${scenario.seed}`}
+          </code>
         </div>
       </div>
       {relatedChange && (

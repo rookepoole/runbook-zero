@@ -122,7 +122,10 @@ export const TimelinePanel = () => {
             <strong>{event.title}</strong>
             <p>{event.detail}</p>
             <small>
-              {event.type.toUpperCase()} · deterministic scenario event
+              {event.type.toUpperCase()} ·{" "}
+              {scenario.pack.source.kind === "live-site"
+                ? "captured evidence event"
+                : "deterministic scenario event"}
             </small>
           </li>
         ))}

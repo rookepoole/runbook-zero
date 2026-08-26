@@ -4,6 +4,7 @@ import "./App.css";
 import { CapabilityFirewall } from "./components/CapabilityFirewall/CapabilityFirewall";
 import { IncidentCommand } from "./components/IncidentCommand/IncidentCommand";
 import { IncidentLauncher } from "./components/IncidentLauncher/IncidentLauncher";
+import { LiveSiteBridge } from "./components/LiveSiteBridge/LiveSiteBridge";
 import { TelemetryPanel } from "./components/TelemetryPanel/TelemetryPanel";
 import { TimelinePanel } from "./components/TimelinePanel/TimelinePanel";
 import { TopologyPanel } from "./components/TopologyPanel/TopologyPanel";
@@ -91,6 +92,10 @@ function App() {
         <WebMCPStatus connection={connection} />
       </header>
       <main>
+        <LiveSiteBridge
+          source={scenario.pack.source}
+          onOpenLauncher={() => setLauncherOpen(true)}
+        />
         <div className="workspace-context">
           <div>
             <span>LIVE INCIDENT WORKSPACE</span>
@@ -125,13 +130,15 @@ function App() {
           <div>
             <span>Authority</span>
             <strong>
-              {scenario.stagedMitigation?.status === "applied"
-                ? "Applied after approval"
-                : scenario.stagedMitigation?.status === "approved"
-                  ? "Human approved"
-                  : scenario.stagedMitigation?.status === "staged"
-                    ? "Awaiting human"
-                    : "No change staged"}
+              {scenario.stagedMitigation?.status === "released"
+                ? "Released to target site"
+                : scenario.stagedMitigation?.status === "applied"
+                  ? "Applied after approval"
+                  : scenario.stagedMitigation?.status === "approved"
+                    ? "Human approved"
+                    : scenario.stagedMitigation?.status === "staged"
+                      ? "Awaiting human"
+                      : "No change staged"}
             </strong>
           </div>
         </div>

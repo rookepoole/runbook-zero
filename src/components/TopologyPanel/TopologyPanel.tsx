@@ -35,7 +35,11 @@ export const TopologyPanel = () => {
     >
       <div className="workspace-panel__heading">
         <div>
-          <p className="eyebrow">Service topology</p>
+          <p className="eyebrow">
+            {scenario.pack.source.kind === "live-site"
+              ? "Observed surfaces"
+              : "Service topology"}
+          </p>
           <h2 id="topology-heading">{scenario.pack.topologyTitle}</h2>
         </div>
         <div className="panel-actions">

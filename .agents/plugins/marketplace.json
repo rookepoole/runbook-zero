@@ -1,0 +1,20 @@
+{
+  "name": "runbook-zero",
+  "interface": {
+    "displayName": "Runbook Zero"
+  },
+  "plugins": [
+    {
+      "name": "runbook-zero",
+      "source": {
+        "source": "local",
+        "path": "./plugins/runbook-zero"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

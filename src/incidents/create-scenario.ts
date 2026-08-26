@@ -7,6 +7,12 @@ export const createScenarioFromPack = (
   sourcePack: IncidentPack,
 ): ScenarioState => {
   const pack = cloneIncidentPack(sourcePack);
+  const source = pack.source ?? {
+    kind: pack.canonical
+      ? ("bundled-simulation" as const)
+      : ("imported-simulation" as const),
+    label: pack.canonical ? "Canonical deterministic demo" : "Incident Pack",
+  };
   return {
     id: pack.incident.id,
     seed: pack.seed,
@@ -18,6 +24,7 @@ export const createScenarioFromPack = (
       agentPrompt: pack.agentPrompt,
       impactPath: pack.impactPath,
       topologyTitle: pack.topologyTitle,
+      source,
     },
     phase: "INCIDENT_OPEN",
     phaseHistory: ["BOOT", "HEALTHY", "INCIDENT_OPEN"],
@@ -35,6 +42,7 @@ export const createScenarioFromPack = (
     mitigationEffects: pack.mitigationEffects,
     mitigationComparison: null,
     stagedMitigation: null,
+    externalExecution: null,
     configTargetServiceId: pack.configTargetServiceId,
     systemConfig: pack.systemConfig,
     baselineConfig: pack.baselineConfig,

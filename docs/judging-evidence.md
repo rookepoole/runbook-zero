@@ -495,3 +495,44 @@ Artifact: `docs/evidence/gate-9-live-rehearsal-receipt.json`
 ### Claim boundary
 
 The repository package and public version 6 are ready. Gate 9 is not passed, and no submission/freeze is claimed, until fresh-viewer acceptance, the required public audio video, Devpost confirmation, and the final tag exist.
+
+## Version 7 — Installable live-site product checkpoint
+
+Status: **IMPLEMENTED / TESTED LOCALLY / DEPLOYMENT PENDING**
+
+Date: 2026-08-26
+
+### Product evidence
+
+- repository-hosted marketplace and Codex plugin `runbook-zero@runbook-zero` version `0.7.0`;
+- plugin manifest passed the official local plugin validator;
+- local marketplace add and plugin installation succeeded, with the skill, capture contract, and builder present in the Codex plugin cache;
+- Site Capture v1 distinguishes the target URL/origin, capture method, untrusted evidence, observed WebMCP tools, browser signals, exact candidate actions, and operator-handoff fallback;
+- the deterministic builder produced byte-equivalent domain data for repeated input and generated a valid no-WebMCP operator-handoff pack;
+- live Incident Packs visibly identify the exact origin, observed capability count, capture time/method, and reference-budget versus measured-baseline provenance;
+- external apply releases an exact incident/seed/mitigation/origin/tool/input receipt instead of claiming the Runbook Zero origin changed an unrelated site;
+- `record_external_execution` is dynamically registered only while that receipt is awaiting evidence; mismatched origin/tool evidence is rejected, failures remain unresolved, and success still requires recovery thresholds.
+
+### Local verification
+
+```text
+plugin validator        PASS
+Codex marketplace add   PASS
+Codex plugin install    PASS — enabled, version 0.7.0
+npm run format:check    PASS
+npm run typecheck       PASS
+npm run lint            PASS
+npm test                PASS — 17 files, 65 tests
+npm run test:e2e        PASS — 4 Chromium tests
+npm run build           PASS
+npm audit               PASS — 0 vulnerabilities
+git diff --check        PASS
+```
+
+The browser suite includes both the unchanged canonical `INC-042` reset-to-resolution flow and the live-site receipt lifecycle. The Playwright harness is regression evidence for production code, not a substitute for real extension WebMCP evidence.
+
+### Current claim boundary
+
+- Public Sites version 6 remains the deployed baseline until version 7 is saved, publicly deployed, and checked on its production origin.
+- The implementation session did not expose a connected Chrome extension, so real Chrome live-origin capture/execution remains **BLOCKED**. No in-app-browser or Playwright evidence is relabeled as Chrome evidence.
+- The repository is not tagged or frozen, and final video/Devpost/fresh-viewer blockers remain.
