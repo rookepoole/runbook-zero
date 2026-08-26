@@ -143,7 +143,7 @@ Status: **TESTED**
 
 Date: 2026-08-25
 
-Implementation commit: `791552e49d51ea7007e11999b0cad6eb37ae6b5f`
+Implementation commit: `ad83d3e25d4770ae018a3d32b4373efdcfc32ace`
 
 ### Real WebMCP J1–J2 replay
 
@@ -179,7 +179,7 @@ Status: **TESTED**
 
 Date: 2026-08-25
 
-Implementation commit: `791552e49d51ea7007e11999b0cad6eb37ae6b5f`
+Implementation commit: `ad83d3e25d4770ae018a3d32b4373efdcfc32ace`
 
 ### Real browser evidence
 

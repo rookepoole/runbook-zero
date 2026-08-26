@@ -3,7 +3,7 @@
   "title": "Canonical agent diagnosis",
   "status": "TESTED",
   "date": "2026-08-25",
-  "implementationCommit": "791552e49d51ea7007e11999b0cad6eb37ae6b5f",
+  "implementationCommit": "ad83d3e25d4770ae018a3d32b4373efdcfc32ace",
   "environment": {
     "browser": "ChatGPT Codex in-app browser",
     "origin": "http://127.0.0.1:4173/",
