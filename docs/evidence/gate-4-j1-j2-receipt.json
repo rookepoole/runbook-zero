@@ -1,0 +1,57 @@
+{
+  "gate": 4,
+  "title": "Canonical agent diagnosis",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "implementationCommit": "791552e49d51ea7007e11999b0cad6eb37ae6b5f",
+  "environment": {
+    "browser": "ChatGPT Codex in-app browser",
+    "origin": "http://127.0.0.1:4173/",
+    "transport": "real page-defined WebMCP"
+  },
+  "journey": {
+    "snapshot": { "checkoutP95Ms": 4700, "checkoutErrorRatePct": 17 },
+    "tracePrimaryPath": [
+      "edge",
+      "gateway",
+      "checkout",
+      "inventory",
+      "inventory-db"
+    ],
+    "inventoryDbSignals": {
+      "saturationPct": 97,
+      "baselineSaturationPct": 45,
+      "p95LatencyMs": 3910,
+      "baselineP95LatencyMs": 35
+    },
+    "causalChange": {
+      "id": "CHG-271",
+      "version": "inventory-v2.7.0",
+      "dbPoolSize": { "from": 80, "to": 12 }
+    },
+    "constraint": "rollback excluded",
+    "rankedCandidates": ["M-POOL-RESTORE", "M-CACHE-DEGRADE"],
+    "stagedMitigation": "M-POOL-RESTORE",
+    "preApprovalApply": {
+      "blocked": true,
+      "reason": "tool unavailable in awaiting-approval snapshot"
+    }
+  },
+  "visiblePostconditions": [
+    "AGENT TRACE · checkout",
+    "evidence-backed working hypothesis",
+    "inventory-db 97% saturation",
+    "dbPoolSize 80 → 12 deployment evidence",
+    "STAGED — NOT APPLIED",
+    "dbPoolSize 12 → 80",
+    "Approve staged mitigation"
+  ],
+  "checks": {
+    "typecheck": "PASS",
+    "format": "PASS",
+    "lint": "PASS",
+    "tests": "PASS — 11 files / 39 tests",
+    "build": "PASS",
+    "diffCheck": "PASS"
+  }
+}

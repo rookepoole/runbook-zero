@@ -1,0 +1,41 @@
+{
+  "gate": 5,
+  "title": "Human approval boundary",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "implementationCommit": "791552e49d51ea7007e11999b0cad6eb37ae6b5f",
+  "environment": {
+    "browser": "ChatGPT Codex in-app browser",
+    "origin": "http://127.0.0.1:4173/"
+  },
+  "beforeApproval": {
+    "phase": "AWAITING_HUMAN_APPROVAL",
+    "visibleLabel": "STAGED — NOT APPLIED",
+    "applyToolAvailable": false,
+    "inventoryConfig": {
+      "inventoryRelease": "inventory-v2.7.0",
+      "inventoryDbPoolSize": 12,
+      "staleInventoryCacheSeconds": 0
+    }
+  },
+  "approval": {
+    "mechanism": "visible human-only button",
+    "webMcpApprovalToolExists": false,
+    "mitigationId": "M-POOL-RESTORE",
+    "incidentId": "INC-042",
+    "scenarioSeed": 42,
+    "timelineActor": "human"
+  },
+  "afterApproval": {
+    "phase": "APPROVED",
+    "visibleLabel": "✓ HUMAN APPROVED",
+    "applyToolAvailable": true,
+    "inventoryConfig": {
+      "inventoryRelease": "inventory-v2.7.0",
+      "inventoryDbPoolSize": 12,
+      "staleInventoryCacheSeconds": 0
+    },
+    "productionMutation": false
+  },
+  "claimBoundary": "Establishes real visible human approval and non-mutation on approval. Does not establish applied recovery or deployed-origin behavior."
+}

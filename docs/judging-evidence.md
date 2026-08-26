@@ -136,3 +136,63 @@ git diff --check      PASS
 ### Claim boundary
 
 Gate 3 proves the exact dynamic registry and its cleanup behavior in automated lifecycle tests, plus real WebMCP registration for the initial incident phase. Real-browser J1–J2 diagnosis and the visible human approval transition remain Gates 4–5.
+
+## Gate 4 — Canonical agent diagnosis
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Implementation commit: `791552e49d51ea7007e11999b0cad6eb37ae6b5f`
+
+### Real WebMCP J1–J2 replay
+
+The canonical journey was run on `http://127.0.0.1:4173/` in the ChatGPT Codex in-app browser using the page-defined WebMCP tools:
+
+1. `get_system_snapshot` returned checkout P95 4,700 ms, 17% errors, and four unhealthy services.
+2. `trace_request_path({ flow: "checkout" })` returned `edge → gateway → checkout → inventory → inventory-db` plus the payments, cache, and event-queue branches.
+3. `query_signals({ serviceId: "inventory-db", window: "30m" })` returned 97% saturation versus a 45% baseline, 3,910 ms P95 versus 35 ms, and 15.9% errors versus 0.1%.
+4. `get_recent_changes({ serviceId: "inventory", since: "60m" })` returned `CHG-271`: `inventory-v2.7.0` changed `dbPoolSize` from 80 to 12.
+5. `set_working_hypothesis` recorded the pool reduction and downstream checkout propagation on the visible workspace.
+6. `compare_mitigations({ excludeKinds: ["rollback"], optimizeFor: "lowest-risk" })` returned only `M-POOL-RESTORE` and `M-CACHE-DEGRADE`, ranking pool restoration first at 420 ms predicted P95 and 0.8% errors.
+7. `stage_mitigation({ mitigationId: "M-POOL-RESTORE" })` produced the exact staged binding for `INC-042`, seed 42.
+8. A real WebMCP call to `apply_approved_mitigation` from the awaiting-approval tool snapshot failed because the tool was unavailable.
+
+The same live page visibly showed the traced dependency path, agent-authored hypothesis, inventory-db telemetry and config evidence, agent timeline events, `STAGED — NOT APPLIED`, the exact `dbPoolSize 12 → 80` diff, risk, reversibility, and human controls.
+
+### Automated checks
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm run test          PASS — 11 files, 39 tests
+npm run build         PASS
+git diff --check      PASS
+```
+
+Artifact: `docs/evidence/gate-4-j1-j2-receipt.json`
+
+## Gate 5 — Human approval boundary
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Implementation commit: `791552e49d51ea7007e11999b0cad6eb37ae6b5f`
+
+### Real browser evidence
+
+- Before approval, the staged card visibly read `STAGED — NOT APPLIED`, the apply tool was absent, and an invocation attempt was rejected as unavailable.
+- The visible **Approve staged mitigation** button was clicked directly in the page; no approval WebMCP tool exists.
+- The card changed to `✓ HUMAN APPROVED`, the timeline added `M-POOL-RESTORE approved by human` with `HUMAN` provenance, and the application entered `APPROVED`.
+- The refreshed real WebMCP surface added `apply_approved_mitigation` for the exact approved mitigation.
+- `inspect_service({ serviceId: "inventory" })` returned the identical pre/post-approval production configuration: release `inventory-v2.7.0`, pool size 12, stale-cache window 0. Telemetry also remained incident-state; approval did not apply anything.
+
+Automated UI/lifecycle tests additionally assert the staged diff, pre-approval absence of apply, human approval event, approved label, and post-click apply registration.
+
+Artifact: `docs/evidence/gate-5-approval-receipt.json`
+
+### Claim boundary
+
+Gates 4–5 establish local real-browser J1–J3 through visible approval. They do not yet claim applied recovery, the full reset-to-resolved J1–J4 E2E, deployment, or final visual/accessibility acceptance.
