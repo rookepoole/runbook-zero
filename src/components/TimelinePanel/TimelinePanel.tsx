@@ -5,6 +5,13 @@ import { useRunbookStore } from "../../state/store";
 
 type TimelineFilter = "all" | TimelineEvent["actor"] | "change";
 
+const emptyFilterMessage: Partial<Record<TimelineFilter, string>> = {
+  agent:
+    "No agent actions yet. Start with the agent brief in Incident command.",
+  human:
+    "No human actions yet. Human approval appears after an agent stages a mitigation.",
+};
+
 export const TimelinePanel = () => {
   const scenario = useRunbookStore((state) => state.scenario);
   const focusedSurface = useRunbookStore((state) => state.focusedSurface);
@@ -115,7 +122,10 @@ export const TimelinePanel = () => {
         ))}
       </ol>
       {events.length === 0 && !showChange && (
-        <p className="empty-state">No {filter} events in this incident.</p>
+        <p className="empty-state empty-state--guidance">
+          {emptyFilterMessage[filter] ??
+            `No ${filter} evidence is available in this incident state.`}
+        </p>
       )}
     </section>
   );

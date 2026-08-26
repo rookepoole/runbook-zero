@@ -516,6 +516,52 @@ main {
   margin: 0.55rem 0 0;
 }
 
+.agent-start-card {
+  background: rgba(98, 168, 255, 0.045);
+  border: 1px solid rgba(98, 168, 255, 0.3);
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  padding: 0.65rem;
+}
+
+.agent-start-card__heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.agent-start-card p,
+.agent-start-card blockquote,
+.agent-start-card small {
+  margin: 0;
+}
+
+.agent-start-card p {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+.agent-start-card blockquote {
+  border-left: 2px solid var(--agent);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+  padding-left: 0.65rem;
+}
+
+.agent-start-card small {
+  color: var(--text-secondary);
+  font-size: 0.67rem;
+  line-height: 1.45;
+}
+
+.empty-state--guidance {
+  border-left: 2px solid var(--agent);
+  padding-left: 0.6rem;
+}
+
 .candidate-list {
   display: grid;
   gap: 0.45rem;

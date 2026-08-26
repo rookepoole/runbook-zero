@@ -180,8 +180,9 @@ test("canonical reset-to-resolved journey preserves human authority", async ({
   await page.getByRole("button", { name: "Reset Scenario" }).click();
   await expect(page.getByText("INCIDENT OPEN")).toBeVisible();
   await expect(page.getByText("4,700 ms").first()).toBeVisible();
+  await expect(page.getByText("START WITH YOUR AGENT")).toBeVisible();
   await expect(
-    page.getByText("Waiting for evidence-backed diagnosis."),
+    page.getByText(/Checkout latency spiked after this morning's deployment/),
   ).toBeVisible();
   await expect.poll(() => toolNames(page)).toHaveLength(9);
   expect(consoleErrors).toEqual([]);
@@ -214,6 +215,14 @@ test("target layouts, keyboard access, and reduced motion remain usable", async 
 
   const bodyText = await page.locator("body").innerText();
   expect(bodyText).not.toMatch(/TODO|lorem ipsum|placeholder/i);
+
+  await page.getByRole("button", { name: "agent", exact: true }).click();
+  await expect(
+    page.getByText(
+      "No agent actions yet. Start with the agent brief in Incident command.",
+    ),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "all", exact: true }).click();
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(page.getByText("Checkout dependency graph")).toBeVisible();

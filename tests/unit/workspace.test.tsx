@@ -56,6 +56,22 @@ describe("shared incident workspace", () => {
     expect(
       screen.getAllByRole("img", { name: /trend from baseline/i }),
     ).toHaveLength(4);
+    expect(screen.getByText("START WITH YOUR AGENT")).toBeVisible();
+    expect(
+      screen.getByText(
+        /Checkout latency spiked after this morning's deployment/,
+      ),
+    ).toBeVisible();
+  });
+
+  it("explains empty provenance filters and points back to the agent brief", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "agent" }));
+    expect(
+      screen.getByText(
+        "No agent actions yet. Start with the agent brief in Incident command.",
+      ),
+    ).toBeVisible();
   });
 
   it("supports inspectable evidence and keyboard-dismissable focus mode", async () => {
