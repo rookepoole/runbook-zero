@@ -1,16 +1,10 @@
 # Runbook Zero judging evidence
 
-## Authority package provenance
-
-Date: 2026-08-25  
-Package: `RUNBOOK_ZERO_PARS_DEEP_v1_2_COMMERCIAL_ROADMAP.zip`  
-Result: the four files tracked by `FREEZE_MANIFEST_v1_2.json` matched the packaged byte counts and SHA-256 hashes exactly before legitimate ledger updates. The manifest remains the immutable package-baseline receipt; later master-ledger and continuation-package edits are expected to change those two working-file hashes.
-
 ## Gate 1 — First real WebMCP round trip
 
 Status: **TESTED**  
 Date: 2026-08-25  
-Implementation commit: `b4b2115a5248b845f3d7157712caf9f740ed6e5d`  
+Implementation commit: `6b7e2e067614415da74765ee340f8d37de1a39a7`
 Application origin: `http://127.0.0.1:4173/`  
 WebMCP environment: ChatGPT Codex in-app browser  
 Local toolchain: Node.js `v24.18.0`, npm `11.16.0`, React `19.2.8`, Vite `8.2.2`

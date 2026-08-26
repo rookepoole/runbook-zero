@@ -30,10 +30,6 @@ npm run build
 
 The Challenge Edition will never expose `apply_approved_mitigation` until the exact staged mitigation has received visible human approval. Staging is not applying, and agent proposal is not human approval.
 
-## Project authority
-
-`PARS_DEEP_MASTER_BUILD_PLAN.md` is the authoritative architecture and implementation ledger. `CODEX_CONTINUATION_PACKAGE.md` is the synchronized operational handoff.
-
 ## License
 
 Runbook Zero Challenge Edition is licensed under the GNU Affero General Public License v3.0. See `LICENSE`.

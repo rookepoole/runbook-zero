@@ -3,7 +3,7 @@
   "title": "First real WebMCP round trip",
   "status": "TESTED",
   "date": "2026-08-25",
-  "implementationCommit": "b4b2115a5248b845f3d7157712caf9f740ed6e5d",
+  "implementationCommit": "6b7e2e067614415da74765ee340f8d37de1a39a7",
   "environment": {
     "browser": "ChatGPT Codex in-app browser",
     "origin": "http://127.0.0.1:4173/",
