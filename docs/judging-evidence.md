@@ -232,3 +232,51 @@ Artifact: `docs/evidence/gate-6-resolution-receipt.json`
 ### Claim boundary
 
 Gate 6 establishes the complete local real-browser J1–J4 workflow. Gate 7 execution/polish, full browser E2E automation, deployed-origin behavior, and submission freeze remain outstanding.
+
+## Gate 7 — Execution and polish
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Implementation commit: `9bb1bc091e31db8643ebbef73a8652f0ce317abc`
+
+### Browser automation
+
+Playwright now replays the entire reset-to-resolved workflow in Chromium through a test-only `document.modelContext` harness that exercises the production registry and real tool executors. It asserts:
+
+- the exact 9-tool initial surface;
+- snapshot, checkout trace, inventory-db signals, and the 80 → 12 change record;
+- the no-rollback comparison and exact `M-POOL-RESTORE` staging;
+- absence of apply before approval;
+- keyboard-triggered visible human approval and post-approval apply exposure;
+- immediate apply removal after invocation;
+- automatic five-second resolution, passing read-only verification, and incident note;
+- deterministic reset back to 4,700 ms P95 and the 9-tool initial surface;
+- zero console/page errors throughout the canonical flow.
+
+A second browser test checks 1280×720 and 1440×900 layouts, horizontal overflow, reduced-motion CSS, keyboard focus/reset activation, required workspace regions, and absence of placeholder text.
+
+This automation supplements—but does not replace—the real supported-browser WebMCP evidence recorded for Gates 1 and 3–6.
+
+### Judge-first visual acceptance
+
+Manual review of the fresh 1440×900 incident, staged, approved, and resolved surfaces answered all five frozen questions without auxiliary explanation: affected flow/service, severity, recent change, mitigation state, and Agent/Human/System provenance. Result: **5/5**.
+
+### Full check result
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm run test          PASS — 12 files, 40 tests
+npm run test:e2e      PASS — 2 Chromium tests
+npm run build         PASS
+git diff --check      PASS
+```
+
+Artifact: `docs/evidence/gate-7-execution-receipt.json`
+
+### Claim boundary
+
+Gate 7 establishes local execution and presentation readiness. Deployment, deployed-origin WebMCP validation, submission documentation, final SHA/tag, and artifact freeze remain Gates 8–9.
