@@ -48,6 +48,14 @@ const callTool = <T>(
     { name, input },
   );
 
+const captureSubmissionAsset = async (page: Page, name: string) => {
+  if (process.env.CAPTURE_SUBMISSION_ASSETS !== "1") return;
+  await page.screenshot({
+    path: `docs/screenshots/${name}.png`,
+    fullPage: true,
+  });
+};
+
 test.beforeEach(async ({ page }) => {
   await installModelContext(page);
 });
@@ -65,6 +73,7 @@ test("canonical reset-to-resolved journey preserves human authority", async ({
   await expect(page.getByText("WebMCP Connected")).toBeVisible();
   await expect(page.getByText("SEV-2")).toBeVisible();
   await expect.poll(() => toolNames(page)).toHaveLength(9);
+  await captureSubmissionAsset(page, "submission-incident-open");
 
   const snapshot = await callTool<{
     incident: { id: string };
@@ -129,6 +138,7 @@ test("canonical reset-to-resolved journey preserves human authority", async ({
   await expect
     .poll(() => toolNames(page))
     .not.toContain("apply_approved_mitigation");
+  await captureSubmissionAsset(page, "submission-staged-not-applied");
 
   await page.getByRole("button", { name: "Approve staged mitigation" }).click();
   await expect(page.getByText("✓ HUMAN APPROVED")).toBeVisible();
@@ -138,6 +148,7 @@ test("canonical reset-to-resolved journey preserves human authority", async ({
   await expect(
     page.getByText("M-POOL-RESTORE approved by human"),
   ).toBeVisible();
+  await captureSubmissionAsset(page, "submission-human-approved");
 
   const applied = await callTool<{ phase: string }>(
     page,
@@ -164,6 +175,7 @@ test("canonical reset-to-resolved journey preserves human authority", async ({
   await expect(
     page.getByText("Pool size restored to 80; recovery thresholds passed."),
   ).toBeVisible();
+  await captureSubmissionAsset(page, "submission-resolved");
 
   await page.getByRole("button", { name: "Reset Scenario" }).click();
   await expect(page.getByText("INCIDENT OPEN")).toBeVisible();

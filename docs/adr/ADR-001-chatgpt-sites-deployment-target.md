@@ -1,6 +1,6 @@
 # ADR-001 — Prefer ChatGPT Sites for the Challenge deployment
 
-Status: Accepted  
+Status: Implemented
 Date: 2026-08-25
 
 ## Evidence
@@ -11,7 +11,7 @@ Date: 2026-08-25
 
 ## Impact
 
-Gate 8 will attempt ChatGPT Sites first. The application remains a static Vite build, so this does not change the domain, state machine, WebMCP tool contract, approval boundary, or Challenge-vs-commercial separation.
+Gate 8 deployed to ChatGPT Sites. The application remains a static Vite client behind a thin Cloudflare Worker-compatible asset entry point, so this does not change the domain, state machine, WebMCP tool contract, approval boundary, or Challenge-vs-commercial separation.
 
 ## Smallest replacement
 
@@ -23,6 +23,12 @@ Fallback: another Challenge-allowed static host only if deployed-origin WebMCP c
 ```
 
 No deployment work begins before the earlier canonical-workflow gates are complete.
+
+## Outcome
+
+- Public URL: `https://runbook-zero.rookepoole.chatgpt.site`
+- Anonymous direct request: `200`, no sign-in redirect
+- Real supported-browser WebMCP discovery and canonical J1–J4 journey: passed on the deployed origin
 
 ## Regression gates
 
