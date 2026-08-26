@@ -5,6 +5,8 @@
   "date": "2026-08-25",
   "environment": "ChatGPT Codex in-app browser",
   "origin": "https://runbook-zero.rookepoole.chatgpt.site",
+  "deploymentVersion": 1,
+  "currentDeploymentVersion": 4,
   "timingMs": {
     "resetAndDiscovery": 298,
     "diagnosisComplete": 20388,
@@ -45,5 +47,5 @@
     "reconstruction": "A direct DOM snapshot showed RESOLVED and verify_recovery returned recovered true before the close note and reset completed.",
     "classification": "browser-selector timing artifact; product state and recovery remained correct"
   },
-  "claimBoundary": "This proves live rehearsal headroom and canonical behavior, not existence of the required public YouTube video or completed submission."
+  "claimBoundary": "This prior-version receipt proves rehearsal headroom and canonical behavior, not timing for the reconstructed version 4, existence of the required public YouTube video, or completed submission. Repeat the timed rehearsal on version 4 before recording."
 }

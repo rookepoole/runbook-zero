@@ -42,7 +42,7 @@
   },
   "judgeFirstAcceptance": {
     "priorClaim": "WITHDRAWN",
-    "currentStatus": "PENDING_REVISED_PUBLIC_DEPLOYMENT_AND_FRESH_VIEWER",
+    "currentStatus": "PENDING_FRESH_VIEWER_ON_PUBLIC_VERSION_4",
     "requiredScore": "4/5"
   },
   "checks": {
@@ -55,5 +55,5 @@
     "npmAudit": "PASS — 0 vulnerabilities",
     "diffCheck": "PASS"
   },
-  "claimBoundary": "The revised UX is implemented and locally tested. Gate 7 remains reopened until fresh-viewer acceptance is repeated on the revised public deployment; Gate 8 must be reconfirmed for this candidate."
+  "claimBoundary": "The revised UX is implemented, locally tested, and publicly deployed as Sites version 4. Gate 7 remains reopened until independent fresh-viewer acceptance is repeated against that deployment."
 }
