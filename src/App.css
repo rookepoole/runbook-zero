@@ -50,6 +50,7 @@
 .brand-lockup p,
 .brand-lockup span,
 .header-incident span,
+.header-incident b,
 .header-incident strong {
   margin: 0;
 }
@@ -73,6 +74,7 @@
 }
 
 .header-incident span,
+.header-incident b,
 .header-incident strong,
 .mono-label,
 .tool-count,
@@ -91,6 +93,14 @@
   color: var(--critical);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
+}
+
+.header-incident b {
+  border: 1px solid rgba(255, 93, 115, 0.5);
+  color: var(--critical);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  padding: 0.2rem 0.3rem;
 }
 
 .reset-button,

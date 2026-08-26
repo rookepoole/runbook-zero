@@ -39,6 +39,7 @@ function App() {
         </div>
         <div className="header-incident">
           <span>{scenario.incident.id}</span>
+          <b>{scenario.incident.severity}</b>
           <strong>{scenario.phase.replaceAll("_", "-")}</strong>
         </div>
         <button type="button" className="reset-button" onClick={resetScenario}>
