@@ -6,6 +6,8 @@ Status: **IMPLEMENTED / TESTED LOCALLY / NOT YET DEPLOYED**
 
 Date: 2026-08-26
 
+Source checkpoint: `2a0088f675558cd853bab63901ceef2df71af656`
+
 Public site: stable version 5 remains live until explicit version 6 publication approval
 
 The Gates below remain minimum QA evidence. The current candidate is also evaluated directly against WebMCP Leverage, Execution, Potential Impact, and Creativity & Ambition in [rubric-upgrade.md](rubric-upgrade.md).

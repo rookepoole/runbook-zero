@@ -4,6 +4,7 @@
   "date": "2026-08-26",
   "status": "TESTED_LOCALLY_NOT_DEPLOYED",
   "baseCommit": "78d51f48c96e9c982344e5a7921b8db3796a4262",
+  "sourceCommit": "2a0088f675558cd853bab63901ceef2df71af656",
   "productEvidence": {
     "incidentPackSchema": "IMPLEMENTED",
     "bundledPackIds": [
