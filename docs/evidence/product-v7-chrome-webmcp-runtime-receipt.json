@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "runbook-zero-product-v7-chrome-webmcp-runtime-2026-08-26",
+  "recordedAt": "2026-08-26T09:14:37.3330879Z",
+  "classification": "TESTED",
+  "browser": {
+    "family": "Google Chrome",
+    "version": "151.0.7922.174",
+    "webMcpTestingEnabled": true,
+    "chatGptExtensionConnection": "PASS after Chrome relaunch"
+  },
+  "primarySourceControl": {
+    "url": "https://googlechromelabs.github.io/webmcp-tools/demos/explainer/",
+    "registeredToolCount": 3,
+    "registeredTools": ["getAvailability", "bookSlot", "cancelBooking"],
+    "builtInAgentCall": {
+      "tool": "bookSlot",
+      "date": "2026-09-01",
+      "time": "14:00",
+      "visibleSynchronization": "PASS — the demo displayed the exact last call and booking success",
+      "consoleErrorCount": 0
+    }
+  },
+  "runbookZero": {
+    "url": "https://runbook-zero.rookepoole.chatgpt.site/",
+    "status": "WebMCP Connected",
+    "activeToolCount": 9,
+    "activeTools": [
+      "get_system_snapshot",
+      "inspect_service",
+      "query_signals",
+      "trace_request_path",
+      "get_recent_changes",
+      "set_working_hypothesis",
+      "compare_mitigations",
+      "stage_mitigation",
+      "add_incident_note"
+    ],
+    "applyApprovedMitigation": "LOCKED — no exact staged mitigation has visible human approval",
+    "consoleErrorCount": 0
+  },
+  "claimBoundary": {
+    "establishes": "Chrome 151 with WebMCP testing enabled supports real page registration and visible execution, and deployed Runbook Zero registers its correct pre-approval nine-tool surface with apply absent.",
+    "doesNotEstablish": "The current Codex task did not receive Runbook Zero's dynamically registered page tools as directly callable task tools, so it does not claim a Codex-to-Runbook tool invocation in this Chrome task.",
+    "promotionTest": "Start a fresh Codex task so the installed runbook-zero-live-sites skill loads, explicitly attach the preserved Chrome tab, and execute a read-only Runbook Zero tool before any staged or approved action."
+  }
+}

@@ -105,7 +105,7 @@ npm audit
 
 The Playwright suite uses a test-only `document.modelContext` harness against the production registry and executors. It validates the browser workflow but does not replace the real supported-browser evidence recorded in [Judging evidence](docs/judging-evidence.md).
 
-Version 7 is publicly deployed from commit `a70b024524b3e7d5015167917e30405de5b1631b`. Its baseline is 17 Vitest files / 65 tests, 4 Playwright Chromium tests, a production build, plugin manifest validation, and a successful Codex installation from the public GitHub marketplace. A real connected Chrome extension also rendered the production v7 workbench and captured a second public origin into the deterministic no-WebMCP operator-handoff path; that acceptance remains separate from the Playwright harness and does not claim an external WebMCP invocation where the target exposed no `document.modelContext`.
+Version 7 is publicly deployed from commit `a70b024524b3e7d5015167917e30405de5b1631b`. Its baseline is 17 Vitest files / 65 tests, 4 Playwright Chromium tests, a production build, plugin manifest validation, and a successful Codex installation from the public GitHub marketplace. Real connected Chrome 151 evidence now covers both branches: a second public origin produced the deterministic no-WebMCP operator handoff, while WebMCP testing enabled the official Chrome Labs three-tool demo and Runbook Zero's correct pre-approval nine-tool surface. That acceptance remains separate from the Playwright harness and does not relabel the official demo's built-in agent call as a Codex-to-Runbook invocation.
 
 ## Repository map
 

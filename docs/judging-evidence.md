@@ -19,11 +19,17 @@ The newly connected Chrome extension then provided real, non-Playwright acceptan
 - that target exposed no `document.modelContext`, so Runbook Zero's Site Capture v1 builder generated the deterministic operator-handoff path rather than inventing agent capabilities or claiming a target-site action;
 - the captured evidence contains no credentials, cookies, storage values, or personal data.
 
-Artifacts: `docs/evidence/product-v7-deployment-receipt.json`, `docs/evidence/product-v7-chrome-capture.json`
+After Chrome 151's **WebMCP for testing** flag was enabled and the browser relaunched, a second native-runtime acceptance run established:
+
+- the primary-source Chrome Labs explainer registered `getAvailability`, `bookSlot`, and `cancelBooking`, and its built-in agent visibly executed `bookSlot` with the exact call rendered on the page and zero console errors;
+- deployed Runbook Zero changed from **WebMCP unavailable** to **WebMCP Connected**, displayed nine active tools, kept `apply_approved_mitigation` locked, and recorded zero console errors;
+- the preserved active surface exactly matched the canonical pre-approval registry.
+
+Artifacts: `docs/evidence/product-v7-deployment-receipt.json`, `docs/evidence/product-v7-chrome-capture.json`, `docs/evidence/product-v7-chrome-webmcp-runtime-receipt.json`
 
 ### Version 7 claim boundary
 
-This proves public v7 publication, real Chrome-extension cross-site capture, and safe no-WebMCP degradation. The inspected Chrome documents did not expose `document.modelContext`, so this run does **not** claim an external WebMCP invocation. The real page-defined WebMCP round trips for the same production registry remain recorded in the supported ChatGPT browser evidence below. Fresh-viewer acceptance, the public video, Devpost confirmation, final tag, and immutable freeze remain outstanding.
+This proves public v7 publication, real Chrome-extension cross-site capture, safe no-WebMCP degradation, native Chrome WebMCP registration, the correct deployed pre-approval surface, and a visible primary-source demo execution. The current Codex task did not receive Runbook Zero's page tools as directly callable task tools, so the Chrome receipt does **not** claim a Codex-to-Runbook invocation. The real page-defined Runbook Zero round trips remain recorded in the supported ChatGPT browser evidence below. A fresh task with the installed plugin and explicitly attached Chrome tab is the promotion test; fresh-viewer acceptance, the public video, Devpost confirmation, final tag, and immutable freeze also remain outstanding.
 
 ## Official-rubric upgrade — public version 6
 
