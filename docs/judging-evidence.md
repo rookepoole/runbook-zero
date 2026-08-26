@@ -1,5 +1,30 @@
 # Runbook Zero judging evidence
 
+## Product version 7 — public deployment and Chrome acceptance
+
+Status: **IMPLEMENTED / TESTED / DEPLOYED**
+
+Date: 2026-08-26
+
+Deployed source checkpoint: `a70b024524b3e7d5015167917e30405de5b1631b`
+
+Public site: <https://runbook-zero.rookepoole.chatgpt.site/>
+
+Sites version 7 deployment `appgdep_6a8ea7ffdd448191be481afad4616398` succeeded from the exact saved version `appgprj_6a8e3de05780819199793f7e9957dbec~appgver_a6bd9738fff881918d5791aba506a424`. An unauthenticated HTTPS request returned `200`, and the served JavaScript asset contains the version 7 marketplace install path and receipt-bound `record_external_execution` capability.
+
+The newly connected Chrome extension then provided real, non-Playwright acceptance evidence:
+
+- production v7 rendered the **Codex Product Connection**, **Live Incident Workspace**, and visible **Capability Firewall** with zero recorded console errors;
+- Chrome loaded the separate public origin `https://webmcp.devpost.com/` and captured its exact title, URL, visible challenge content, and 164 interactive elements;
+- that target exposed no `document.modelContext`, so Runbook Zero's Site Capture v1 builder generated the deterministic operator-handoff path rather than inventing agent capabilities or claiming a target-site action;
+- the captured evidence contains no credentials, cookies, storage values, or personal data.
+
+Artifacts: `docs/evidence/product-v7-deployment-receipt.json`, `docs/evidence/product-v7-chrome-capture.json`
+
+### Version 7 claim boundary
+
+This proves public v7 publication, real Chrome-extension cross-site capture, and safe no-WebMCP degradation. The inspected Chrome documents did not expose `document.modelContext`, so this run does **not** claim an external WebMCP invocation. The real page-defined WebMCP round trips for the same production registry remain recorded in the supported ChatGPT browser evidence below. Fresh-viewer acceptance, the public video, Devpost confirmation, final tag, and immutable freeze remain outstanding.
+
 ## Official-rubric upgrade — public version 6
 
 Status: **IMPLEMENTED / TESTED / DEPLOYED**

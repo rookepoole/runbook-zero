@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "sessionId": "SITE-DEVPOST-001",
+  "capturedAt": "2026-08-26T08:49:11.6687994Z",
+  "capturedBy": "codex-browser-extension",
+  "target": {
+    "url": "https://webmcp.devpost.com/",
+    "title": "The WebMCP Challenge: 10 days for exploring what’s possible with WebMCP - Devpost",
+    "symptom": "The challenge page should remain usable while an agent captures bounded operational evidence.",
+    "customerImpact": "An operator needs a safe incident handoff when the target site exposes no WebMCP action surface.",
+    "severity": "SEV-3"
+  },
+  "signals": {
+    "consoleErrorCount": 0,
+    "interactiveElementCount": 164
+  },
+  "webMcpTools": [],
+  "evidence": [
+    {
+      "id": "E-VISIBLE-STATE",
+      "kind": "browser",
+      "summary": "Chrome rendered the public WebMCP Challenge page with its overview, schedule, rules, resources, and submission controls visible.",
+      "surface": "page-runtime"
+    },
+    {
+      "id": "E-CAPABILITY-ABSENCE",
+      "kind": "browser",
+      "summary": "The exact target document did not expose document.modelContext in the connected Chrome session.",
+      "surface": "page-runtime"
+    }
+  ],
+  "operatorHandoff": [
+    "Keep the captured page evidence read-only and do not claim an automated target-site action.",
+    "Use the site-owned interface for any change, then capture fresh evidence to verify the result."
+  ]
+}

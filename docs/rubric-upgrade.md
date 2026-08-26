@@ -2,16 +2,16 @@
 
 Date: 2026-08-26
 
-Scope: version 7 candidate compared with deployed public version 6.
+Scope: deployed public version 7 compared with the former version 6 baseline.
 
 These are evidence-based internal estimates, not predictions of an individual judge's score.
 
-| Official criterion    | v6 estimate | v7 candidate | Evidence for the change                                                                                                                                                                                                                                                    |
-| --------------------- | ----------: | -----------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WebMCP Leverage       |      8.5/10 |   **9.2/10** | The dynamic page registry and visible capability firewall now govern both deterministic packs and external site actions. A released live action exposes a receipt-bound evidence tool while apply disappears; origin/tool mismatches are rejected independently of schema. |
-| Execution             |      7.0/10 |   **8.7/10** | Runbook Zero is now a real Codex plugin installable from its repository marketplace. It includes a capture contract, deterministic builder, live provenance UI, external-action receipts, fallback handoffs, 65 unit/component tests, and 4 browser tests.                 |
-| Potential Impact      |      5.5/10 |   **8.4/10** | The product can now wrap investigation and guarded action around a broad range of browser-visible sites. Automation expands when a target exposes WebMCP while no-tool sites still receive evidence-backed diagnosis and exact operator handoff.                           |
-| Creativity & Ambition |      7.5/10 |   **9.1/10** | The approval firewall now crosses origins without pretending origin isolation does not exist: Codex carries bounded evidence into the workbench and carries only an exact human-approved receipt back to the target.                                                       |
+| Official criterion    | v6 estimate | deployed v7 | Evidence for the change                                                                                                                                                                                                                                                    |
+| --------------------- | ----------: | ----------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WebMCP Leverage       |      8.5/10 |  **9.2/10** | The dynamic page registry and visible capability firewall now govern both deterministic packs and external site actions. A released live action exposes a receipt-bound evidence tool while apply disappears; origin/tool mismatches are rejected independently of schema. |
+| Execution             |      7.0/10 |  **8.7/10** | Runbook Zero is now a real Codex plugin installable from its repository marketplace. It includes a capture contract, deterministic builder, live provenance UI, external-action receipts, fallback handoffs, 65 unit/component tests, and 4 browser tests.                 |
+| Potential Impact      |      5.5/10 |  **8.4/10** | The product can now wrap investigation and guarded action around a broad range of browser-visible sites. Automation expands when a target exposes WebMCP while no-tool sites still receive evidence-backed diagnosis and exact operator handoff.                           |
+| Creativity & Ambition |      7.5/10 |  **9.1/10** | The approval firewall now crosses origins without pretending origin isolation does not exist: Codex carries bounded evidence into the workbench and carries only an exact human-approved receipt back to the target.                                                       |
 
 Estimated total: **35.4/40**, up from **28.5/40** at the start of the product reset.
 
@@ -28,6 +28,7 @@ Estimated total: **35.4/40**, up from **28.5/40** at the start of the product re
 ## Evidence boundary
 
 - The Playwright browser harness exercises the production registry and executors but is not real Chrome-extension WebMCP evidence.
-- A Chrome-specific acceptance run is currently **BLOCKED** because no Chrome extension connection is exposed to the implementation session. No in-app-browser result is relabeled as Chrome evidence.
-- Public Sites version 6 remains the deployed baseline until version 7 publication and deployed-origin verification complete.
+- **TESTED:** a real connected Chrome extension rendered production version 7 with zero recorded console errors and captured `https://webmcp.devpost.com/` as a second public origin. The target exposed no `document.modelContext`, so the capture deterministically produced the honest operator-handoff path.
+- The Chrome result proves cross-site capture and safe degradation, not an external WebMCP call. Real page-defined WebMCP round trips remain supported-browser evidence and are not relabeled as Chrome evidence.
+- **DEPLOYED:** Sites version 7 deployment `appgdep_6a8ea7ffdd448191be481afad4616398` succeeded from exact pushed commit `a70b024524b3e7d5015167917e30405de5b1631b`.
 - Fresh-viewer acceptance, the public sub-three-minute video, Devpost confirmation, final SHA/tag, and immutable submission freeze remain outstanding.

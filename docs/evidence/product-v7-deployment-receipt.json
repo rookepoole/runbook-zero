@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "runbook-zero-product-v7-deployment-2026-08-26",
+  "recordedAt": "2026-08-26T08:49:11.6687994Z",
+  "classification": "TESTED",
+  "source": {
+    "commit": "a70b024524b3e7d5015167917e30405de5b1631b",
+    "versionId": "appgprj_6a8e3de05780819199793f7e9957dbec~appgver_a6bd9738fff881918d5791aba506a424",
+    "versionNumber": 7
+  },
+  "deployment": {
+    "id": "appgdep_6a8ea7ffdd448191be481afad4616398",
+    "status": "succeeded",
+    "url": "https://runbook-zero.rookepoole.chatgpt.site",
+    "httpsStatus": 200,
+    "javascriptAsset": "/assets/index-RnC4RS6E.js",
+    "stylesheetAsset": "/assets/index-4Gpdz2kA.css"
+  },
+  "chromeExtensionAcceptance": {
+    "connection": "PASS — exact Chrome extension browser selected",
+    "deployedV7Render": "PASS — Runbook Zero rendered the Codex Product Connection, live incident workspace, and Capability Firewall",
+    "deployedV7ConsoleErrors": 0,
+    "externalOrigin": "https://webmcp.devpost.com",
+    "externalOriginRead": "PASS — title, URL, visible content, and 164 interactive elements captured",
+    "externalOriginConsoleErrors": 0,
+    "externalOriginModelContextAvailable": false,
+    "fallbackPackBuild": "PASS — capture converted twice into live-site-devpost-001 with identical SHA-256 B0F86784DCDE153C07B530C0ABE89BBA872EA59696BE2A4FDA0DA13366574505"
+  },
+  "webMcpEvidenceBoundary": {
+    "deployedV7ModelContextAvailableInThisChromeSession": false,
+    "externalWebMcpToolInvocation": "NOT TESTED — the inspected external origin exposed no document.modelContext surface",
+    "supportedBrowserEvidence": "The real page-defined WebMCP round trips for the same production registry remain recorded in the version 6 supported ChatGPT browser receipt. This Chrome run proves the version 7 cross-site capture and safe no-tool fallback, not an external WebMCP invocation."
+  },
+  "remaining": [
+    "fresh-viewer acceptance",
+    "public under-three-minute video",
+    "Devpost submission confirmation",
+    "final SHA and submission-v1.0 tag/freeze"
+  ]
+}
