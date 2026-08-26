@@ -12,6 +12,15 @@
     "humanApprovalComplete": 25968,
     "workflowComplete": 62696
   },
+  "scriptTimingModel": {
+    "quotedWords": 203,
+    "speechSecondsAt130Wpm": 93.7,
+    "speechSecondsAt150Wpm": 81.2,
+    "projectedTotalSecondsBeforeOverlap": {
+      "at130Wpm": 156.4,
+      "at150Wpm": 143.9
+    }
+  },
   "observations": {
     "initialToolCount": 9,
     "rankedCandidateIds": ["M-POOL-RESTORE", "M-CACHE-DEGRADE"],

@@ -265,11 +265,11 @@ Gate 6 establishes the complete local real-browser J1–J4 workflow. Gate 7 exec
 
 ## Gate 7 — Execution and polish
 
-Status: **TESTED**
+Status: **IMPLEMENTED / REOPENED FOR ACCEPTANCE**
 
 Date: 2026-08-25
 
-Implementation commit: `9bb1bc091e31db8643ebbef73a8652f0ce317abc`
+Current UX implementation commit: `aaa8ba77d76125b71edcb46e373276ce56d6e4fc`
 
 ### Browser automation
 
@@ -285,13 +285,26 @@ Playwright now replays the entire reset-to-resolved workflow in Chromium through
 - deterministic reset back to 4,700 ms P95 and the 9-tool initial surface;
 - zero console/page errors throughout the canonical flow.
 
-A second browser test checks 1280×720 and 1440×900 layouts, horizontal overflow, reduced-motion CSS, keyboard focus/reset activation, required workspace regions, and absence of placeholder text.
+A second browser test checks 1280×720 and 1440×900 layouts, horizontal overflow, reduced-motion CSS, keyboard focus/reset activation, required workspace regions, dependency edges, four telemetry trends, precise change inspection, Focus Mode, and absence of placeholder text.
 
 This automation supplements—but does not replace—the real supported-browser WebMCP evidence recorded for Gates 1 and 3–6.
 
-### Judge-first visual acceptance
+### Usability reconstruction
 
-Manual review of the fresh 1440×900 incident, staged, approved, and resolved surfaces answered all five frozen questions without auxiliary explanation: affected flow/service, severity, recent change, mitigation state, and Agent/Human/System provenance. Result: **5/5**.
+The project owner rejected the earlier interface as insufficiently usable and too shallow relative to the frozen design research. That evidence invalidated the earlier uncorroborated 5/5 claim and reopened Gate 7.
+
+The replacement at `aaa8ba77d76125b71edcb46e373276ce56d6e4fc` implements the smallest architecture-preserving correction:
+
+- a real connected dependency graph with upstream/downstream inspection and durable agent-path evidence;
+- a continuously visible Depth-0 triage strip;
+- baseline deltas, deterministic trend shapes, change markers, timestamps, and evidence IDs for every selected service;
+- confidence and evidence bindings on the working hypothesis;
+- complete mitigation comparison detail, simulation assumptions, and exact incident/seed/mitigation approval scope;
+- filterable, inspectable Agent/Human/System/change evidence;
+- contextual, provenance-labeled Focus Mode with `Escape` dismissal;
+- internally consistent resolved telemetry and authority/config state.
+
+Automated visual and interaction checks pass, and refreshed 1440×900 canonical stills have been reviewed. The required fresh-viewer 4/5 acceptance must be repeated against the revised public deployment before Gate 7 returns to **TESTED**.
 
 ### Full check result
 
@@ -299,7 +312,7 @@ Manual review of the fresh 1440×900 incident, staged, approved, and resolved su
 npm run typecheck     PASS
 npm run format:check  PASS
 npm run lint          PASS
-npm run test          PASS — 12 files, 40 tests
+npm run test          PASS — 12 files, 42 tests
 npm run test:e2e      PASS — 2 Chromium tests
 npm run build         PASS
 git diff --check      PASS
@@ -309,11 +322,11 @@ Artifact: `docs/evidence/gate-7-execution-receipt.json`
 
 ### Claim boundary
 
-Gate 7 establishes local execution and presentation readiness. Deployment, deployed-origin WebMCP validation, submission documentation, final SHA/tag, and artifact freeze remain Gates 8–9.
+The revised Gate 7 implementation is locally tested, but Gate 7 remains reopened until the fresh-viewer acceptance is repeated on the revised public deployment. The currently public Sites version predates this correction, so Gate 8 must also be reconfirmed after an explicitly approved update.
 
 ## Gate 8 — Public deployment
 
-Status: **TESTED**
+Status: **TESTED FOR PRIOR DEPLOYMENT / REOPENED FOR CURRENT CANDIDATE**
 
 Date: 2026-08-25
 

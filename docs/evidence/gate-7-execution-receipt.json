@@ -1,9 +1,30 @@
 {
   "gate": 7,
   "title": "Execution and polish",
-  "status": "TESTED",
+  "status": "IMPLEMENTED_REOPENED_FOR_ACCEPTANCE",
   "date": "2026-08-25",
-  "implementationCommit": "9bb1bc091e31db8643ebbef73a8652f0ce317abc",
+  "implementationCommit": "aaa8ba77d76125b71edcb46e373276ce56d6e4fc",
+  "reconstruction": {
+    "evidence": "Project-owner review rejected the earlier interface as insufficiently usable and too shallow relative to the frozen design research.",
+    "impact": "The earlier uncorroborated 5/5 judge-first claim was withdrawn and Gate 7 was reopened.",
+    "smallestReplacement": [
+      "connected dependency graph with upstream/downstream inspection",
+      "Depth-0 incident triage strip",
+      "baseline deltas, deterministic trend charts, change markers, timestamps, and evidence IDs",
+      "hypothesis confidence and evidence bindings",
+      "mitigation assumptions and exact approval scope",
+      "filterable and inspectable evidence trail",
+      "provenance-labelled contextual Focus Mode with Escape dismissal",
+      "consistent resolved telemetry, authority, and active configuration"
+    ],
+    "regressionGates": [
+      "domain and state-machine tests",
+      "dynamic registry and safety tests",
+      "canonical browser journey",
+      "1280x720 and 1440x900 layout checks",
+      "fresh-viewer judge-first acceptance on revised public deployment"
+    ]
+  },
   "browserAutomation": {
     "runner": "Playwright Chromium",
     "testCount": 2,
@@ -11,29 +32,28 @@
     "consoleAndPageErrors": 0,
     "viewports": ["1280x720", "1440x900"],
     "horizontalOverflow": false,
-    "keyboardReset": "PASS",
+    "keyboardResetAndFocusMode": "PASS",
     "reducedMotion": "PASS",
+    "dependencyEdges": 11,
+    "metricTrends": 4,
+    "preciseChangeInspection": "PASS",
     "placeholderText": false,
     "webMcpHarness": "test-only document.modelContext harness exercising production registry and executors"
   },
   "judgeFirstAcceptance": {
-    "score": "5/5",
-    "questions": {
-      "affectedFlowOrService": "PASS",
-      "severity": "PASS",
-      "recentChange": "PASS",
-      "mitigationState": "PASS",
-      "actionProvenance": "PASS"
-    }
+    "priorClaim": "WITHDRAWN",
+    "currentStatus": "PENDING_REVISED_PUBLIC_DEPLOYMENT_AND_FRESH_VIEWER",
+    "requiredScore": "4/5"
   },
   "checks": {
     "typecheck": "PASS",
     "format": "PASS",
     "lint": "PASS",
-    "unitAndComponentTests": "PASS — 12 files / 40 tests",
+    "unitAndComponentTests": "PASS — 12 files / 42 tests",
     "browserE2E": "PASS — 2 tests",
     "build": "PASS",
+    "npmAudit": "PASS — 0 vulnerabilities",
     "diffCheck": "PASS"
   },
-  "claimBoundary": "Supplements real WebMCP receipts with repeatable browser automation. Does not establish deployment or deployed-origin WebMCP."
+  "claimBoundary": "The revised UX is implemented and locally tested. Gate 7 remains reopened until fresh-viewer acceptance is repeated on the revised public deployment; Gate 8 must be reconfirmed for this candidate."
 }

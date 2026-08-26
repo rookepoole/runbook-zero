@@ -54,6 +54,16 @@ Scenario A always opens `INC-042` with the same topology, service health, teleme
 
 This makes reset, testing, judging, and video recording reproducible while keeping the WebMCP interactions real.
 
+## Shared operational workspace
+
+The interface follows three information depths without moving the operator away from the incident room:
+
+- Depth 0 keeps impact path, unhealthy count, worst P95/error rate, phase, and authority state continuously visible.
+- Depth 1 combines the dependency graph, selected-service telemetry, incident command, and evidence trail.
+- Depth 2 exposes baseline deltas, deterministic trends, dependency direction, exact change records, evidence IDs, mitigation assumptions, and approval scope.
+
+Human node selection and WebMCP tool calls use the same shared focus state. Contextual Focus Mode enlarges the relevant region while keeping the other three regions compressed and available; `Escape` returns to the four-region layout. Provenance remains explicit: agent focus is blue, human approval is violet, and system events are neutral.
+
 ## Deployment boundary
 
 The Worker in `worker/index.ts` serves the Vite client bundle through the Sites-managed asset binding. It contains no incident logic, credentials, persistence, or approval behavior. The deployed application therefore exercises the same domain, registry, and UI code validated locally.

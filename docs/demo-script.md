@@ -4,6 +4,8 @@ Target: **2:20–2:40**. Hard stop: **2:55**.
 
 Measured live rehearsal: **62.696 seconds** of deployed WebMCP tool/control time from reset through resolution note, leaving roughly 77–97 seconds inside the target window for prompt entry, narration, and readable holds.
 
+The complete quoted narration and prompts contain **203 words**. At a clear 130–150 words per minute, speech takes approximately 81–94 seconds; combined with the measured interaction path, the unreduced run projects to roughly **2:24–2:37** before natural overlap.
+
 ## Before recording
 
 - Open <https://runbook-zero.rookepoole.chatgpt.site> in the supported WebMCP client.
