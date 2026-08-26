@@ -363,3 +363,52 @@ Artifact: `docs/evidence/gate-8-deployment-receipt.json`
 ### Claim boundary
 
 Gate 8 establishes a public, direct-link ChatGPT Sites deployment and real supported-browser WebMCP behavior on that deployed origin. Submission documentation, demo assets, final SHA/tag, and the immutable `submission-v1.0` freeze remain Gate 9.
+
+## Gate 9 — Submission package and live rehearsal
+
+Status: **IMPLEMENTED / BLOCKED**
+
+Date: 2026-08-25
+
+Repository-package candidate: `f919de76061406481a1d3db264700a1ce7eef65d`
+
+### Implemented and tested
+
+- judge-first README with live URL, canonical prompts, safety thesis, local setup, validation commands, and repository map;
+- architecture and exact phase-derived WebMCP lifecycle documentation;
+- paste-ready submission narrative covering fit, user experience, human/agent collaboration, and implementation;
+- exact 2:20–2:40 recording script and acceptance checklist;
+- four reviewed 1440×900 browser stills for the submission gallery;
+- GitHub metadata with public visibility, live homepage, challenge topics, and detected AGPL-3.0 license;
+- package version `1.0.0` and site-wide Open Graph/X preview metadata;
+- final candidate checks: typecheck, format, lint, 40 Vitest tests, 2 Playwright tests, build, zero npm audit findings, and diff check.
+
+### Real deployed-origin rehearsal
+
+The supported in-app browser repeated the full public-site workflow from reset in **62.696 seconds of measured tool/control time**:
+
+- initial discovery: 9 tools;
+- diagnosis completed at 20.388 seconds;
+- no-rollback comparison and exact staging completed at 25.657 seconds;
+- direct pre-approval apply was unavailable;
+- visible human approval completed at 25.968 seconds and exposed apply;
+- exact apply, five recovery frames, verification, and note completed by 62.696 seconds;
+- final verification returned `recovered: true` and the UI showed `RESOLVED`;
+- post-rehearsal reset restored 4,700 ms checkout P95, 9 tools, and no apply.
+
+The semantic text wait used during the rehearsal timed out once even though a subsequent direct DOM snapshot and `verify_recovery` call proved the incident was resolved. The complete workflow still finished well inside the recording budget; this browser-selector timing artifact is retained rather than hidden.
+
+Artifact: `docs/evidence/gate-9-live-rehearsal-receipt.json`
+
+### Remaining blockers
+
+- record the real live workflow with clear entrant audio;
+- upload the sub-three-minute video publicly to YouTube and insert its URL;
+- approve and publish the final saved Sites candidate;
+- complete Devpost and capture confirmation;
+- record final SHA/deployment and tag `submission-v1.0`;
+- freeze the repository, live site, and submission through judging.
+
+### Claim boundary
+
+The repository package and live rehearsal are ready. Gate 9 is not passed, and no submission/freeze is claimed, until the required public audio video, final deployment, Devpost confirmation, and tag exist.

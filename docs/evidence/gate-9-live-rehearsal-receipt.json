@@ -1,0 +1,40 @@
+{
+  "gate": 9,
+  "component": "live deployed-origin rehearsal",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "environment": "ChatGPT Codex in-app browser",
+  "origin": "https://runbook-zero.rookepoole.chatgpt.site",
+  "timingMs": {
+    "resetAndDiscovery": 298,
+    "diagnosisComplete": 20388,
+    "stagingComplete": 25657,
+    "humanApprovalComplete": 25968,
+    "workflowComplete": 62696
+  },
+  "observations": {
+    "initialToolCount": 9,
+    "rankedCandidateIds": ["M-POOL-RESTORE", "M-CACHE-DEGRADE"],
+    "stagedApplyAvailable": false,
+    "preApprovalDirectCallBlocked": true,
+    "humanApprovedVisible": true,
+    "approvedApplyAvailable": true,
+    "phaseReturnedByApply": "MITIGATING",
+    "verificationRecovered": true,
+    "resolvedVisible": true,
+    "noteEventId": "EVT-013"
+  },
+  "postRehearsalReset": {
+    "incidentId": "INC-042",
+    "checkoutP95Ms": 4700,
+    "toolCount": 9,
+    "applyAvailable": false
+  },
+  "failureHistory": {
+    "selectorWaitTimeoutObserved": true,
+    "impact": "The semantic RESOLVED text wait timed out once during orchestration.",
+    "reconstruction": "A direct DOM snapshot showed RESOLVED and verify_recovery returned recovered true before the close note and reset completed.",
+    "classification": "browser-selector timing artifact; product state and recovery remained correct"
+  },
+  "claimBoundary": "This proves live rehearsal headroom and canonical behavior, not existence of the required public YouTube video or completed submission."
+}
