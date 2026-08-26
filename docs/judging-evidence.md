@@ -50,5 +50,48 @@ git diff --check   PASS
 
 ### Known limitations
 
-- This proves Gate 1 only; it does not claim the Gate 2 domain core, dynamic multi-state registry, human approval boundary, canonical J1–J4 journey, or deployed-origin behavior.
+- This Gate 1 receipt alone does not claim the dynamic multi-state registry, human approval boundary, canonical J1–J4 journey, or deployed-origin behavior.
 - The current UI is a restrained Gate 1 surface, not the final frozen four-region product interface.
+
+## Gate 2 — Deterministic incident core
+
+Status: **TESTED**
+
+Date: 2026-08-25
+
+Implementation commit: `bf85abbfd06f3ef17d4681553678210cb0632206`
+
+### Commands run
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm run test          PASS — 9 files, 23 tests
+npm run build         PASS — Vite production build
+git diff --check      PASS
+```
+
+### Acceptance evidence
+
+| Property                             | Status | Evidence                                                                                         |
+| ------------------------------------ | ------ | ------------------------------------------------------------------------------------------------ |
+| Reproducible Scenario A reset        | TESTED | independent deep state graphs compare exactly across resets                                      |
+| Root-cause evidence                  | TESTED | checkout trace reaches `inventory-db`; change records `dbPoolSize` 80 → 12 in `inventory-v2.7.0` |
+| Deterministic mitigation truth table | TESTED | fixed P95 predictions 390 / 420 / 650 ms and stable constraint-aware ordering                    |
+| Frozen phase transitions             | TESTED | canonical state path and discard edge; invalid phase jumps rejected                              |
+| Staging is non-mutating              | TESTED | telemetry and production configuration deep-equal before and after staging                       |
+| Exact human approval binding         | TESTED | wrong IDs and cross-incident replay rejected; approval produces a human-authored timeline event  |
+| Pre-approval application impossible  | TESTED | apply rejects staged-but-unapproved state                                                        |
+| Discard invalidates approval         | TESTED | staged binding is removed, phase returns to investigation, later application fails               |
+| Apply exits approved state           | TESTED | exact approved effect moves immediately to `MITIGATING`                                          |
+| Deterministic five-step recovery     | TESTED | identical replays reach 420 ms checkout P95, 0.8% errors, 68% DB saturation, and `RESOLVED`      |
+| Gate 1 adapter regression            | TESTED | registry, capability, UI, and system-snapshot tests remain green                                 |
+
+### Artifacts
+
+- `docs/evidence/gate-2-domain-receipt.json`
+
+### Claim boundary
+
+Gate 2 establishes the deterministic domain, state-machine, command, query, and recovery foundations under automated tests. Dynamic WebMCP registration and the full J1–J4 interface remain subsequent gates and are not claimed here.

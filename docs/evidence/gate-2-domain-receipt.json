@@ -1,0 +1,52 @@
+{
+  "gate": 2,
+  "title": "Deterministic incident core",
+  "status": "TESTED",
+  "date": "2026-08-25",
+  "implementationCommit": "bf85abbfd06f3ef17d4681553678210cb0632206",
+  "scenario": {
+    "id": "INC-042",
+    "seed": 42,
+    "incidentTelemetry": {
+      "checkoutP95Ms": 4700,
+      "checkoutErrorRatePct": 17,
+      "inventoryDbSaturationPct": 97
+    },
+    "causalChange": {
+      "version": "inventory-v2.7.0",
+      "dbPoolSize": { "from": 80, "to": 12 }
+    },
+    "mitigationPredictionsP95Ms": {
+      "M-ROLLBACK-27": 390,
+      "M-POOL-RESTORE": 420,
+      "M-CACHE-DEGRADE": 650
+    }
+  },
+  "safetyChecks": {
+    "stagingDoesNotMutateTelemetry": "PASS",
+    "stagingDoesNotMutateConfiguration": "PASS",
+    "approvalRequiresExactMitigationId": "PASS",
+    "approvalBoundToIncidentAndSeed": "PASS",
+    "applyBeforeApprovalRejected": "PASS",
+    "wrongIdApplicationRejected": "PASS",
+    "discardInvalidatesBinding": "PASS",
+    "applyImmediatelyExitsApproved": "PASS"
+  },
+  "recovery": {
+    "steps": 5,
+    "deterministicReplay": "PASS",
+    "finalPhase": "RESOLVED",
+    "finalCheckoutP95Ms": 420,
+    "finalCheckoutErrorRatePct": 0.8,
+    "finalInventoryDbSaturationPct": 68
+  },
+  "checks": {
+    "typecheck": "PASS",
+    "format": "PASS",
+    "lint": "PASS",
+    "tests": "PASS — 9 files / 23 tests",
+    "build": "PASS",
+    "diffCheck": "PASS"
+  },
+  "claimBoundary": "Establishes Gate 2 domain/state-machine behavior under automated tests. Does not establish the dynamic WebMCP registry, complete shared UI, deployed-origin behavior, or Gates 3-9."
+}
