@@ -271,6 +271,8 @@ Date: 2026-08-25
 
 Current UX implementation commit: `aaa8ba77d76125b71edcb46e373276ce56d6e4fc`
 
+Current agent-handoff correction commit: `e2734ae`
+
 ### Browser automation
 
 Playwright now replays the entire reset-to-resolved workflow in Chromium through a test-only `document.modelContext` harness that exercises the production registry and real tool executors. It asserts:
@@ -285,7 +287,7 @@ Playwright now replays the entire reset-to-resolved workflow in Chromium through
 - deterministic reset back to 4,700 ms P95 and the 9-tool initial surface;
 - zero console/page errors throughout the canonical flow.
 
-A second browser test checks 1280×720 and 1440×900 layouts, horizontal overflow, reduced-motion CSS, keyboard focus/reset activation, required workspace regions, dependency edges, four telemetry trends, precise change inspection, Focus Mode, and absence of placeholder text.
+A second browser test checks 1280×720 and 1440×900 layouts, horizontal overflow, reduced-motion CSS, keyboard focus/reset activation, required workspace regions, dependency edges, four telemetry trends, precise change inspection, Focus Mode, explanatory empty provenance filters, and absence of placeholder text.
 
 This automation supplements—but does not replace—the real supported-browser WebMCP evidence recorded for Gates 1 and 3–6.
 
@@ -304,7 +306,14 @@ The replacement at `aaa8ba77d76125b71edcb46e373276ce56d6e4fc` implements the sma
 - contextual, provenance-labeled Focus Mode with `Escape` dismissal;
 - internally consistent resolved telemetry and authority/config state.
 
-Automated visual and interaction checks pass, and refreshed 1440×900 canonical stills have been reviewed. The required fresh-viewer 4/5 acceptance must be repeated against the revised public deployment before Gate 7 returns to **TESTED**.
+A direct project-owner walkthrough then exposed one remaining first-use failure: selecting the empty Agent timeline filter produced “No agent events in this incident” without explaining how to invoke the WebMCP workflow. Commit `e2734ae` applies the smallest correction without changing the domain, state machine, registry, or human-approval invariant:
+
+- the initial incident panel now presents the exact canonical first agent request;
+- the cue explains that agent calls focus and update the same workspace;
+- the cue states the visible-human-approval boundary before any production change;
+- empty Agent and Human provenance filters now explain what action creates those events and where to continue.
+
+Automated visual and interaction checks pass, and the correction received a real supported-browser visual/DOM review with the exact nine-tool `document.modelContext` surface. The required fresh-viewer 4/5 acceptance must be repeated after this correction is publicly deployed before Gate 7 returns to **TESTED**.
 
 ### Full check result
 
@@ -312,7 +321,7 @@ Automated visual and interaction checks pass, and refreshed 1440×900 canonical 
 npm run typecheck     PASS
 npm run format:check  PASS
 npm run lint          PASS
-npm run test          PASS — 12 files, 42 tests
+npm run test          PASS — 12 files, 43 tests
 npm run test:e2e      PASS — 2 Chromium tests
 npm run build         PASS
 git diff --check      PASS
@@ -322,7 +331,7 @@ Artifact: `docs/evidence/gate-7-execution-receipt.json`
 
 ### Claim boundary
 
-The revised Gate 7 implementation is locally tested and is now live as public Sites version 4. Gate 7 remains reopened until the required fresh-viewer acceptance is repeated against that deployment.
+The original Gate 7 reconstruction is live as public Sites version 4. The `e2734ae` agent-handoff correction is locally tested but not yet deployed. Gate 7 remains reopened until the correction is deployed and the required fresh-viewer acceptance is repeated against that public version.
 
 ## Gate 8 — Public deployment
 

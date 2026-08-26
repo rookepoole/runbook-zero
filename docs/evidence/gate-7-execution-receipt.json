@@ -4,6 +4,7 @@
   "status": "IMPLEMENTED_REOPENED_FOR_ACCEPTANCE",
   "date": "2026-08-25",
   "implementationCommit": "aaa8ba77d76125b71edcb46e373276ce56d6e4fc",
+  "agentHandoffCorrectionCommit": "e2734ae",
   "reconstruction": {
     "evidence": "Project-owner review rejected the earlier interface as insufficiently usable and too shallow relative to the frozen design research.",
     "impact": "The earlier uncorroborated 5/5 judge-first claim was withdrawn and Gate 7 was reopened.",
@@ -25,6 +26,18 @@
       "fresh-viewer judge-first acceptance on revised public deployment"
     ]
   },
+  "followupUsabilityCorrection": {
+    "evidence": "A direct project-owner walkthrough reached an empty Agent timeline filter that said only 'No agent events in this incident' and did not explain how to start the WebMCP workflow.",
+    "impact": "A first-time viewer could mistake the expected pre-agent state for a broken integration and would not know what request to give the agent.",
+    "smallestReplacement": [
+      "show the exact canonical first agent request in the initial incident panel",
+      "explain that agent calls visibly update the same workspace",
+      "state the visible-human-approval boundary in the handoff cue",
+      "replace dead-end Agent and Human filter messages with next-action guidance"
+    ],
+    "architectureChanged": false,
+    "browserReview": "PASS — real supported browser exposed the exact nine-tool document.modelContext surface and rendered the cue and filtered guidance"
+  },
   "browserAutomation": {
     "runner": "Playwright Chromium",
     "testCount": 2,
@@ -42,18 +55,18 @@
   },
   "judgeFirstAcceptance": {
     "priorClaim": "WITHDRAWN",
-    "currentStatus": "PENDING_FRESH_VIEWER_ON_PUBLIC_VERSION_4",
+    "currentStatus": "PENDING_DEPLOYMENT_AND_FRESH_VIEWER_ON_CORRECTED_PUBLIC_VERSION",
     "requiredScore": "4/5"
   },
   "checks": {
     "typecheck": "PASS",
     "format": "PASS",
     "lint": "PASS",
-    "unitAndComponentTests": "PASS — 12 files / 42 tests",
+    "unitAndComponentTests": "PASS — 12 files / 43 tests",
     "browserE2E": "PASS — 2 tests",
     "build": "PASS",
     "npmAudit": "PASS — 0 vulnerabilities",
     "diffCheck": "PASS"
   },
-  "claimBoundary": "The revised UX is implemented, locally tested, and publicly deployed as Sites version 4. Gate 7 remains reopened until independent fresh-viewer acceptance is repeated against that deployment."
+  "claimBoundary": "The original UX reconstruction is deployed as Sites version 4. The agent-handoff correction at e2734ae is locally tested but not yet deployed. Gate 7 remains reopened until that correction is publicly deployed and independent fresh-viewer acceptance is repeated against it."
 }
