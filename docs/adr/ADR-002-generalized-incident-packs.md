@@ -1,6 +1,6 @@
 # ADR-002: Generalize scenarios as validated Incident Packs
 
-Status: Accepted for the version 6 Challenge candidate
+Status: Accepted and deployed in public Sites version 6
 
 Date: 2026-08-26
 

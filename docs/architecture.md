@@ -80,7 +80,7 @@ The Worker in `worker/index.ts` serves the Vite client bundle through the Sites-
 - Pure state-machine, query, command, pack-validation, safety, registry, and simulation tests.
 - React workspace and recovery UI tests.
 - Playwright canonical and multi-pack journeys, keyboard, reduced-motion, viewport, overflow, import-failure, and console checks.
-- Real supported-browser WebMCP discovery and invocation on local version 6 and deployed version 5; deployed version 6 verification remains pending publication.
+- Real supported-browser WebMCP discovery and invocation on local and deployed version 6 across all three bundled packs, including the canonical approval-and-recovery transition.
 - Anonymous HTTPS and direct-link deployment checks.
 
 Evidence and claim boundaries are recorded in [judging-evidence.md](judging-evidence.md).

@@ -1,14 +1,14 @@
 # Runbook Zero judging evidence
 
-## Official-rubric upgrade candidate — version 6
+## Official-rubric upgrade — public version 6
 
-Status: **IMPLEMENTED / TESTED LOCALLY / NOT YET DEPLOYED**
+Status: **IMPLEMENTED / TESTED / DEPLOYED**
 
 Date: 2026-08-26
 
-Source checkpoint: `2a0088f675558cd853bab63901ceef2df71af656`
+Deployed source checkpoint: `ae316febb75efe74a5c52fe911a834e43884226c`
 
-Public site: stable version 5 remains live until explicit version 6 publication approval
+Public site: <https://runbook-zero.rookepoole.chatgpt.site/>
 
 The Gates below remain minimum QA evidence. The current candidate is also evaluated directly against WebMCP Leverage, Execution, Potential Impact, and Creativity & Ambition in [rubric-upgrade.md](rubric-upgrade.md).
 
@@ -31,15 +31,29 @@ npm run lint          PASS
 npm test              PASS — 15 files, 57 tests
 npm run test:e2e      PASS — 3 Chromium tests
 npm run build         PASS
+npm audit             PASS — 0 vulnerabilities
 ```
 
 Real local in-app-browser evidence used the page's actual `document.modelContext` surface. Switching from canonical to the payment pack replaced the discoverable service and flow enums while preserving the same nine tool names. Real calls returned `INC-117` and payment-consumer telemetry. Comparison and staging exposed ten tools with apply absent; the visible human approval changed both the Firewall and actual registry to include apply; exact approved application removed apply and recovered through five pack frames; `verify_recovery` passed all payment-specific thresholds.
 
 Artifact: `docs/evidence/rubric-upgrade-v6-local-receipt.json`
 
+### Production publication and WebMCP validation
+
+Sites version 6 was saved from the exact pushed checkpoint above and published successfully. An unauthenticated HTTPS request returned `200` with successful TLS verification. In the supported ChatGPT Codex in-app browser, the deployed origin exposed real page-defined `document.modelContext` tools and passed the following checks:
+
+- `INC-042`, `INC-117`, and `INC-203` each returned incident-dependent snapshots through the same `get_system_snapshot` contract;
+- service, flow, and mitigation enums changed with the active Incident Pack while the base nine-tool surface remained stable;
+- the canonical `INC-042` journey diagnosed, compared, and staged `M-POOL-RESTORE` with `apply_approved_mitigation` absent;
+- the visible human approval changed the Capability Firewall from **LOCKED** to **AVAILABLE** and registered apply with the exact enum `M-POOL-RESTORE`;
+- exact apply recovered to 420 ms P95, 0.8% errors, and 55% database saturation, all within thresholds, then removed apply from the registry;
+- catalog reset reproduced its initial snapshot byte-for-byte, the browser console reported no errors, and the deployed UI was returned to a clean canonical `INC-042` state.
+
+Artifact: `docs/evidence/rubric-upgrade-v6-deployment-receipt.json`
+
 ### Claim boundary
 
-This section does not claim a version 6 deployment, deployed-origin revalidation, fresh-viewer acceptance, final video, Devpost submission, final tag, or artifact freeze. The historical gate receipts below continue to describe the version indicated in each section.
+This section claims the version 6 production deployment and deployed-origin revalidation described above. It does not claim fresh-viewer acceptance, the final public video, Devpost submission, the final submission tag, or artifact freeze. The historical gate receipts below continue to describe the version indicated in each section.
 
 ## Gate 0 — Rule compliance
 

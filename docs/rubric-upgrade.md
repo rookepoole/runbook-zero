@@ -2,7 +2,7 @@
 
 Date: 2026-08-26
 
-Scope: local version 6 candidate; public version 5 remains unchanged until explicit publication.
+Scope: public Sites version 6 and source checkpoint `ae316febb75efe74a5c52fe911a834e43884226c`.
 
 These are evidence-based internal estimates, not predictions of an individual judge's score.
 
@@ -18,6 +18,6 @@ Estimated total: **37.0/40**, up from **30.7/40** before the upgrade.
 ## Evidence boundary
 
 - **TESTED:** 15 Vitest files / 57 tests and 3 Playwright browser tests; canonical and all bundled pack domain recoveries; invalid-import preservation; deterministic reset; source-level presentation decoupling; dynamic registration invariant.
-- **TESTED in a real supported browser:** local `document.modelContext` discovery; payment-pack service/flow enums; `INC-117` snapshot and signals; comparison; staging with apply absent; visible human approval; apply appearing; exact approved apply; recovery verification; apply removal.
-- **NOT YET DEPLOYED:** version 6 candidate and its new multi-pack evidence.
-- **STILL BLOCKED:** fresh-viewer acceptance, public sub-three-minute video, Devpost confirmation, final SHA/deployment record, and `submission-v1.0` freeze.
+- **TESTED in a real supported browser:** local and deployed-origin `document.modelContext` discovery; incident-dependent schemas and results for `INC-042`, `INC-117`, and `INC-203`; canonical comparison and staging with apply absent; visible human approval; exact approved apply appearing; recovery verification; apply removal; deterministic per-pack reset.
+- **DEPLOYED:** public Sites version 6 from the exact pushed source checkpoint; anonymous HTTPS returned `200` with successful TLS verification and the deployed browser console remained error-free.
+- **STILL BLOCKED:** fresh-viewer acceptance, public sub-three-minute video, Devpost confirmation, final submission SHA/tag, and the immutable `submission-v1.0` freeze.

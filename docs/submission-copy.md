@@ -1,6 +1,6 @@
 # Submission copy
 
-Version 6 candidate draft for the WebMCP Challenge submission. Publish and revalidate version 6 before using this copy; then replace only the final video URL after recording.
+Version 6 draft for the WebMCP Challenge submission. The application is published and production-revalidated; replace only the final video URL after recording and complete the final submission freeze.
 
 ## Title
 

@@ -1,0 +1,70 @@
+{
+  "date": "2026-08-26",
+  "receipt": "rubric-upgrade-v6-production",
+  "status": "PASS",
+  "site": {
+    "url": "https://runbook-zero.rookepoole.chatgpt.site/",
+    "access": "public",
+    "version": 6,
+    "deploymentId": "appgdep_6a8e8f22f18c81919cc5bc7bbdd1787a",
+    "sourceCommit": "ae316febb75efe74a5c52fe911a834e43884226c",
+    "archiveSha256": "47ea7d13981aa429d987b4e44088b46a2f600560df151966143375171c9b55ec"
+  },
+  "transport": {
+    "anonymousHttpStatus": 200,
+    "tlsVerifyResult": 0,
+    "finalUrl": "https://runbook-zero.rookepoole.chatgpt.site/"
+  },
+  "realBrowser": {
+    "client": "ChatGPT Codex in-app browser",
+    "origin": "https://runbook-zero.rookepoole.chatgpt.site",
+    "documentModelContext": true,
+    "initialToolCount": 9,
+    "consoleErrors": 0
+  },
+  "incidentPacks": [
+    {
+      "incidentId": "INC-042",
+      "snapshotReturned": true,
+      "serviceEnumIncludes": "inventory-db",
+      "flowEnumIncludes": "checkout"
+    },
+    {
+      "incidentId": "INC-117",
+      "snapshotReturned": true,
+      "serviceEnumIncludes": "payment-consumer",
+      "flowEnumIncludes": "payment-confirmation",
+      "observedConsumerSaturationPct": 96
+    },
+    {
+      "incidentId": "INC-203",
+      "snapshotReturned": true,
+      "serviceEnumIncludes": "catalog-db",
+      "flowEnumIncludes": "catalog-browse"
+    }
+  ],
+  "canonicalSafety": {
+    "stagedMitigation": "M-POOL-RESTORE",
+    "applyAbsentBeforeApproval": true,
+    "visibleFirewallBeforeApproval": "LOCKED",
+    "approvalAction": "visible human UI click",
+    "applyPresentAfterApproval": true,
+    "approvedMitigationEnum": ["M-POOL-RESTORE"],
+    "visibleFirewallAfterApproval": "AVAILABLE",
+    "applyAbsentAfterRecovery": true
+  },
+  "canonicalRecovery": {
+    "recovered": true,
+    "checkoutP95LatencyMs": 420,
+    "checkoutErrorRatePct": 0.8,
+    "inventoryDbSaturationPct": 55,
+    "allThresholdsPassed": true
+  },
+  "determinism": {
+    "catalogResetSnapshotExactMatch": true,
+    "finalDisplayedIncident": "INC-042",
+    "finalPhase": "incident_open",
+    "finalApplyState": "unregistered"
+  },
+  "claimBoundary": "This receipt proves public Sites version 6 publication, anonymous HTTPS access, real deployed-origin WebMCP behavior across all three bundled packs, the canonical human-approval invariant, deterministic recovery, and a clean canonical reset. It does not claim fresh-viewer acceptance, a public demo video, Devpost submission, submission-v1.0 tagging, or artifact freeze."
+}

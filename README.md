@@ -8,7 +8,7 @@
 
 Runbook Zero makes WebMCP part of the product's control plane. The page registers real `document.modelContext` tools, changes that tool surface as the incident moves through its state machine, and renders every agent action into the same topology, telemetry, change record, and incident timeline the human sees. A validated Incident Pack supplies the operational data, so the same domain and WebMCP contracts work across different failure modes instead of one scripted screen.
 
-> **Deployment status:** public Sites version 5 remains the stable canonical demo. The repository currently contains the locally validated multi-pack version 6 candidate, pending explicit publication.
+> **Deployment status:** public Sites version 6 is live. The deployed build contains the generalized three-pack incident platform and was revalidated on its production origin with real WebMCP calls.
 
 The central safety invariant is enforced at both the domain and registry layers:
 
@@ -79,7 +79,7 @@ npm audit
 
 The Playwright suite uses a test-only `document.modelContext` harness against the production registry and executors. It validates the browser workflow but does not replace the real supported-browser evidence recorded in [Judging evidence](docs/judging-evidence.md).
 
-Current version 6 candidate baseline: 15 Vitest files / 57 tests, 3 Playwright Chromium tests, production build, and real in-app-browser WebMCP verification across the canonical and payment packs. The latest dependency audit must be rerun immediately before publication.
+Published version 6 baseline: 15 Vitest files / 57 tests, 3 Playwright Chromium tests, production build, zero known dependency vulnerabilities, and real in-app-browser WebMCP verification across all three bundled packs plus the complete canonical approval-and-recovery flow.
 
 ## Repository map
 
