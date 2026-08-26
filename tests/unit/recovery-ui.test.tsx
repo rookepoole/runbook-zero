@@ -31,6 +31,7 @@ describe("visible deterministic recovery", () => {
     useRunbookStore.setState({
       scenario: createAppliedState(),
       focusedSurface: "telemetry",
+      focusProvenance: "agent",
       lastAgentAction: "Agent applied human-approved M-POOL-RESTORE.",
       snapshotInvocationCount: 0,
       selectedServiceId: "checkout",

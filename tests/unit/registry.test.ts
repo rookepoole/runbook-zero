@@ -11,6 +11,7 @@ describe("Gate 1 WebMCP registry seam", () => {
     useRunbookStore.setState({
       scenario: createScenarioA(),
       focusedSurface: null,
+      focusProvenance: null,
       lastAgentAction: null,
       snapshotInvocationCount: 0,
       selectedServiceId: "checkout",
@@ -43,6 +44,7 @@ describe("Gate 1 WebMCP registry seam", () => {
     });
     expect(useRunbookStore.getState()).toMatchObject({
       focusedSurface: "system-overview",
+      focusProvenance: "agent",
       snapshotInvocationCount: 1,
     });
     handle.unregister();

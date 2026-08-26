@@ -5,6 +5,7 @@ import {
   beginInvestigation,
   compareMitigations,
   discardStagedMitigation,
+  setWorkingHypothesis,
   stageMitigation,
 } from "../../src/domain/commands";
 import type { MitigationId } from "../../src/domain/types";
@@ -123,5 +124,19 @@ describe("incident commands and approval invariant", () => {
     expect(() => stageMitigation(candidateState(), unknown)).toThrowError(
       new DomainError("UNKNOWN_MITIGATION", "Unknown mitigation M-NOT-REAL."),
     );
+  });
+
+  it("preserves confidence and evidence bindings with the hypothesis", () => {
+    const investigating = beginInvestigation(createScenarioA());
+    const next = setWorkingHypothesis(
+      investigating,
+      "The inventory database pool is saturated.",
+      "high",
+      ["CHG-271", "inventory-db.saturationPct"],
+    );
+    expect(next.incident).toMatchObject({
+      hypothesisConfidence: "high",
+      hypothesisEvidenceIds: ["CHG-271", "inventory-db.saturationPct"],
+    });
   });
 });

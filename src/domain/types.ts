@@ -51,6 +51,8 @@ export interface Incident {
   affectedServices: ServiceId[];
   customerImpact: string;
   workingHypothesis?: string;
+  hypothesisConfidence?: "low" | "medium" | "high";
+  hypothesisEvidenceIds?: string[];
   stagedMitigationId?: string;
 }
 

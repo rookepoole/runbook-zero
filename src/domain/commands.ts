@@ -48,6 +48,8 @@ export const beginInvestigation = (state: ScenarioState): ScenarioState => {
 export const setWorkingHypothesis = (
   state: ScenarioState,
   hypothesis: string,
+  confidence: "low" | "medium" | "high" = "medium",
+  evidenceIds: string[] = [],
 ): ScenarioState => {
   invariant(
     state.phase === "INVESTIGATING",
@@ -61,7 +63,15 @@ export const setWorkingHypothesis = (
     "A working hypothesis cannot be empty.",
   );
   return appendEvent(
-    { ...state, incident: { ...state.incident, workingHypothesis: trimmed } },
+    {
+      ...state,
+      incident: {
+        ...state.incident,
+        workingHypothesis: trimmed,
+        hypothesisConfidence: confidence,
+        hypothesisEvidenceIds: [...evidenceIds],
+      },
+    },
     {
       actor: "agent",
       type: "hypothesis",

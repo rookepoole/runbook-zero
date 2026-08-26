@@ -18,6 +18,7 @@ describe("shared incident workspace", () => {
     useRunbookStore.setState({
       scenario: createScenarioA(),
       focusedSurface: null,
+      focusProvenance: null,
       lastAgentAction: null,
       snapshotInvocationCount: 0,
       selectedServiceId: "checkout",
@@ -50,6 +51,30 @@ describe("shared incident workspace", () => {
     expect(screen.getByText("Incident command")).toBeVisible();
     expect(screen.getByText("Telemetry / signals")).toBeVisible();
     expect(screen.getByText("Change + incident timeline")).toBeVisible();
+    expect(screen.getByText("4 / 11 services")).toBeVisible();
+    expect(screen.getByText("Checkout dependency graph")).toBeVisible();
+    expect(
+      screen.getAllByRole("img", { name: /trend from baseline/i }),
+    ).toHaveLength(4);
+  });
+
+  it("supports inspectable evidence and keyboard-dismissable focus mode", async () => {
+    render(<App />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Focus topology panel" }),
+    );
+    expect(screen.getByText(/FOCUS MODE · topology/i)).toBeVisible();
+    expect(screen.getAllByText("gateway").length).toBeGreaterThan(0);
+    expect(screen.getByText("payments, inventory")).toBeVisible();
+
+    act(() => fireEvent.keyDown(window, { key: "Escape" }));
+    expect(
+      screen.queryByText(/FOCUS MODE · topology/i),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Inspect exact change"));
+    expect(screen.getByText("dbPoolSize 80")).toBeVisible();
+    expect(screen.getByText("dbPoolSize 12")).toBeVisible();
   });
 
   it("visibly mirrors diagnosis, constrained comparison, and staging", async () => {
@@ -69,6 +94,9 @@ describe("shared incident workspace", () => {
         "inventory-v2.7.0 reduced dbPoolSize from 80 to 12, saturating inventory-db.",
       ),
     ).toHaveLength(2);
+    expect(screen.getByText("HIGH CONFIDENCE")).toBeVisible();
+    expect(screen.getAllByText("CHG-271").length).toBeGreaterThan(0);
+    expect(screen.getByText("inventory-db.saturationPct")).toBeVisible();
     expect(
       screen.getByText("Agent recorded a working hypothesis."),
     ).toBeVisible();

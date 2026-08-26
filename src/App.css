@@ -95,6 +95,10 @@
   letter-spacing: 0.08em;
 }
 
+.header-incident--resolved strong {
+  color: var(--healthy);
+}
+
 .header-incident b {
   border: 1px solid rgba(255, 93, 115, 0.5);
   color: var(--critical);
@@ -216,6 +220,11 @@ main {
   padding: 0.3rem 0.45rem;
 }
 
+.phase-badge--resolved {
+  border-color: rgba(61, 220, 151, 0.5);
+  color: var(--healthy);
+}
+
 .workspace-grid {
   display: grid;
   gap: 1px;
@@ -271,6 +280,7 @@ main {
 .human-chip,
 .system-chip,
 .staged-chip,
+.applied-chip,
 .constraint-chip,
 .agent-chip,
 .human-chip,
@@ -307,6 +317,12 @@ main {
   background: rgba(246, 200, 95, 0.08);
   border: 1px dashed rgba(246, 200, 95, 0.65);
   color: var(--degraded);
+}
+
+.applied-chip {
+  background: rgba(98, 168, 255, 0.08);
+  border: 1px solid rgba(98, 168, 255, 0.5);
+  color: var(--agent);
 }
 
 .mono-label {
@@ -543,6 +559,11 @@ main {
   border-style: solid;
 }
 
+.approval-card--applied {
+  border-color: rgba(98, 168, 255, 0.55);
+  border-style: solid;
+}
+
 .approval-card__heading {
   justify-content: space-between;
 }
@@ -702,6 +723,10 @@ main {
   text-decoration: none;
 }
 
+.config-evidence .config-restored {
+  color: var(--healthy);
+}
+
 .timeline-panel {
   grid-column: 2;
   grid-row: 2;
@@ -786,6 +811,422 @@ main {
   z-index: 20;
 }
 
+.triage-strip {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1.45fr repeat(4, minmax(0, 1fr));
+  margin-bottom: 1px;
+}
+
+.triage-strip > div {
+  border-right: 1px solid var(--border);
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.55rem 0.75rem;
+}
+
+.triage-strip > div:last-child {
+  border-right: 0;
+}
+
+.triage-strip span {
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.triage-strip strong {
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-mode-bar {
+  align-items: center;
+  background: rgba(184, 137, 255, 0.08);
+  border: 1px solid rgba(184, 137, 255, 0.42);
+  color: var(--human);
+  display: flex;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  justify-content: space-between;
+  margin-bottom: 1px;
+  padding: 0.42rem 0.65rem;
+  text-transform: uppercase;
+}
+
+.focus-mode-bar--agent {
+  background: rgba(98, 168, 255, 0.07);
+  border-color: rgba(98, 168, 255, 0.42);
+  color: var(--agent);
+}
+
+.focus-mode-bar button,
+.focus-button,
+.timeline-filters button {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  padding: 0.3rem 0.45rem;
+}
+
+.focus-mode-bar button:hover,
+.focus-button:hover,
+.timeline-filters button:hover,
+.timeline-filters button[aria-pressed="true"] {
+  background: var(--raised);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.panel-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.45rem;
+}
+
+@media (min-width: 1101px) {
+  .workspace-grid[class*="workspace-grid--focus-"] {
+    grid-template-columns: minmax(0, 1.9fr) minmax(320px, 0.8fr);
+    grid-template-rows: repeat(3, minmax(0, 220px));
+  }
+
+  .workspace-grid[class*="workspace-grid--focus-"] > .workspace-panel {
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .workspace-grid--focus-timeline .timeline-list {
+    max-height: 610px;
+  }
+
+  .workspace-grid--focus-topology .topology-panel,
+  .workspace-grid--focus-telemetry .telemetry-panel {
+    grid-column: 1;
+    grid-row: 1 / 4;
+  }
+
+  .workspace-grid--focus-topology .incident-command,
+  .workspace-grid--focus-telemetry .incident-command {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .workspace-grid--focus-topology .telemetry-panel,
+  .workspace-grid--focus-telemetry .topology-panel {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .workspace-grid--focus-topology .timeline-panel,
+  .workspace-grid--focus-telemetry .timeline-panel {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .workspace-grid--focus-incident-command,
+  .workspace-grid--focus-timeline {
+    grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.9fr) !important;
+  }
+
+  .workspace-grid--focus-incident-command .incident-command,
+  .workspace-grid--focus-timeline .timeline-panel {
+    grid-column: 2;
+    grid-row: 1 / 4;
+  }
+
+  .workspace-grid--focus-incident-command .topology-panel,
+  .workspace-grid--focus-timeline .topology-panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .workspace-grid--focus-incident-command .telemetry-panel,
+  .workspace-grid--focus-timeline .telemetry-panel {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .workspace-grid--focus-incident-command .timeline-panel,
+  .workspace-grid--focus-timeline .incident-command {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}
+
+.topology-canvas {
+  aspect-ratio: 2.65 / 1;
+  background:
+    linear-gradient(rgba(98, 168, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(98, 168, 255, 0.02) 1px, transparent 1px),
+    #0b1016;
+  background-size: 24px 24px;
+  border: 1px solid var(--border);
+  min-height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.topology-edges {
+  height: 100%;
+  inset: 0;
+  overflow: visible;
+  position: absolute;
+  width: 100%;
+}
+
+.topology-edges marker path {
+  fill: var(--border-strong);
+}
+
+.topology-edge {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 0.45;
+  vector-effect: non-scaling-stroke;
+}
+
+.topology-edge--traced {
+  stroke: var(--agent);
+  stroke-width: 1.8;
+}
+
+.topology-node {
+  left: var(--node-x);
+  min-height: 0;
+  padding: 0.42rem;
+  position: absolute;
+  top: var(--node-y);
+  width: 15%;
+  z-index: 1;
+}
+
+.topology-node::after {
+  content: none;
+}
+
+.topology-node strong {
+  font-size: clamp(0.58rem, 0.72vw, 0.72rem);
+}
+
+.topology-node small {
+  font-size: clamp(0.5rem, 0.58vw, 0.6rem);
+}
+
+.topology-node--traced::before {
+  background: var(--panel);
+  right: 0.2rem;
+  top: -0.45rem;
+}
+
+.topology-inspector,
+.evidence-detail-grid {
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0.55rem;
+}
+
+.topology-inspector > div,
+.evidence-detail-grid > div {
+  border-right: 1px solid var(--border);
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.48rem 0.55rem;
+}
+
+.topology-inspector > div:last-child,
+.evidence-detail-grid > div:last-child {
+  border-right: 0;
+}
+
+.topology-inspector strong,
+.topology-inspector code,
+.topology-inspector small,
+.evidence-detail-grid code {
+  color: var(--text-primary);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signal-card__label {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.metric-delta {
+  font-family: var(--mono);
+}
+
+.metric-delta--bad {
+  color: var(--critical) !important;
+}
+
+.metric-delta--good {
+  color: var(--healthy) !important;
+}
+
+.sparkline {
+  height: 44px;
+  overflow: visible;
+  width: 100%;
+}
+
+.sparkline__baseline {
+  stroke: var(--text-secondary);
+  stroke-dasharray: 2 2;
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.sparkline__change {
+  stroke: var(--degraded);
+  stroke-dasharray: 1 2;
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.sparkline__line {
+  fill: none;
+  stroke: var(--critical);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.health-label--healthy ~ .focus-button + .sparkline,
+.metric-delta--good + .sparkline {
+  color: var(--healthy);
+}
+
+.sparkline__point {
+  fill: var(--critical);
+}
+
+.signal-card--healthy .sparkline__line {
+  stroke: var(--healthy);
+}
+
+.signal-card--healthy .sparkline__point {
+  fill: var(--healthy);
+}
+
+.signal-card--degraded .sparkline__line {
+  stroke: var(--degraded);
+}
+
+.signal-card--degraded .sparkline__point {
+  fill: var(--degraded);
+}
+
+.evidence-detail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.evidence-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+.evidence-chips span,
+.evidence-chips code,
+.approval-scope {
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  padding: 0.25rem 0.35rem;
+}
+
+.candidate-card p {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  margin: 0.15rem 0 0;
+}
+
+.approval-scope {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.65rem;
+}
+
+.approval-scope code {
+  color: var(--human);
+}
+
+.assumption-list {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  padding-top: 0.65rem;
+}
+
+.timeline-filters {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+
+.timeline-filters button {
+  text-transform: uppercase;
+}
+
+.timeline-item > div code,
+.timeline-item > small {
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.59rem;
+}
+
+.timeline-item details {
+  color: var(--text-secondary);
+  font-size: 0.67rem;
+}
+
+.timeline-item summary {
+  cursor: pointer;
+}
+
+.timeline-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0.45rem 0 0;
+}
+
+.timeline-detail div {
+  border: 1px solid var(--border);
+  padding: 0.35rem;
+}
+
+.timeline-detail dt,
+.timeline-detail dd {
+  display: inline;
+  margin: 0;
+}
+
+.timeline-detail dt {
+  color: var(--text-secondary);
+  margin-right: 0.35rem;
+}
+
 @media (max-width: 1100px) {
   .workspace-grid {
     grid-template-columns: 1fr;
@@ -829,17 +1270,26 @@ main {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .topology-node:nth-child(4n)::after {
-    content: "→";
+  .triage-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .topology-node:nth-child(2n)::after,
-  .topology-node:last-child::after {
-    content: "";
+  .triage-strip > div {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .triage-strip > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .topology-canvas {
+    aspect-ratio: 2 / 1;
   }
 
   .topology-legend,
-  .config-evidence {
+  .config-evidence,
+  .topology-inspector,
+  .evidence-detail-grid {
     align-items: flex-start;
     display: grid;
     gap: 0.35rem;

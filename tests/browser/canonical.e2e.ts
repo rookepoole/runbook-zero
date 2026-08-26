@@ -179,7 +179,7 @@ test("canonical reset-to-resolved journey preserves human authority", async ({
 
   await page.getByRole("button", { name: "Reset Scenario" }).click();
   await expect(page.getByText("INCIDENT OPEN")).toBeVisible();
-  await expect(page.getByText("4,700 ms")).toBeVisible();
+  await expect(page.getByText("4,700 ms").first()).toBeVisible();
   await expect(
     page.getByText("Waiting for evidence-backed diagnosis."),
   ).toBeVisible();
@@ -216,6 +216,18 @@ test("target layouts, keyboard access, and reduced motion remain usable", async 
   expect(bodyText).not.toMatch(/TODO|lorem ipsum|placeholder/i);
 
   await page.setViewportSize({ width: 1440, height: 900 });
-  await expect(page.getByText("Checkout dependency path")).toBeVisible();
+  await expect(page.getByText("Checkout dependency graph")).toBeVisible();
   await expect(page.getByText("Evidence trail")).toBeVisible();
+  await expect(page.locator(".topology-edge")).toHaveCount(11);
+  await expect(page.locator(".sparkline")).toHaveCount(4);
+
+  await page.getByRole("button", { name: "Focus topology panel" }).click();
+  await expect(page.getByText(/FOCUS MODE · topology/i)).toBeVisible();
+  await expect(page.getByText("payments, inventory")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByText(/FOCUS MODE · topology/i)).not.toBeVisible();
+
+  await page.getByText("Inspect exact change").click();
+  await expect(page.getByText("dbPoolSize 80")).toBeVisible();
+  await expect(page.getByText("dbPoolSize 12")).toBeVisible();
 });

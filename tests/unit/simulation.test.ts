@@ -47,6 +47,25 @@ describe("deterministic recovery simulation", () => {
     expect(first.frames[3].checkoutP95).toBe(420);
     expect(first.state.phase).toBe("RESOLVED");
     expect(first.state.incident.status).toBe("resolved");
+    expect(
+      Math.max(
+        ...Object.values(first.state.services).map(
+          (service) => service.p95LatencyMs,
+        ),
+      ),
+    ).toBeLessThanOrEqual(500);
+    expect(
+      Math.max(
+        ...Object.values(first.state.services).map(
+          (service) => service.errorRatePct,
+        ),
+      ),
+    ).toBeLessThanOrEqual(1);
+    expect(
+      Object.values(first.state.services).every(
+        (service) => service.health === "healthy",
+      ),
+    ).toBe(true);
     expect(verifyRecovery(first.state)).toEqual({
       recovered: true,
       checks: [
@@ -64,7 +83,7 @@ describe("deterministic recovery simulation", () => {
         },
         {
           metric: "inventory-db.saturationPct",
-          value: 68,
+          value: 55,
           threshold: 70,
           pass: true,
         },

@@ -9,6 +9,7 @@ describe("Gate 1 shared interface", () => {
     useRunbookStore.setState({
       scenario: createScenarioA(),
       focusedSurface: null,
+      focusProvenance: null,
       lastAgentAction: null,
       snapshotInvocationCount: 0,
       selectedServiceId: "checkout",

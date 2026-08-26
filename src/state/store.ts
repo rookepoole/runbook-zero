@@ -20,10 +20,12 @@ export type FocusTarget =
   | "telemetry"
   | "timeline"
   | null;
+export type FocusProvenance = "agent" | "human" | null;
 
 interface RunbookState {
   scenario: ScenarioState;
   focusedSurface: FocusTarget;
+  focusProvenance: FocusProvenance;
   lastAgentAction: string | null;
   snapshotInvocationCount: number;
   selectedServiceId: ServiceId;
@@ -41,6 +43,10 @@ interface RunbookState {
     tracedFlow?: UserFlow,
   ) => void;
   selectService: (serviceId: ServiceId) => void;
+  toggleHumanFocus: (
+    target: Exclude<FocusTarget, "system-overview" | null>,
+  ) => void;
+  clearFocus: () => void;
   approveStagedMitigation: (mitigationId: MitigationId) => void;
   discardStagedMitigationAsHuman: () => void;
   advanceRecoveryFrame: () => void;
@@ -50,6 +56,7 @@ interface RunbookState {
 export const useRunbookStore = create<RunbookState>((set) => ({
   scenario: createScenarioA(),
   focusedSurface: null,
+  focusProvenance: null,
   lastAgentAction: null,
   snapshotInvocationCount: 0,
   selectedServiceId: "checkout",
@@ -57,6 +64,7 @@ export const useRunbookStore = create<RunbookState>((set) => ({
   focusSystemOverviewFromAgent: () =>
     set((state) => ({
       focusedSurface: "system-overview",
+      focusProvenance: "agent",
       lastAgentAction: "Agent inspected the live system snapshot.",
       snapshotInvocationCount: state.snapshotInvocationCount + 1,
     })),
@@ -64,7 +72,13 @@ export const useRunbookStore = create<RunbookState>((set) => ({
     scenario,
     action,
     focusedSurface = "incident-command",
-  ) => set({ scenario, focusedSurface, lastAgentAction: action }),
+  ) =>
+    set({
+      scenario,
+      focusedSurface,
+      focusProvenance: "agent",
+      lastAgentAction: action,
+    }),
   recordAgentInspection: (
     action,
     focusedSurface = "incident-command",
@@ -73,22 +87,41 @@ export const useRunbookStore = create<RunbookState>((set) => ({
   ) =>
     set((state) => ({
       focusedSurface,
+      focusProvenance: "agent",
       lastAgentAction: action,
       selectedServiceId: selectedServiceId ?? state.selectedServiceId,
       tracedFlow: tracedFlow ?? state.tracedFlow,
     })),
   selectService: (selectedServiceId) =>
-    set({ selectedServiceId, focusedSurface: "telemetry" }),
+    set({
+      selectedServiceId,
+      focusedSurface: "telemetry",
+      focusProvenance: "human",
+      lastAgentAction: null,
+    }),
+  toggleHumanFocus: (target) =>
+    set((state) =>
+      state.focusedSurface === target && state.focusProvenance === "human"
+        ? { focusedSurface: null, focusProvenance: null }
+        : {
+            focusedSurface: target,
+            focusProvenance: "human",
+            lastAgentAction: null,
+          },
+    ),
+  clearFocus: () => set({ focusedSurface: null, focusProvenance: null }),
   approveStagedMitigation: (mitigationId) =>
     set((state) => ({
       scenario: approveStagedMitigationAsHuman(state.scenario, mitigationId),
       focusedSurface: "incident-command",
+      focusProvenance: "human",
       lastAgentAction: null,
     })),
   discardStagedMitigationAsHuman: () =>
     set((state) => ({
       scenario: discardStagedMitigation(state.scenario, "human"),
       focusedSurface: "incident-command",
+      focusProvenance: "human",
       lastAgentAction: null,
     })),
   advanceRecoveryFrame: () =>
@@ -97,6 +130,7 @@ export const useRunbookStore = create<RunbookState>((set) => ({
         ? {
             scenario: advanceRecovery(state.scenario),
             focusedSurface: "telemetry" as const,
+            focusProvenance: "agent" as const,
           }
         : state,
     ),
@@ -104,6 +138,7 @@ export const useRunbookStore = create<RunbookState>((set) => ({
     set({
       scenario: createScenarioA(),
       focusedSurface: null,
+      focusProvenance: null,
       lastAgentAction: null,
       snapshotInvocationCount: 0,
       selectedServiceId: "checkout",

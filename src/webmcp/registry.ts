@@ -290,9 +290,17 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
     },
     execute: (raw) => {
       const summary = requiredString(raw, "summary");
+      const confidence = requiredString(raw, "confidence") as
+        "low" | "medium" | "high";
+      const evidenceIds = (raw.evidenceIds ?? []) as string[];
       let state = currentScenario();
       if (state.phase === "INCIDENT_OPEN") state = beginInvestigation(state);
-      const next = setWorkingHypothesis(state, summary);
+      const next = setWorkingHypothesis(
+        state,
+        summary,
+        confidence,
+        evidenceIds,
+      );
       commitAgentScenario(next, "Agent recorded a working hypothesis.");
       return { hypothesis: next.incident.workingHypothesis };
     },

@@ -3,6 +3,8 @@ import { useRunbookStore } from "../../state/store";
 export const IncidentCommand = () => {
   const scenario = useRunbookStore((state) => state.scenario);
   const focusedSurface = useRunbookStore((state) => state.focusedSurface);
+  const focusProvenance = useRunbookStore((state) => state.focusProvenance);
+  const toggleFocus = useRunbookStore((state) => state.toggleHumanFocus);
   const approve = useRunbookStore((state) => state.approveStagedMitigation);
   const discard = useRunbookStore(
     (state) => state.discardStagedMitigationAsHuman,
@@ -10,6 +12,10 @@ export const IncidentCommand = () => {
   const comparison = scenario.mitigationComparison;
   const staged = scenario.stagedMitigation;
   const isAgentFocused =
+    (focusedSurface === "incident-command" ||
+      focusedSurface === "system-overview") &&
+    focusProvenance === "agent";
+  const isFocused =
     focusedSurface === "incident-command" ||
     focusedSurface === "system-overview";
 
@@ -24,7 +30,17 @@ export const IncidentCommand = () => {
           <p className="eyebrow">Incident command</p>
           <h2 id="incident-command-heading">{scenario.incident.title}</h2>
         </div>
-        {isAgentFocused && <span className="agent-chip">AGENT FOCUS</span>}
+        <div className="panel-actions">
+          {isAgentFocused && <span className="agent-chip">AGENT FOCUS</span>}
+          <button
+            type="button"
+            className="focus-button"
+            aria-label={`${isFocused ? "Exit" : "Focus"} incident command panel`}
+            onClick={() => toggleFocus("incident-command")}
+          >
+            {isFocused ? "Collapse" : "Focus"}
+          </button>
+        </div>
       </div>
 
       <div className="impact-strip">
@@ -39,7 +55,19 @@ export const IncidentCommand = () => {
         {scenario.incident.workingHypothesis ? (
           <div className="hypothesis-card">
             <span className="agent-chip">AGENT</span>
-            <p>{scenario.incident.workingHypothesis}</p>
+            <div>
+              <p>{scenario.incident.workingHypothesis}</p>
+              <div className="evidence-chips" aria-label="Hypothesis evidence">
+                <span>
+                  {scenario.incident.hypothesisConfidence?.toUpperCase() ??
+                    "MEDIUM"}{" "}
+                  CONFIDENCE
+                </span>
+                {(scenario.incident.hypothesisEvidenceIds ?? []).map((id) => (
+                  <code key={id}>{id}</code>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           <p className="empty-state">Waiting for evidence-backed diagnosis.</p>
@@ -70,6 +98,11 @@ export const IncidentCommand = () => {
                     ms predicted P95 · {option.estimatedRecoverySeconds}s
                     recovery
                   </small>
+                  <small>
+                    {option.predictedErrorRatePct}% errors · reversible{" "}
+                    {option.reversible ? "yes" : "no"}
+                  </small>
+                  <p>{option.description}</p>
                 </article>
               );
             })}
@@ -85,7 +118,11 @@ export const IncidentCommand = () => {
           <div className="approval-card__heading">
             <span
               className={
-                staged.status === "approved" ? "human-chip" : "staged-chip"
+                staged.status === "approved"
+                  ? "human-chip"
+                  : staged.status === "applied"
+                    ? "applied-chip"
+                    : "staged-chip"
               }
             >
               {staged.status === "approved"
@@ -98,6 +135,12 @@ export const IncidentCommand = () => {
           </div>
           <h3>{staged.option.title}</h3>
           <p>{staged.option.description}</p>
+          <div className="approval-scope">
+            <span>Approval scope</span>
+            <code>
+              {staged.incidentId} · seed {staged.scenarioSeed} · {staged.id}
+            </code>
+          </div>
           <dl className="approval-facts">
             <div>
               <dt>Exact change</dt>
@@ -124,6 +167,12 @@ export const IncidentCommand = () => {
               <dd>{staged.option.reversible ? "YES" : "NO"}</dd>
             </div>
           </dl>
+          <div className="assumption-list">
+            <span className="section-label">Simulation assumptions</span>
+            {staged.option.assumptions.map((assumption) => (
+              <p key={assumption}>• {assumption}</p>
+            ))}
+          </div>
           {scenario.phase === "AWAITING_HUMAN_APPROVAL" && (
             <div className="approval-actions">
               <button

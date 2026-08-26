@@ -79,9 +79,34 @@ const applyRecoveryFrame = (
     });
   }
   if (step === 5) {
-    for (const serviceId of state.incident.affectedServices) {
-      services = updateService(services, serviceId, { health: "healthy" });
-    }
+    services = updateService(services, "gateway", {
+      p50LatencyMs: 34,
+      p95LatencyMs: 95,
+      errorRatePct: 0.3,
+      saturationPct: 45,
+      health: "healthy",
+    });
+    services = updateService(services, "checkout", {
+      p50LatencyMs: 145,
+      p95LatencyMs: option.predictedP95Ms,
+      errorRatePct: option.predictedErrorRatePct,
+      saturationPct: 55,
+      health: "healthy",
+    });
+    services = updateService(services, "inventory", {
+      p50LatencyMs: 82,
+      p95LatencyMs: Math.max(280, option.predictedP95Ms - 140),
+      errorRatePct: 0.5,
+      saturationPct: 54,
+      health: "healthy",
+    });
+    services = updateService(services, "inventory-db", {
+      p50LatencyMs: 18,
+      p95LatencyMs: 38,
+      errorRatePct: 0.2,
+      saturationPct: 55,
+      health: "healthy",
+    });
   }
   return services;
 };
