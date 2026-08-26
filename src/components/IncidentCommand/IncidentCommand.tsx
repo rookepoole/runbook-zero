@@ -1,5 +1,8 @@
 import { useRunbookStore } from "../../state/store";
 
+const formatActionValue = (value: unknown) =>
+  value === null ? "null" : String(value);
+
 export const IncidentCommand = () => {
   const scenario = useRunbookStore((state) => state.scenario);
   const focusedSurface = useRunbookStore((state) => state.focusedSurface);
@@ -76,10 +79,7 @@ export const IncidentCommand = () => {
               <span className="mono-label">WEBMCP HANDOFF</span>
             </div>
             <p>In a WebMCP-capable browser, ask your agent:</p>
-            <blockquote>
-              Checkout latency spiked after this morning&apos;s deployment. Find
-              the likely cause. Don&apos;t change production yet.
-            </blockquote>
+            <blockquote>{scenario.pack.agentPrompt}</blockquote>
             <small>
               Agent calls will focus and update this same workspace. Production
               cannot change before visible human approval of an exact staged
@@ -158,12 +158,25 @@ export const IncidentCommand = () => {
           </div>
           <dl className="approval-facts">
             <div>
-              <dt>Exact change</dt>
-              <dd>dbPoolSize 12 → 80</dd>
+              <dt>Exact action</dt>
+              <dd>
+                {staged.option.exactActions.map((action) => (
+                  <span
+                    className="exact-action"
+                    key={`${action.targetService}-${action.field}`}
+                  >
+                    <small>{action.targetService}</small>
+                    <code>
+                      {action.field} {formatActionValue(action.from)} →{" "}
+                      {formatActionValue(action.to)}
+                    </code>
+                  </span>
+                ))}
+              </dd>
             </div>
             <div>
               <dt>Target</dt>
-              <dd>inventory</dd>
+              <dd>{staged.option.targetService}</dd>
             </div>
             <div>
               <dt>Predicted P95</dt>

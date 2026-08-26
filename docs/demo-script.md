@@ -20,7 +20,7 @@ Narration:
 
 > Runbook Zero is a WebMCP-native incident command console where a browser agent and a human work on the same live operational surface. The page gives the agent structured tools while the human keeps context and control.
 
-Show `INC-042`, the Depth-0 impact metrics, connected checkout path, and WebMCP status.
+Briefly open **Incident Packs** to show the canonical, payment-queue, and catalog-cache incidents, then close it. Show `INC-042`, the Depth-0 impact metrics, connected checkout path, Capability Firewall, and WebMCP status.
 
 ## 0:15–0:55 — Diagnose
 
@@ -40,7 +40,7 @@ Prompt:
 
 > Don't roll back inventory. Show me the lowest-risk alternative and stage it for review.
 
-Hold briefly on `STAGED — NOT APPLIED`, `M-POOL-RESTORE`, and the exact `12 → 80` change. Show that telemetry is still unhealthy and apply is absent.
+Hold briefly on `STAGED — NOT APPLIED`, `M-POOL-RESTORE`, the exact `12 → 80` change, and the Firewall's red `LOCKED` state. Show that telemetry is still unhealthy and apply is absent.
 
 Narration:
 
@@ -50,7 +50,7 @@ Narration:
 
 Click **Approve staged mitigation**.
 
-Hold on `HUMAN APPROVED`, the human timeline event, and the changed active-tool surface.
+Hold on `HUMAN APPROVED`, the human timeline event, and the Firewall's green `AVAILABLE` transition.
 
 Narration:
 

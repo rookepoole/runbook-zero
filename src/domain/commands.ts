@@ -8,8 +8,6 @@ import type {
 } from "./types";
 import { invariant } from "./validation";
 
-const EVENT_BASE_MS = Date.parse("2026-08-25T14:05:00.000Z");
-
 const createEvent = (
   state: ScenarioState,
   event: Omit<TimelineEvent, "id" | "timestamp">,
@@ -17,7 +15,7 @@ const createEvent = (
   ...event,
   id: `EVT-${String(state.timeline.length + 1).padStart(3, "0")}`,
   timestamp: new Date(
-    EVENT_BASE_MS + state.timeline.length * 1_000,
+    Date.parse(state.eventBaseTimestamp) + state.timeline.length * 1_000,
   ).toISOString(),
 });
 
@@ -298,6 +296,12 @@ export const applyApprovedMitigation = (
   );
 
   const transitioned = transitionPhase(state, "MITIGATING");
+  const effect = state.mitigationEffects[mitigationId];
+  invariant(
+    effect,
+    "UNKNOWN_MITIGATION",
+    `Unknown mitigation effect ${mitigationId}.`,
+  );
   const event = createEvent(state, {
     actor: "agent",
     type: "apply",
@@ -312,8 +316,12 @@ export const applyApprovedMitigation = (
       status: "applied",
       appliedAt: event.timestamp,
     },
-    systemConfig: { ...state.mitigationEffects[mitigationId] },
-    recovery: { mitigationId, step: 0, totalSteps: 5 },
+    systemConfig: { ...effect.resultingConfig },
+    recovery: {
+      mitigationId,
+      step: 0,
+      totalSteps: effect.recoveryFrames.length,
+    },
     timeline: [...state.timeline, event],
   };
 };

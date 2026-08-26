@@ -18,7 +18,6 @@ export const TimelinePanel = () => {
   const focusProvenance = useRunbookStore((state) => state.focusProvenance);
   const toggleFocus = useRunbookStore((state) => state.toggleHumanFocus);
   const [filter, setFilter] = useState<TimelineFilter>("all");
-  const change = scenario.changes[0];
   const isFocused = focusedSurface === "timeline";
   const isAgentFocused = isFocused && focusProvenance === "agent";
   const events = [...scenario.timeline]
@@ -39,7 +38,7 @@ export const TimelinePanel = () => {
         </div>
         <div className="panel-actions">
           <span className="mono-label">
-            {scenario.timeline.length + 1} EVENTS
+            {scenario.timeline.length + scenario.changes.length} EVENTS
           </span>
           <button
             type="button"
@@ -66,41 +65,48 @@ export const TimelinePanel = () => {
         )}
       </div>
       <ol className="timeline-list">
-        {showChange && (
-          <li className="timeline-item timeline-item--change">
-            <div>
-              <span className="system-chip">CHANGE</span>
-              <time>{change.timestamp.slice(11, 16)} UTC</time>
-              <code>{change.id}</code>
-            </div>
-            <strong>{change.summary}</strong>
-            <p>
-              {change.category} · {change.author} · {change.risk.toUpperCase()}{" "}
-              RISK
-            </p>
-            <details>
-              <summary>Inspect exact change</summary>
-              <dl className="timeline-detail">
-                <div>
-                  <dt>Service</dt>
-                  <dd>{change.serviceId}</dd>
-                </div>
-                <div>
-                  <dt>Version</dt>
-                  <dd>{change.version}</dd>
-                </div>
-                <div>
-                  <dt>Before</dt>
-                  <dd>dbPoolSize 80</dd>
-                </div>
-                <div>
-                  <dt>After</dt>
-                  <dd>dbPoolSize 12</dd>
-                </div>
-              </dl>
-            </details>
-          </li>
-        )}
+        {showChange &&
+          scenario.changes.map((change) => (
+            <li className="timeline-item timeline-item--change" key={change.id}>
+              <div>
+                <span className="system-chip">CHANGE</span>
+                <time>{change.timestamp.slice(11, 16)} UTC</time>
+                <code>{change.id}</code>
+              </div>
+              <strong>{change.summary}</strong>
+              <p>
+                {change.category} · {change.author} ·{" "}
+                {change.risk.toUpperCase()} RISK
+              </p>
+              <details>
+                <summary>Inspect exact change</summary>
+                <dl className="timeline-detail">
+                  <div>
+                    <dt>Service</dt>
+                    <dd>{change.serviceId}</dd>
+                  </div>
+                  <div>
+                    <dt>Version</dt>
+                    <dd>{change.version ?? "configuration"}</dd>
+                  </div>
+                  {Object.entries(change.diff).flatMap(([field, values]) => [
+                    <div key={`${field}-before`}>
+                      <dt>Before</dt>
+                      <dd>
+                        {field} {String(values.from)}
+                      </dd>
+                    </div>,
+                    <div key={`${field}-after`}>
+                      <dt>After</dt>
+                      <dd>
+                        {field} {String(values.to)}
+                      </dd>
+                    </div>,
+                  ])}
+                </dl>
+              </details>
+            </li>
+          ))}
         {events.map((event) => (
           <li
             className={`timeline-item timeline-item--${event.actor}`}

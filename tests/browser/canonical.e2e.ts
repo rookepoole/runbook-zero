@@ -50,6 +50,7 @@ const callTool = <T>(
 
 const captureSubmissionAsset = async (page: Page, name: string) => {
   if (process.env.CAPTURE_SUBMISSION_ASSETS !== "1") return;
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: `docs/screenshots/${name}.png`,
     fullPage: true,

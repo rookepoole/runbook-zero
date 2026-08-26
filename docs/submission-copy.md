@@ -1,6 +1,6 @@
 # Submission copy
 
-Paste-ready draft for the WebMCP Challenge submission. Replace only the final video URL after recording.
+Version 6 candidate draft for the WebMCP Challenge submission. Publish and revalidate version 6 before using this copy; then replace only the final video URL after recording.
 
 ## Title
 
@@ -12,7 +12,7 @@ Human-authorized incident response on a shared WebMCP surface.
 
 ## Short description
 
-Runbook Zero is a WebMCP-native incident command environment where a browser agent and a human investigate failures, compare mitigations, stage exact changes, preserve a visible human-only approval boundary, apply only what was approved, and verify deterministic recovery in the same live interface.
+Runbook Zero is a WebMCP-native incident platform where a browser agent and a human investigate failures, compare mitigations, stage exact changes, preserve a visible human-only approval boundary, apply only what was approved, and verify deterministic recovery in the same live interface.
 
 ## Inspiration
 
@@ -20,20 +20,23 @@ Operations consoles contain the context needed to resolve incidents, but agents 
 
 ## What it does
 
+Runbook Zero loads validated Incident Packs through a user-facing launcher. The Challenge Edition includes three complete incidents: the canonical checkout database-pool regression, a payment event queue backlog caused by reduced consumer concurrency, and a catalog cache stampede caused by a TTL regression. Operators can also download a working pack as JSON, customize it, and import it locally without uploading the file.
+
 The canonical `INC-042` scenario begins with checkout latency at 4.7 seconds after an inventory deployment reduced the database pool from 80 to 12. The agent uses page-defined tools to trace the request path, inspect telemetry and configuration, connect the recent change to 97% database saturation, compare mitigations under a no-rollback constraint, and stage a low-risk pool restoration.
 
 The application then stops. The agent has no approval tool and `apply_approved_mitigation` is absent from its WebMCP surface. A human reviews the exact `12 → 80` change and approves it in the visible UI. Only then does the page register apply. After application, the tool disappears immediately, the incident recovers through five deterministic frames, verification passes, and the agent records the resolution in the shared timeline.
 
 ## How it uses WebMCP
 
-WebMCP is the application's control plane, not an add-on. Runbook Zero registers 12 real `document.modelContext` tools and derives the active subset from 11 state-machine phases. Stale registrations are aborted on every phase change. Tool calls focus and update the same connected topology, baseline-and-trend telemetry, exact change evidence, mitigation card, and provenance timeline the human sees. The tool surface itself communicates authority: stage and discard exist before approval; apply exists only in `APPROVED`; verify and notes remain during recovery.
+WebMCP is the application's control plane, not an add-on. Runbook Zero registers 12 real `document.modelContext` tools and derives the active subset from 11 state-machine phases. Stale registrations are aborted on phase or pack changes. The same contracts run every incident while their service, flow, mitigation, and exact approved-action schemas derive from the active pack. Tool calls focus and update the same connected topology, baseline-and-trend telemetry, exact change evidence, mitigation card, provenance timeline, and Capability Firewall the human sees. The tool surface itself communicates authority: stage and discard exist before approval; apply exists only for an exactly approved stage; verify and notes remain during recovery.
 
 ## How it was built
 
 - React 19, TypeScript, Vite, and Zustand
 - Real page-defined WebMCP through `document.modelContext.registerTool`
 - Pure guarded domain commands and queries
-- Deterministic `INC-042` simulation and five-frame recovery engine
+- Validated Incident Pack v1 domain with three bundled scenarios and safe local JSON import
+- Pack-driven deterministic recovery engine with incident-specific thresholds
 - Dynamic AbortController-based tool registration
 - Three-depth operational information model and shared contextual Focus Mode
 - Vitest and Testing Library for domain, registry, safety, and UI coverage
@@ -46,13 +49,15 @@ The hardest part was preserving human authority as a runtime capability invarian
 
 ## Accomplishments
 
-- Complete deployed J1–J4 incident journey through real WebMCP
+- Complete canonical J1–J4 incident journey through real WebMCP
+- One shared tool/domain layer proven across three incident classes
 - Direct pre-approval apply attempt demonstrably blocked
 - Dynamic 5/9/10/10/7 phase-dependent tool surfaces
+- Visible Capability Firewall synchronized with the live registry and authority state
 - Visible, exact, human-only approval boundary
 - Deterministic recovery and one-click reset
 - Public ChatGPT Sites deployment and AGPL-3.0 repository
-- 42 unit/component tests, 2 browser tests, clean typecheck/lint/build, and zero npm audit findings
+- 57 unit/component tests, 3 browser tests, clean typecheck/lint/build, and real local multi-pack WebMCP evidence
 
 ## What we learned
 
@@ -60,7 +65,7 @@ WebMCP is most powerful when capability discovery is also policy. A browser agen
 
 ## What's next
 
-After the judged Challenge Edition is frozen, future work can add more deterministic scenarios and carefully designed adapters for real observability and remediation systems without weakening the same stage → human approval → exact apply → verification boundary.
+After the judged Challenge Edition is frozen, future work can add carefully designed adapters for real observability and remediation systems without weakening the same stage → human approval → exact apply → verification boundary. No commercial backend or production integration is part of this Challenge candidate.
 
 ## Testing instructions
 

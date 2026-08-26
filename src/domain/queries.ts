@@ -8,6 +8,7 @@ import type {
   SystemSnapshot,
   UserFlow,
 } from "./types";
+import { invariant } from "./validation";
 
 export const getSystemSnapshot = (state: ScenarioState): SystemSnapshot => ({
   incident: {
@@ -35,36 +36,12 @@ export const getSystemSnapshot = (state: ScenarioState): SystemSnapshot => ({
     })),
 });
 
-const FLOW_PATHS: Record<
-  UserFlow,
-  Pick<RequestTrace, "primaryPath" | "branches">
-> = {
-  checkout: {
-    primaryPath: ["edge", "gateway", "checkout", "inventory", "inventory-db"],
-    branches: [
-      ["checkout", "payments"],
-      ["inventory", "redis-cache"],
-      ["inventory", "event-queue"],
-    ],
-  },
-  "catalog-browse": {
-    primaryPath: ["edge", "gateway", "catalog", "inventory", "inventory-db"],
-    branches: [
-      ["catalog", "pricing"],
-      ["inventory", "redis-cache"],
-    ],
-  },
-  login: {
-    primaryPath: ["edge", "gateway", "auth"],
-    branches: [],
-  },
-};
-
 export const traceRequestPath = (
   state: ScenarioState,
   flow: UserFlow,
 ): RequestTrace => {
-  const path = FLOW_PATHS[flow];
+  const path = state.flows[flow];
+  invariant(path, "INVALID_PHASE", `Unknown request flow ${flow}.`);
   const allServices = new Set<ServiceId>([
     ...path.primaryPath,
     ...path.branches.flat(),
@@ -86,9 +63,10 @@ export const inspectService = (state: ScenarioState, serviceId: ServiceId) => ({
   telemetry: { ...state.services[serviceId] },
   dependencies: [...state.topology[serviceId]],
   config:
-    serviceId === "inventory"
-      ? { ...state.systemConfig }
-      : ({} satisfies Record<string, never>),
+    serviceId === state.configTargetServiceId ? { ...state.systemConfig } : {},
+  evidence: state.evidence.filter((item) =>
+    item.serviceIds.includes(serviceId),
+  ),
 });
 
 export const querySignals = (
@@ -137,27 +115,17 @@ export const rankMitigations = (
     );
 
 export const verifyRecovery = (state: ScenarioState): RecoveryVerification => {
-  const checkout = state.services.checkout;
-  const inventoryDb = state.services["inventory-db"];
-  const checks = [
-    {
-      metric: "checkout.p95LatencyMs",
-      value: checkout.p95LatencyMs,
-      threshold: 500,
-      pass: checkout.p95LatencyMs <= 500,
-    },
-    {
-      metric: "checkout.errorRatePct",
-      value: checkout.errorRatePct,
-      threshold: 1,
-      pass: checkout.errorRatePct <= 1,
-    },
-    {
-      metric: "inventory-db.saturationPct",
-      value: inventoryDb.saturationPct,
-      threshold: 70,
-      pass: inventoryDb.saturationPct <= 70,
-    },
-  ];
+  const checks = state.recoveryThresholds.map((threshold) => {
+    const value = state.services[threshold.serviceId][threshold.metric];
+    return {
+      metric: `${threshold.serviceId}.${threshold.metric}`,
+      value,
+      threshold: threshold.threshold,
+      pass:
+        threshold.operator === "lte"
+          ? value <= threshold.threshold
+          : value >= threshold.threshold,
+    };
+  });
   return { recovered: checks.every((check) => check.pass), checks };
 };

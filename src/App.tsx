@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
+import { CapabilityFirewall } from "./components/CapabilityFirewall/CapabilityFirewall";
 import { IncidentCommand } from "./components/IncidentCommand/IncidentCommand";
+import { IncidentLauncher } from "./components/IncidentLauncher/IncidentLauncher";
 import { TelemetryPanel } from "./components/TelemetryPanel/TelemetryPanel";
 import { TimelinePanel } from "./components/TimelinePanel/TimelinePanel";
 import { TopologyPanel } from "./components/TopologyPanel/TopologyPanel";
@@ -10,6 +12,7 @@ import { useRunbookStore } from "./state/store";
 import { useWebMCPRegistry } from "./webmcp/use-webmcp-registry";
 
 function App() {
+  const [launcherOpen, setLauncherOpen] = useState(false);
   const connection = useWebMCPRegistry();
   const scenario = useRunbookStore((state) => state.scenario);
   const resetScenario = useRunbookStore((state) => state.resetScenario);
@@ -30,11 +33,13 @@ function App() {
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") clearFocus();
+      if (event.key !== "Escape") return;
+      if (launcherOpen) setLauncherOpen(false);
+      else clearFocus();
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [clearFocus]);
+  }, [clearFocus, launcherOpen]);
 
   const unhealthyServices = Object.values(scenario.services).filter(
     (service) => service.health !== "healthy",
@@ -67,9 +72,22 @@ function App() {
           <b>{scenario.incident.severity}</b>
           <strong>{scenario.phase.replaceAll("_", "-")}</strong>
         </div>
-        <button type="button" className="reset-button" onClick={resetScenario}>
-          Reset Scenario
-        </button>
+        <div className="header-actions">
+          <button
+            type="button"
+            className="reset-button"
+            onClick={resetScenario}
+          >
+            Reset Scenario
+          </button>
+          <button
+            type="button"
+            className="launcher-button"
+            onClick={() => setLauncherOpen(true)}
+          >
+            Incident Packs
+          </button>
+        </div>
         <WebMCPStatus connection={connection} />
       </header>
       <main>
@@ -87,11 +105,14 @@ function App() {
         <div className="triage-strip" aria-label="Incident at-a-glance">
           <div>
             <span>Impact path</span>
-            <strong>Checkout → inventory reservation</strong>
+            <strong>{scenario.pack.impactPath}</strong>
           </div>
           <div>
             <span>Unhealthy</span>
-            <strong>{unhealthyServices.length} / 11 services</strong>
+            <strong>
+              {unhealthyServices.length} /{" "}
+              {Object.keys(scenario.services).length} services
+            </strong>
           </div>
           <div>
             <span>Highest P95</span>
@@ -114,6 +135,7 @@ function App() {
             </strong>
           </div>
         </div>
+        <CapabilityFirewall connection={connection} />
         {focusedPanel && (
           <div className={`focus-mode-bar focus-mode-bar--${focusProvenance}`}>
             <span>
@@ -140,6 +162,10 @@ function App() {
           <span>{lastAgentAction}</span>
         </div>
       )}
+      <IncidentLauncher
+        open={launcherOpen}
+        onClose={() => setLauncherOpen(false)}
+      />
     </div>
   );
 }

@@ -1,15 +1,4 @@
-export type ServiceId =
-  | "edge"
-  | "gateway"
-  | "auth"
-  | "catalog"
-  | "pricing"
-  | "checkout"
-  | "payments"
-  | "inventory"
-  | "redis-cache"
-  | "inventory-db"
-  | "event-queue";
+export type ServiceId = string;
 
 export type ServiceHealth = "healthy" | "degraded" | "critical";
 
@@ -24,6 +13,14 @@ export interface ServiceTelemetry {
   timestamp: string;
 }
 
+export type PrimitiveConfigValue = string | number | boolean | null;
+export type ServiceConfig = Record<string, PrimitiveConfigValue>;
+
+export interface ChangeDiffValue {
+  from: PrimitiveConfigValue;
+  to: PrimitiveConfigValue;
+}
+
 export interface ChangeRecord {
   id: string;
   timestamp: string;
@@ -33,7 +30,14 @@ export interface ChangeRecord {
   version?: string;
   author: string;
   risk: "low" | "medium" | "high";
-  diff: Record<string, unknown>;
+  diff: Record<string, ChangeDiffValue>;
+}
+
+export interface EvidenceRecord {
+  id: string;
+  kind: "telemetry" | "change" | "trace" | "configuration";
+  summary: string;
+  serviceIds: ServiceId[];
 }
 
 export interface Incident {
@@ -57,10 +61,20 @@ export interface Incident {
 }
 
 export type MitigationKind =
-  "rollback" | "config-restore" | "cache-degrade-mode" | "traffic-shift";
+  | "rollback"
+  | "config-restore"
+  | "cache-degrade-mode"
+  | "traffic-shift"
+  | "capacity-adjustment";
 
-export type MitigationId =
-  "M-ROLLBACK-27" | "M-POOL-RESTORE" | "M-CACHE-DEGRADE";
+export type MitigationId = string;
+
+export interface ExactAction {
+  targetService: ServiceId;
+  field: string;
+  from: PrimitiveConfigValue;
+  to: PrimitiveConfigValue;
+}
 
 export interface MitigationOption {
   id: MitigationId;
@@ -68,6 +82,7 @@ export interface MitigationOption {
   title: string;
   targetService: ServiceId;
   description: string;
+  exactActions: ExactAction[];
   predictedP95Ms: number;
   predictedErrorRatePct: number;
   estimatedRecoverySeconds: number;
@@ -76,10 +91,17 @@ export interface MitigationOption {
   assumptions: string[];
 }
 
+export type TelemetryUpdate = Partial<
+  Omit<ServiceTelemetry, "serviceId" | "timestamp">
+>;
+
+export interface RecoveryFrame {
+  serviceUpdates: Record<ServiceId, TelemetryUpdate>;
+}
+
 export interface MitigationEffect {
-  inventoryRelease: string;
-  inventoryDbPoolSize: number;
-  staleInventoryCacheSeconds: number;
+  resultingConfig: ServiceConfig;
+  recoveryFrames: RecoveryFrame[];
 }
 
 export interface StagedMitigation {
@@ -124,12 +146,78 @@ export type ApplicationPhase =
   | "RESOLVED"
   | "POSTMORTEM_READY";
 
-export type UserFlow = "checkout" | "catalog-browse" | "login";
+export type UserFlow = string;
 
-export interface SystemConfig {
-  inventoryRelease: string;
-  inventoryDbPoolSize: number;
-  staleInventoryCacheSeconds: number;
+export interface FlowDefinition {
+  id: UserFlow;
+  label: string;
+  primaryPath: ServiceId[];
+  branches: ServiceId[][];
+}
+
+export interface TopologyPosition {
+  x: number;
+  y: number;
+}
+
+export interface RecoveryThreshold {
+  serviceId: ServiceId;
+  metric:
+    | "p50LatencyMs"
+    | "p95LatencyMs"
+    | "errorRatePct"
+    | "requestsPerSecond"
+    | "saturationPct";
+  operator: "lte" | "gte";
+  threshold: number;
+}
+
+export interface IncidentPack {
+  schemaVersion: 1;
+  packId: string;
+  name: string;
+  summary: string;
+  canonical: boolean;
+  seed: number;
+  agentPrompt: string;
+  impactPath: string;
+  topologyTitle: string;
+  defaultServiceId: ServiceId;
+  defaultFlow: UserFlow;
+  eventBaseTimestamp: string;
+  recoveryTimestamp: string;
+  incident: Omit<
+    Incident,
+    | "status"
+    | "workingHypothesis"
+    | "hypothesisConfidence"
+    | "hypothesisEvidenceIds"
+    | "stagedMitigationId"
+  >;
+  services: Record<ServiceId, ServiceTelemetry>;
+  baselineServices: Record<ServiceId, ServiceTelemetry>;
+  topology: Record<ServiceId, ServiceId[]>;
+  topologyLayout: Record<ServiceId, TopologyPosition>;
+  flows: Record<UserFlow, FlowDefinition>;
+  changes: ChangeRecord[];
+  evidence: EvidenceRecord[];
+  mitigationCandidates: Record<MitigationId, MitigationOption>;
+  mitigationEffects: Record<MitigationId, MitigationEffect>;
+  configTargetServiceId: ServiceId;
+  systemConfig: ServiceConfig;
+  baselineConfig: ServiceConfig;
+  recoveryThresholds: RecoveryThreshold[];
+  timeline: TimelineEvent[];
+}
+
+export interface IncidentPackMetadata {
+  packId: string;
+  name: string;
+  summary: string;
+  canonical: boolean;
+  agentPrompt: string;
+  impactPath: string;
+  topologyTitle: string;
 }
 
 export interface MitigationComparison {
@@ -142,25 +230,35 @@ export interface MitigationComparison {
 export interface RecoveryState {
   mitigationId: MitigationId;
   step: number;
-  totalSteps: 5;
+  totalSteps: number;
 }
 
 export interface ScenarioState {
-  id: "INC-042";
-  seed: 42;
+  id: string;
+  seed: number;
+  pack: IncidentPackMetadata;
   phase: ApplicationPhase;
   phaseHistory: ApplicationPhase[];
   incident: Incident;
   services: Record<ServiceId, ServiceTelemetry>;
   baselineServices: Record<ServiceId, ServiceTelemetry>;
   topology: Record<ServiceId, ServiceId[]>;
+  topologyLayout: Record<ServiceId, TopologyPosition>;
+  flows: Record<UserFlow, FlowDefinition>;
+  defaultServiceId: ServiceId;
+  defaultFlow: UserFlow;
   changes: ChangeRecord[];
+  evidence: EvidenceRecord[];
   mitigationOptions: Record<MitigationId, MitigationOption>;
   mitigationEffects: Record<MitigationId, MitigationEffect>;
   mitigationComparison: MitigationComparison | null;
   stagedMitigation: StagedMitigation | null;
-  systemConfig: SystemConfig;
-  baselineConfig: SystemConfig;
+  configTargetServiceId: ServiceId;
+  systemConfig: ServiceConfig;
+  baselineConfig: ServiceConfig;
+  recoveryThresholds: RecoveryThreshold[];
+  eventBaseTimestamp: string;
+  recoveryTimestamp: string;
   timeline: TimelineEvent[];
   recovery: RecoveryState | null;
 }

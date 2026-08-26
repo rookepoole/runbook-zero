@@ -1,5 +1,8 @@
 import { useRunbookStore } from "../../state/store";
 
+const formatConfigValue = (value: unknown) =>
+  value === null ? "null" : String(value);
+
 const Sparkline = ({
   baseline,
   current,
@@ -62,6 +65,13 @@ export const TelemetryPanel = () => {
   const baseline = scenario.baselineServices[selectedServiceId];
   const isFocused = focusedSurface === "telemetry";
   const isAgentFocused = isFocused && focusProvenance === "agent";
+  const relatedEvidence = scenario.evidence.filter((item) =>
+    item.serviceIds.includes(selectedServiceId),
+  );
+  const relatedChange = scenario.changes.find((change) =>
+    relatedEvidence.some((item) => item.id === change.id),
+  );
+  const changeMarker = scenario.changes[0]?.timestamp.slice(11, 16) ?? "n/a";
   const metrics = [
     {
       label: "P95 latency",
@@ -151,7 +161,7 @@ export const TelemetryPanel = () => {
               label={metric.label}
             />
             <small>
-              baseline {metric.baselineFormatted} · change marker 13:51
+              baseline {metric.baselineFormatted} · change marker {changeMarker}
             </small>
           </div>
         ))}
@@ -165,32 +175,49 @@ export const TelemetryPanel = () => {
         </div>
         <div>
           <span className="section-label">Evidence IDs</span>
-          <code>{selectedServiceId}.telemetry · CHG-271</code>
+          <code>
+            {relatedEvidence.map((item) => item.id).join(" · ") ||
+              `${selectedServiceId}.telemetry`}
+          </code>
         </div>
         <div>
           <span className="section-label">Baseline model</span>
-          <code>known-good deterministic seed 42</code>
+          <code>known-good deterministic seed {scenario.seed}</code>
         </div>
       </div>
-      {(selectedServiceId === "inventory" ||
-        selectedServiceId === "inventory-db") && (
+      {relatedChange && (
         <div className="config-evidence">
-          <span className="section-label">Correlated deployment</span>
-          <strong>{scenario.systemConfig.inventoryRelease}</strong>
-          {scenario.systemConfig.inventoryDbPoolSize ===
-          scenario.baselineConfig.inventoryDbPoolSize ? (
-            <code className="config-restored">
-              ✓ dbPoolSize restored to{" "}
-              {scenario.systemConfig.inventoryDbPoolSize}
-            </code>
-          ) : (
-            <code>
-              <del>
-                known-good: {scenario.baselineConfig.inventoryDbPoolSize}
-              </del>{" "}
-              <ins>active: {scenario.systemConfig.inventoryDbPoolSize}</ins>
-            </code>
-          )}
+          <span className="section-label">Correlated change</span>
+          <strong>{relatedChange.summary}</strong>
+          {Object.entries(relatedChange.diff).map(([field, change]) => {
+            const appliedAction =
+              scenario.stagedMitigation?.status === "applied"
+                ? scenario.stagedMitigation.option.exactActions.find(
+                    (action) => action.field === field,
+                  )
+                : undefined;
+            const active = Object.hasOwn(scenario.systemConfig, field)
+              ? scenario.systemConfig[field]
+              : (appliedAction?.to ?? change.to);
+            const knownGood = Object.hasOwn(scenario.baselineConfig, field)
+              ? scenario.baselineConfig[field]
+              : change.from;
+            const restored = active === knownGood;
+            return restored ? (
+              <code className="config-restored" key={field}>
+                ✓ restored to {formatConfigValue(active)} · {field}
+              </code>
+            ) : (
+              <code key={field}>
+                <del>
+                  known-good: {formatConfigValue(knownGood)} · {field}
+                </del>{" "}
+                <ins>
+                  active: {formatConfigValue(active)} · {field}
+                </ins>
+              </code>
+            );
+          })}
         </div>
       )}
     </section>

@@ -12,6 +12,7 @@ export type WebMCPConnectionState =
 
 export const useWebMCPRegistry = (): WebMCPConnectionState => {
   const phase = useRunbookStore((state) => state.scenario.phase);
+  const packId = useRunbookStore((state) => state.scenario.pack.packId);
   const [connection, setConnection] = useState<WebMCPConnectionState>(() =>
     detectWebMCPCapability(document).status === "available"
       ? { status: "connecting" }
@@ -25,7 +26,11 @@ export const useWebMCPRegistry = (): WebMCPConnectionState => {
     }
 
     let disposed = false;
-    const handle = registerToolsForPhase(capability.modelContext, phase);
+    const handle = registerToolsForPhase(
+      capability.modelContext,
+      phase,
+      useRunbookStore.getState().scenario,
+    );
     void handle.registered
       .then(() => {
         if (!disposed)
@@ -49,7 +54,7 @@ export const useWebMCPRegistry = (): WebMCPConnectionState => {
       disposed = true;
       handle.unregister();
     };
-  }, [phase]);
+  }, [packId, phase]);
 
   return connection;
 };

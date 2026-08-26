@@ -4,20 +4,6 @@ import { traceRequestPath } from "../../domain/queries";
 import type { ServiceId } from "../../domain/types";
 import { useRunbookStore } from "../../state/store";
 
-const SERVICE_POSITIONS: Record<ServiceId, { x: number; y: number }> = {
-  edge: { x: 3, y: 42 },
-  gateway: { x: 21, y: 42 },
-  auth: { x: 40, y: 4 },
-  catalog: { x: 40, y: 28 },
-  checkout: { x: 40, y: 55 },
-  pricing: { x: 59, y: 12 },
-  payments: { x: 59, y: 37 },
-  inventory: { x: 59, y: 64 },
-  "redis-cache": { x: 79, y: 35 },
-  "inventory-db": { x: 79, y: 61 },
-  "event-queue": { x: 79, y: 84 },
-};
-
 const healthIcon = { healthy: "✓", degraded: "△", critical: "!" } as const;
 
 export const TopologyPanel = () => {
@@ -50,7 +36,7 @@ export const TopologyPanel = () => {
       <div className="workspace-panel__heading">
         <div>
           <p className="eyebrow">Service topology</p>
-          <h2 id="topology-heading">Checkout dependency graph</h2>
+          <h2 id="topology-heading">{scenario.pack.topologyTitle}</h2>
         </div>
         <div className="panel-actions">
           {tracedFlow && (
@@ -86,8 +72,8 @@ export const TopologyPanel = () => {
             </marker>
           </defs>
           {edges.map(({ from, to }) => {
-            const start = SERVICE_POSITIONS[from];
-            const end = SERVICE_POSITIONS[to];
+            const start = scenario.topologyLayout[from];
+            const end = scenario.topologyLayout[to];
             const traced = tracedServices.has(from) && tracedServices.has(to);
             return (
               <path
@@ -103,10 +89,10 @@ export const TopologyPanel = () => {
             );
           })}
         </svg>
-        {(Object.keys(SERVICE_POSITIONS) as ServiceId[]).map((serviceId) => {
+        {(Object.keys(scenario.services) as ServiceId[]).map((serviceId) => {
           const service = scenario.services[serviceId];
           const traced = tracedServices.has(serviceId);
-          const position = SERVICE_POSITIONS[serviceId];
+          const position = scenario.topologyLayout[serviceId];
           return (
             <button
               type="button"

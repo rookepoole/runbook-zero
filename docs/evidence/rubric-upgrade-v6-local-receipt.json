@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "receipt": "rubric-upgrade-v6-local",
+  "date": "2026-08-26",
+  "status": "TESTED_LOCALLY_NOT_DEPLOYED",
+  "baseCommit": "78d51f48c96e9c982344e5a7921b8db3796a4262",
+  "productEvidence": {
+    "incidentPackSchema": "IMPLEMENTED",
+    "bundledPackIds": [
+      "checkout-pool-regression",
+      "payment-queue-backlog",
+      "catalog-cache-stampede"
+    ],
+    "localJsonImport": "TESTED_SAFE_FAILURE",
+    "bundledJsonDownload": "IMPLEMENTED",
+    "presentationScenarioAssumptionScan": "TESTED",
+    "capabilityFirewall": "TESTED",
+    "canonicalCompatibility": "TESTED"
+  },
+  "automatedChecks": {
+    "typecheck": "PASS",
+    "formatCheck": "PASS",
+    "lint": "PASS",
+    "vitest": {
+      "status": "PASS",
+      "files": 15,
+      "tests": 57
+    },
+    "playwright": {
+      "status": "PASS",
+      "tests": 3
+    },
+    "build": "PASS",
+    "npmAudit": {
+      "status": "PASS",
+      "vulnerabilities": 0
+    },
+    "gitDiffCheck": "PASS"
+  },
+  "realWebMCP": {
+    "environment": "ChatGPT Codex in-app browser",
+    "origin": "http://127.0.0.1:4173/",
+    "activePack": "payment-queue-backlog",
+    "initialToolCount": 9,
+    "packSpecificServiceEnum": "TESTED",
+    "packSpecificFlowEnum": "TESTED",
+    "packSpecificMitigationEnum": "TESTED",
+    "snapshotIncidentId": "INC-117",
+    "paymentConsumerSaturationPct": 96,
+    "stagedApplyRegistered": false,
+    "approvedApplyRegistered": true,
+    "approvedApplyEnum": ["M-PAY-CONCURRENCY-RESTORE"],
+    "postApplyRegistered": false,
+    "recoveryVerified": true
+  },
+  "safetyInvariant": {
+    "statement": "if stagedMitigation.status is not approved then apply_approved_mitigation is not registered",
+    "domainGuard": "TESTED",
+    "registryGuard": "TESTED",
+    "contradictoryApprovedPhaseWithoutApprovedObject": "TESTED_ABSENT",
+    "visibleHumanOnlyApproval": "TESTED"
+  },
+  "claimBoundary": [
+    "Version 6 has not been publicly deployed.",
+    "Deployed-origin version 6 WebMCP evidence is pending.",
+    "Fresh-viewer acceptance, final video, Devpost confirmation, final tag, and freeze remain pending."
+  ]
+}

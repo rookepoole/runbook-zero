@@ -1,5 +1,44 @@
 # Runbook Zero judging evidence
 
+## Official-rubric upgrade candidate — version 6
+
+Status: **IMPLEMENTED / TESTED LOCALLY / NOT YET DEPLOYED**
+
+Date: 2026-08-26
+
+Public site: stable version 5 remains live until explicit version 6 publication approval
+
+The Gates below remain minimum QA evidence. The current candidate is also evaluated directly against WebMCP Leverage, Execution, Potential Impact, and Creativity & Ambition in [rubric-upgrade.md](rubric-upgrade.md).
+
+### Meaningful product upgrade
+
+- generalized the closed Scenario A data model into a runtime-validated Incident Pack v1 contract;
+- preserved `INC-042` as the canonical demo and added complete payment-event-queue and catalog-cache-stampede packs;
+- added a polished launcher, bundled JSON downloads, and local-only JSON import with safe failure;
+- removed canonical service, flow, change, configuration, and mitigation assumptions from presentation source;
+- made WebMCP service, flow, staging, and exact approved-action schemas derive from the active pack;
+- added a visible Capability Firewall showing active capabilities, locked apply, the reason for the lock, application phase, human authority, and the approval-triggered availability transition;
+- strengthened registration so an inconsistent `APPROVED` phase still cannot expose apply without an approved staged object.
+
+### Candidate validation
+
+```text
+npm run typecheck     PASS
+npm run format:check  PASS
+npm run lint          PASS
+npm test              PASS — 15 files, 57 tests
+npm run test:e2e      PASS — 3 Chromium tests
+npm run build         PASS
+```
+
+Real local in-app-browser evidence used the page's actual `document.modelContext` surface. Switching from canonical to the payment pack replaced the discoverable service and flow enums while preserving the same nine tool names. Real calls returned `INC-117` and payment-consumer telemetry. Comparison and staging exposed ten tools with apply absent; the visible human approval changed both the Firewall and actual registry to include apply; exact approved application removed apply and recovered through five pack frames; `verify_recovery` passed all payment-specific thresholds.
+
+Artifact: `docs/evidence/rubric-upgrade-v6-local-receipt.json`
+
+### Claim boundary
+
+This section does not claim a version 6 deployment, deployed-origin revalidation, fresh-viewer acceptance, final video, Devpost submission, final tag, or artifact freeze. The historical gate receipts below continue to describe the version indicated in each section.
+
 ## Gate 0 — Rule compliance
 
 Status: **IMPLEMENTED / BLOCKED**

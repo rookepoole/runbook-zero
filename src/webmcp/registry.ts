@@ -89,6 +89,13 @@ export const getActiveToolNames = (phase: ApplicationPhase): ToolName[] => {
   return names;
 };
 
+export const getRegisteredToolNames = (state: ScenarioState): ToolName[] =>
+  getActiveToolNames(state.phase).filter(
+    (name) =>
+      name !== APPLY_APPROVED_MITIGATION_TOOL_NAME ||
+      state.stagedMitigation?.status === "approved",
+  );
+
 export interface RegisteredToolHandle {
   unregister: () => void;
   registered: Promise<void>;
@@ -126,327 +133,355 @@ const readOnlyAnnotations = {
   untrustedContentHint: false,
 };
 
-const serviceSchema = {
-  type: "string",
-  enum: [
-    "edge",
-    "gateway",
-    "auth",
-    "catalog",
-    "pricing",
-    "checkout",
-    "payments",
-    "inventory",
-    "redis-cache",
-    "inventory-db",
-    "event-queue",
-  ],
-};
+const toolDefinitions = (): Record<ToolName, WebMCPTool> => {
+  const scenario = currentScenario();
+  const serviceSchema = {
+    type: "string",
+    enum: Object.keys(scenario.services),
+  };
+  const flowSchema = {
+    type: "string",
+    enum: Object.keys(scenario.flows),
+  };
+  const mitigationSchema = {
+    type: "string",
+    enum: Object.keys(scenario.mitigationOptions),
+  };
+  const approvedMitigationSchema = {
+    type: "string",
+    enum:
+      scenario.stagedMitigation?.status === "approved"
+        ? [scenario.stagedMitigation.id]
+        : [],
+  };
 
-const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
-  get_system_snapshot: {
-    name: "get_system_snapshot",
-    title: "Get system snapshot",
-    description:
-      "Inspect the active incident and unhealthy services. Use this first to understand current system health without changing state.",
-    inputSchema: {
-      type: "object",
-      properties: {},
-      additionalProperties: false,
-    },
-    annotations: readOnlyAnnotations,
-    execute: () => {
-      const store = useRunbookStore.getState();
-      const result = getSystemSnapshot(store.scenario);
-      store.focusSystemOverviewFromAgent();
-      return result;
-    },
-  },
-  inspect_service: {
-    name: "inspect_service",
-    title: "Inspect service",
-    description:
-      "Inspect current telemetry, dependencies, and active configuration for one service.",
-    inputSchema: {
-      type: "object",
-      properties: { serviceId: serviceSchema },
-      required: ["serviceId"],
-      additionalProperties: false,
-    },
-    annotations: readOnlyAnnotations,
-    execute: (raw) => {
-      const serviceId = requiredString(raw, "serviceId") as ServiceId;
-      const result = inspectService(currentScenario(), serviceId);
-      useRunbookStore
-        .getState()
-        .recordAgentInspection(
-          `Agent inspected ${serviceId}.`,
-          "telemetry",
-          serviceId,
-        );
-      return result;
-    },
-  },
-  query_signals: {
-    name: "query_signals",
-    title: "Query signals",
-    description:
-      "Compare current and baseline telemetry for a service and identify anomalies.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        serviceId: serviceSchema,
-        window: { type: "string", enum: ["15m", "30m", "60m"] },
+  return {
+    get_system_snapshot: {
+      name: "get_system_snapshot",
+      title: "Get system snapshot",
+      description:
+        "Inspect the active incident and unhealthy services. Use this first to understand current system health without changing state.",
+      inputSchema: {
+        type: "object",
+        properties: {},
+        additionalProperties: false,
       },
-      required: ["serviceId"],
-      additionalProperties: false,
+      annotations: readOnlyAnnotations,
+      execute: () => {
+        const store = useRunbookStore.getState();
+        const result = getSystemSnapshot(store.scenario);
+        store.focusSystemOverviewFromAgent();
+        return result;
+      },
     },
-    annotations: readOnlyAnnotations,
-    execute: (raw) => {
-      const serviceId = requiredString(raw, "serviceId") as ServiceId;
-      const window = (raw.window ?? "15m") as "15m" | "30m" | "60m";
-      const result = querySignals(currentScenario(), serviceId, window);
-      useRunbookStore
-        .getState()
-        .recordAgentInspection(
-          `Agent queried ${serviceId} signals.`,
-          "telemetry",
-          serviceId,
+    inspect_service: {
+      name: "inspect_service",
+      title: "Inspect service",
+      description:
+        "Inspect current telemetry, dependencies, and active configuration for one service.",
+      inputSchema: {
+        type: "object",
+        properties: { serviceId: serviceSchema },
+        required: ["serviceId"],
+        additionalProperties: false,
+      },
+      annotations: readOnlyAnnotations,
+      execute: (raw) => {
+        const serviceId = requiredString(raw, "serviceId") as ServiceId;
+        const state = currentScenario();
+        invariant(
+          state.services[serviceId],
+          "INVALID_PHASE",
+          `Unknown service ${serviceId}.`,
         );
-      return result;
+        const result = inspectService(state, serviceId);
+        useRunbookStore
+          .getState()
+          .recordAgentInspection(
+            `Agent inspected ${serviceId}.`,
+            "telemetry",
+            serviceId,
+          );
+        return result;
+      },
     },
-  },
-  trace_request_path: {
-    name: "trace_request_path",
-    title: "Trace request path",
-    description: "Trace dependencies for a named user flow.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        flow: {
-          type: "string",
-          enum: ["checkout", "catalog-browse", "login"],
+    query_signals: {
+      name: "query_signals",
+      title: "Query signals",
+      description:
+        "Compare current and baseline telemetry for a service and identify anomalies.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          serviceId: serviceSchema,
+          window: { type: "string", enum: ["15m", "30m", "60m"] },
         },
+        required: ["serviceId"],
+        additionalProperties: false,
       },
-      required: ["flow"],
-      additionalProperties: false,
-    },
-    annotations: readOnlyAnnotations,
-    execute: (raw) => {
-      const flow = requiredString(raw, "flow") as UserFlow;
-      const result = traceRequestPath(currentScenario(), flow);
-      useRunbookStore
-        .getState()
-        .recordAgentInspection(
-          `Agent traced the ${flow} request path.`,
-          "topology",
-          undefined,
-          flow,
+      annotations: readOnlyAnnotations,
+      execute: (raw) => {
+        const serviceId = requiredString(raw, "serviceId") as ServiceId;
+        invariant(
+          currentScenario().services[serviceId],
+          "INVALID_PHASE",
+          `Unknown service ${serviceId}.`,
         );
-      return result;
-    },
-  },
-  get_recent_changes: {
-    name: "get_recent_changes",
-    title: "Get recent changes",
-    description: "Inspect deploy and configuration changes near the incident.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        serviceId: serviceSchema,
-        since: { type: "string", enum: ["15m", "30m", "60m", "6h"] },
+        const window = (raw.window ?? "15m") as "15m" | "30m" | "60m";
+        const result = querySignals(currentScenario(), serviceId, window);
+        useRunbookStore
+          .getState()
+          .recordAgentInspection(
+            `Agent queried ${serviceId} signals.`,
+            "telemetry",
+            serviceId,
+          );
+        return result;
       },
-      additionalProperties: false,
     },
-    annotations: readOnlyAnnotations,
-    execute: (raw) => {
-      const serviceId = raw.serviceId as ServiceId | undefined;
-      const changes = getRecentChanges(currentScenario()).filter(
-        (change) => !serviceId || change.serviceId === serviceId,
-      );
-      useRunbookStore
-        .getState()
-        .recordAgentInspection(
-          "Agent inspected the change timeline.",
-          "timeline",
+    trace_request_path: {
+      name: "trace_request_path",
+      title: "Trace request path",
+      description: "Trace dependencies for a named user flow.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          flow: flowSchema,
+        },
+        required: ["flow"],
+        additionalProperties: false,
+      },
+      annotations: readOnlyAnnotations,
+      execute: (raw) => {
+        const flow = requiredString(raw, "flow") as UserFlow;
+        invariant(
+          currentScenario().flows[flow],
+          "INVALID_PHASE",
+          `Unknown request flow ${flow}.`,
         );
-      return changes;
-    },
-  },
-  set_working_hypothesis: {
-    name: "set_working_hypothesis",
-    title: "Set working hypothesis",
-    description:
-      "Record the agent's current diagnosis in the shared workspace.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        summary: { type: "string" },
-        confidence: { type: "string", enum: ["low", "medium", "high"] },
-        evidenceIds: { type: "array", items: { type: "string" } },
+        const result = traceRequestPath(currentScenario(), flow);
+        useRunbookStore
+          .getState()
+          .recordAgentInspection(
+            `Agent traced the ${flow} request path.`,
+            "topology",
+            undefined,
+            flow,
+          );
+        return result;
       },
-      required: ["summary", "confidence"],
-      additionalProperties: false,
     },
-    execute: (raw) => {
-      const summary = requiredString(raw, "summary");
-      const confidence = requiredString(raw, "confidence") as
-        "low" | "medium" | "high";
-      const evidenceIds = (raw.evidenceIds ?? []) as string[];
-      let state = currentScenario();
-      if (state.phase === "INCIDENT_OPEN") state = beginInvestigation(state);
-      const next = setWorkingHypothesis(
-        state,
-        summary,
-        confidence,
-        evidenceIds,
-      );
-      commitAgentScenario(next, "Agent recorded a working hypothesis.");
-      return { hypothesis: next.incident.workingHypothesis };
+    get_recent_changes: {
+      name: "get_recent_changes",
+      title: "Get recent changes",
+      description:
+        "Inspect deploy and configuration changes near the incident.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          serviceId: serviceSchema,
+          since: { type: "string", enum: ["15m", "30m", "60m", "6h"] },
+        },
+        additionalProperties: false,
+      },
+      annotations: readOnlyAnnotations,
+      execute: (raw) => {
+        const serviceId = raw.serviceId as ServiceId | undefined;
+        const changes = getRecentChanges(currentScenario()).filter(
+          (change) => !serviceId || change.serviceId === serviceId,
+        );
+        useRunbookStore
+          .getState()
+          .recordAgentInspection(
+            "Agent inspected the change timeline.",
+            "timeline",
+          );
+        return changes;
+      },
     },
-  },
-  compare_mitigations: {
-    name: "compare_mitigations",
-    title: "Compare mitigations",
-    description:
-      "Simulate candidate mitigations without changing production state.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        excludeKinds: {
-          type: "array",
-          items: {
+    set_working_hypothesis: {
+      name: "set_working_hypothesis",
+      title: "Set working hypothesis",
+      description:
+        "Record the agent's current diagnosis in the shared workspace.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          summary: { type: "string" },
+          confidence: { type: "string", enum: ["low", "medium", "high"] },
+          evidenceIds: { type: "array", items: { type: "string" } },
+        },
+        required: ["summary", "confidence"],
+        additionalProperties: false,
+      },
+      execute: (raw) => {
+        const summary = requiredString(raw, "summary");
+        const confidence = requiredString(raw, "confidence") as
+          "low" | "medium" | "high";
+        const evidenceIds = (raw.evidenceIds ?? []) as string[];
+        let state = currentScenario();
+        if (state.phase === "INCIDENT_OPEN") state = beginInvestigation(state);
+        const next = setWorkingHypothesis(
+          state,
+          summary,
+          confidence,
+          evidenceIds,
+        );
+        commitAgentScenario(next, "Agent recorded a working hypothesis.");
+        return { hypothesis: next.incident.workingHypothesis };
+      },
+    },
+    compare_mitigations: {
+      name: "compare_mitigations",
+      title: "Compare mitigations",
+      description:
+        "Simulate candidate mitigations without changing production state.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          excludeKinds: {
+            type: "array",
+            items: {
+              type: "string",
+              enum: [
+                "rollback",
+                "config-restore",
+                "cache-degrade-mode",
+                "traffic-shift",
+                "capacity-adjustment",
+              ],
+            },
+          },
+          optimizeFor: {
             type: "string",
-            enum: [
-              "rollback",
-              "config-restore",
-              "cache-degrade-mode",
-              "traffic-shift",
-            ],
+            enum: ["lowest-risk", "fastest-recovery", "lowest-latency"],
           },
         },
-        optimizeFor: {
-          type: "string",
-          enum: ["lowest-risk", "fastest-recovery", "lowest-latency"],
-        },
+        additionalProperties: false,
       },
-      additionalProperties: false,
+      annotations: readOnlyAnnotations,
+      execute: (raw) => {
+        const excludeKinds = (raw.excludeKinds ?? []) as MitigationKind[];
+        const optimizeFor = (raw.optimizeFor ?? "lowest-risk") as
+          "lowest-risk" | "fastest-recovery" | "lowest-latency";
+        let state = currentScenario();
+        if (state.phase === "INCIDENT_OPEN") state = beginInvestigation(state);
+        if (state.phase === "INVESTIGATING") {
+          const next = compareMitigations(state, { excludeKinds, optimizeFor });
+          commitAgentScenario(next, "Agent compared mitigation candidates.");
+          return rankMitigations(next, excludeKinds, optimizeFor);
+        }
+        return rankMitigations(state, excludeKinds, optimizeFor);
+      },
     },
-    annotations: readOnlyAnnotations,
-    execute: (raw) => {
-      const excludeKinds = (raw.excludeKinds ?? []) as MitigationKind[];
-      const optimizeFor = (raw.optimizeFor ?? "lowest-risk") as
-        "lowest-risk" | "fastest-recovery" | "lowest-latency";
-      let state = currentScenario();
-      if (state.phase === "INCIDENT_OPEN") state = beginInvestigation(state);
-      if (state.phase === "INVESTIGATING") {
-        const next = compareMitigations(state, { excludeKinds, optimizeFor });
-        commitAgentScenario(next, "Agent compared mitigation candidates.");
-        return rankMitigations(next, excludeKinds, optimizeFor);
-      }
-      return rankMitigations(state, excludeKinds, optimizeFor);
+    stage_mitigation: {
+      name: "stage_mitigation",
+      title: "Stage mitigation",
+      description:
+        "Stage one available candidate for visible human review without changing production.",
+      inputSchema: {
+        type: "object",
+        properties: { mitigationId: mitigationSchema },
+        required: ["mitigationId"],
+        additionalProperties: false,
+      },
+      execute: (raw) => {
+        const mitigationId = requiredString(
+          raw,
+          "mitigationId",
+        ) as MitigationId;
+        const next = stageMitigation(currentScenario(), mitigationId);
+        commitAgentScenario(
+          next,
+          `Agent staged ${mitigationId} for human review.`,
+        );
+        return next.stagedMitigation;
+      },
     },
-  },
-  stage_mitigation: {
-    name: "stage_mitigation",
-    title: "Stage mitigation",
-    description:
-      "Stage one available candidate for visible human review without changing production.",
-    inputSchema: {
-      type: "object",
-      properties: { mitigationId: { type: "string" } },
-      required: ["mitigationId"],
-      additionalProperties: false,
+    discard_staged_mitigation: {
+      name: "discard_staged_mitigation",
+      title: "Discard staged mitigation",
+      description:
+        "Discard the staged mitigation and invalidate its approval binding.",
+      inputSchema: {
+        type: "object",
+        properties: { reason: { type: "string" } },
+        additionalProperties: false,
+      },
+      execute: () => {
+        const next = discardStagedMitigation(currentScenario());
+        commitAgentScenario(next, "Agent discarded the staged mitigation.");
+        return { phase: next.phase, stagedMitigation: null };
+      },
     },
-    execute: (raw) => {
-      const mitigationId = requiredString(raw, "mitigationId") as MitigationId;
-      const next = stageMitigation(currentScenario(), mitigationId);
-      commitAgentScenario(
-        next,
-        `Agent staged ${mitigationId} for human review.`,
-      );
-      return next.stagedMitigation;
+    apply_approved_mitigation: {
+      name: "apply_approved_mitigation",
+      title: "Apply approved mitigation",
+      description: "Apply the exact mitigation visibly approved by the human.",
+      inputSchema: {
+        type: "object",
+        properties: { mitigationId: approvedMitigationSchema },
+        required: ["mitigationId"],
+        additionalProperties: false,
+      },
+      execute: (raw) => {
+        const mitigationId = requiredString(
+          raw,
+          "mitigationId",
+        ) as MitigationId;
+        const next = applyApprovedMitigation(currentScenario(), mitigationId);
+        commitAgentScenario(
+          next,
+          `Agent applied human-approved ${mitigationId}.`,
+        );
+        return { phase: next.phase, recovery: next.recovery };
+      },
     },
-  },
-  discard_staged_mitigation: {
-    name: "discard_staged_mitigation",
-    title: "Discard staged mitigation",
-    description:
-      "Discard the staged mitigation and invalidate its approval binding.",
-    inputSchema: {
-      type: "object",
-      properties: { reason: { type: "string" } },
-      additionalProperties: false,
+    verify_recovery: {
+      name: "verify_recovery",
+      title: "Verify recovery",
+      description: "Compare live telemetry with recovery thresholds.",
+      inputSchema: {
+        type: "object",
+        properties: {},
+        additionalProperties: false,
+      },
+      annotations: readOnlyAnnotations,
+      execute: () => {
+        const state = currentScenario();
+        useRunbookStore
+          .getState()
+          .recordAgentInspection("Agent verified recovery thresholds.");
+        return verifyRecovery(state);
+      },
     },
-    execute: () => {
-      const next = discardStagedMitigation(currentScenario());
-      commitAgentScenario(next, "Agent discarded the staged mitigation.");
-      return { phase: next.phase, stagedMitigation: null };
+    add_incident_note: {
+      name: "add_incident_note",
+      title: "Add incident note",
+      description: "Add an agent-authored note to the incident timeline.",
+      inputSchema: {
+        type: "object",
+        properties: { note: { type: "string" } },
+        required: ["note"],
+        additionalProperties: false,
+      },
+      execute: (raw) => {
+        const note = requiredString(raw, "note");
+        const next = addIncidentNote(currentScenario(), note);
+        commitAgentScenario(next, "Agent added an incident note.", "timeline");
+        return next.timeline.at(-1);
+      },
     },
-  },
-  apply_approved_mitigation: {
-    name: "apply_approved_mitigation",
-    title: "Apply approved mitigation",
-    description: "Apply the exact mitigation visibly approved by the human.",
-    inputSchema: {
-      type: "object",
-      properties: { mitigationId: { type: "string" } },
-      required: ["mitigationId"],
-      additionalProperties: false,
-    },
-    execute: (raw) => {
-      const mitigationId = requiredString(raw, "mitigationId") as MitigationId;
-      const next = applyApprovedMitigation(currentScenario(), mitigationId);
-      commitAgentScenario(
-        next,
-        `Agent applied human-approved ${mitigationId}.`,
-      );
-      return { phase: next.phase, recovery: next.recovery };
-    },
-  },
-  verify_recovery: {
-    name: "verify_recovery",
-    title: "Verify recovery",
-    description: "Compare live telemetry with recovery thresholds.",
-    inputSchema: {
-      type: "object",
-      properties: {},
-      additionalProperties: false,
-    },
-    annotations: readOnlyAnnotations,
-    execute: () => {
-      const state = currentScenario();
-      useRunbookStore
-        .getState()
-        .recordAgentInspection("Agent verified recovery thresholds.");
-      return verifyRecovery(state);
-    },
-  },
-  add_incident_note: {
-    name: "add_incident_note",
-    title: "Add incident note",
-    description: "Add an agent-authored note to the incident timeline.",
-    inputSchema: {
-      type: "object",
-      properties: { note: { type: "string" } },
-      required: ["note"],
-      additionalProperties: false,
-    },
-    execute: (raw) => {
-      const note = requiredString(raw, "note");
-      const next = addIncidentNote(currentScenario(), note);
-      commitAgentScenario(next, "Agent added an incident note.", "timeline");
-      return next.timeline.at(-1);
-    },
-  },
-});
+  };
+};
 
 export const registerToolsForPhase = (
   modelContext: WebMCPModelContext,
   phase: ApplicationPhase,
+  scenario: ScenarioState = currentScenario(),
 ): RegisteredToolHandle => {
   const controller = new AbortController();
-  const names = getActiveToolNames(phase);
+  const names = getRegisteredToolNames({ ...scenario, phase });
   const definitions = toolDefinitions();
   const registered = Promise.all(
     names.map((name) =>

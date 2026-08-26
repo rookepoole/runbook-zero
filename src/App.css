@@ -73,6 +73,12 @@
   padding-left: 1rem;
 }
 
+.header-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.45rem;
+}
+
 .header-incident span,
 .header-incident b,
 .header-incident strong,
@@ -108,6 +114,7 @@
 }
 
 .reset-button,
+.launcher-button,
 .discard-button,
 .approve-button {
   border-radius: 0.35rem;
@@ -118,6 +125,7 @@
 }
 
 .reset-button,
+.launcher-button,
 .discard-button {
   background: transparent;
   border: 1px solid var(--border-strong);
@@ -125,6 +133,7 @@
 }
 
 .reset-button:hover,
+.launcher-button:hover,
 .discard-button:hover {
   background: var(--raised);
   border-color: var(--text-secondary);
@@ -163,6 +172,11 @@ button:focus-visible {
 .webmcp-status--unavailable .status-dot,
 .webmcp-status--error .status-dot {
   background: var(--degraded);
+}
+
+.launcher-button {
+  border-color: rgba(98, 168, 255, 0.5);
+  color: var(--agent);
 }
 
 .status-detail,
@@ -644,6 +658,22 @@ main {
   margin: 0.18rem 0 0;
 }
 
+.exact-action {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.exact-action + .exact-action {
+  border-top: 1px solid var(--border);
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+}
+
+.exact-action small {
+  color: var(--text-secondary);
+  font-size: 0.58rem;
+}
+
 .approval-actions {
   display: flex;
   gap: 0.5rem;
@@ -891,6 +921,324 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.capability-firewall {
+  background: rgba(11, 16, 22, 0.96);
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(280px, 1.25fr) minmax(
+      330px,
+      1.45fr
+    );
+  margin-bottom: 1px;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.capability-firewall--open {
+  border-color: rgba(61, 220, 151, 0.65);
+  box-shadow: inset 3px 0 0 var(--healthy);
+}
+
+.capability-firewall__summary,
+.capability-firewall__active,
+.capability-firewall__consequential {
+  min-width: 0;
+  padding: 0.62rem 0.75rem;
+}
+
+.capability-firewall__summary,
+.capability-firewall__active {
+  border-right: 1px solid var(--border);
+}
+
+.capability-firewall__summary {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.capability-firewall h2 {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  margin: 0.18rem 0 0;
+}
+
+.capability-authority {
+  display: grid;
+  gap: 0.18rem;
+  text-align: right;
+}
+
+.capability-authority span,
+.capability-authority strong,
+.capability-firewall small {
+  font-family: var(--mono);
+  font-size: 0.59rem;
+}
+
+.capability-authority span {
+  color: var(--agent);
+  text-transform: uppercase;
+}
+
+.capability-authority strong,
+.capability-firewall small {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.capability-firewall__active {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.capability-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.capability-chip-list code {
+  background: rgba(98, 168, 255, 0.055);
+  border: 1px solid rgba(98, 168, 255, 0.25);
+  color: var(--agent);
+  font-size: 0.56rem;
+  padding: 0.18rem 0.28rem;
+}
+
+.capability-firewall__consequential {
+  align-items: center;
+  display: grid;
+  gap: 0.28rem 0.45rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.capability-firewall__consequential > code {
+  color: var(--text-primary);
+  font-size: 0.64rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.capability-firewall__consequential small {
+  grid-column: 2 / -1;
+}
+
+.capability-locked,
+.capability-open,
+.capability-human-only,
+.active-pack-chip {
+  border: 1px solid currentColor;
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.18rem 0.28rem;
+}
+
+.capability-locked {
+  color: var(--critical);
+}
+
+.capability-open {
+  color: var(--healthy);
+}
+
+.capability-human-only {
+  color: var(--human);
+}
+
+.launcher-backdrop {
+  align-items: center;
+  background: rgba(2, 5, 8, 0.82);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1.25rem;
+  position: fixed;
+  z-index: 40;
+}
+
+.incident-launcher {
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+  max-height: calc(100vh - 2.5rem);
+  max-width: 1060px;
+  overflow-y: auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+.incident-launcher__heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.incident-launcher h2 {
+  font-size: 1.15rem;
+  margin: 0.25rem 0 0;
+}
+
+.launcher-intro {
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  margin: 0.65rem 0 0.85rem;
+}
+
+.pack-contract {
+  border-left: 2px solid var(--agent);
+  color: var(--text-secondary);
+  font-size: 0.67rem;
+  margin: -0.15rem 0 0.75rem;
+  padding-left: 0.6rem;
+}
+
+.pack-contract summary {
+  color: var(--agent);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.pack-contract p {
+  line-height: 1.5;
+  margin: 0.4rem 0 0;
+}
+
+.incident-pack-grid {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.incident-pack-card {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 235px;
+  padding: 0.75rem;
+}
+
+.incident-pack-card--active {
+  border-color: var(--agent);
+  box-shadow: inset 0 2px 0 rgba(98, 168, 255, 0.3);
+}
+
+.incident-pack-card > div {
+  align-items: center;
+  display: flex;
+  gap: 0.35rem;
+  justify-content: space-between;
+}
+
+.active-pack-chip {
+  color: var(--healthy);
+}
+
+.incident-pack-card h3 {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  margin: 0.7rem 0 0.4rem;
+}
+
+.incident-pack-card p {
+  color: var(--text-secondary);
+  flex: 1;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.incident-pack-card small {
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  margin: 0.65rem 0;
+}
+
+.incident-pack-card button,
+.import-button {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 0.48rem 0.6rem;
+  text-align: center;
+}
+
+.incident-pack-card button:hover,
+.import-button:hover {
+  border-color: var(--agent);
+  color: var(--agent);
+}
+
+.incident-pack-card button:disabled {
+  color: var(--text-secondary);
+  cursor: default;
+  opacity: 0.65;
+}
+
+.pack-card-actions {
+  display: grid !important;
+  gap: 0.35rem !important;
+  grid-template-columns: 0.8fr 1.2fr;
+}
+
+.incident-import {
+  align-items: center;
+  border: 1px dashed var(--border-strong);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding: 0.7rem;
+}
+
+.incident-import > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.incident-import strong {
+  font-size: 0.8rem;
+}
+
+.incident-import small {
+  color: var(--text-secondary);
+  font-size: 0.65rem;
+}
+
+.incident-import input {
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+.incident-import input:focus-visible + .import-button {
+  outline: 2px solid var(--agent);
+  outline-offset: 2px;
+}
+
+.import-error {
+  background: rgba(255, 93, 115, 0.07);
+  border-left: 2px solid var(--critical);
+  color: var(--critical);
+  display: grid;
+  font-size: 0.7rem;
+  gap: 0.2rem;
+  margin-top: 0.6rem;
+  padding: 0.55rem;
 }
 
 .focus-mode-bar {
@@ -1274,6 +1622,19 @@ main {
 }
 
 @media (max-width: 1100px) {
+  .capability-firewall {
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+
+  .capability-firewall__active {
+    border-right: 0;
+  }
+
+  .capability-firewall__consequential {
+    border-top: 1px solid var(--border);
+    grid-column: 1 / -1;
+  }
+
   .workspace-grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -1299,6 +1660,29 @@ main {
 
   .webmcp-status {
     grid-column: 1 / -1;
+  }
+
+  .header-actions {
+    justify-content: flex-end;
+  }
+
+  .capability-firewall,
+  .incident-pack-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-firewall__summary,
+  .capability-firewall__active {
+    border-bottom: 1px solid var(--border);
+    border-right: 0;
+  }
+
+  .capability-firewall__consequential {
+    grid-column: auto;
+  }
+
+  .incident-pack-card {
+    min-height: 200px;
   }
 
   .workspace-context div {

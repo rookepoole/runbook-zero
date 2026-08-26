@@ -5,13 +5,19 @@ import {
   discardStagedMitigation,
 } from "../domain/commands";
 import type {
+  IncidentPack,
   MitigationId,
   ScenarioState,
   ServiceId,
   UserFlow,
 } from "../domain/types";
+import { createScenarioFromPack } from "../incidents/create-scenario";
+import { BUNDLED_PACKS, CANONICAL_PACK } from "../incidents";
+import {
+  IncidentPackValidationError,
+  parseIncidentPackJson,
+} from "../incidents/validation";
 import { advanceRecovery } from "../simulation/engine";
-import { createScenarioA } from "../simulation/scenario-a";
 
 export type FocusTarget =
   | "system-overview"
@@ -22,8 +28,14 @@ export type FocusTarget =
   | null;
 export type FocusProvenance = "agent" | "human" | null;
 
+export type ImportIncidentPackResult =
+  { ok: true; packId: string } | { ok: false; error: string };
+
 interface RunbookState {
   scenario: ScenarioState;
+  incidentPacks: IncidentPack[];
+  activePackId: string;
+  importError: string | null;
   focusedSurface: FocusTarget;
   focusProvenance: FocusProvenance;
   lastAgentAction: string | null;
@@ -50,17 +62,27 @@ interface RunbookState {
   approveStagedMitigation: (mitigationId: MitigationId) => void;
   discardStagedMitigationAsHuman: () => void;
   advanceRecoveryFrame: () => void;
+  loadIncidentPack: (packId: string) => void;
+  importIncidentPackJson: (json: string) => ImportIncidentPackResult;
+  dismissImportError: () => void;
   resetScenario: () => void;
 }
 
-export const useRunbookStore = create<RunbookState>((set) => ({
-  scenario: createScenarioA(),
+const workspaceReset = (pack: IncidentPack) => ({
+  scenario: createScenarioFromPack(pack),
+  activePackId: pack.packId,
   focusedSurface: null,
   focusProvenance: null,
   lastAgentAction: null,
   snapshotInvocationCount: 0,
-  selectedServiceId: "checkout",
+  selectedServiceId: pack.defaultServiceId,
   tracedFlow: null,
+  importError: null,
+});
+
+export const useRunbookStore = create<RunbookState>((set, get) => ({
+  ...workspaceReset(CANONICAL_PACK),
+  incidentPacks: BUNDLED_PACKS,
   focusSystemOverviewFromAgent: () =>
     set((state) => ({
       focusedSurface: "system-overview",
@@ -134,14 +156,38 @@ export const useRunbookStore = create<RunbookState>((set) => ({
           }
         : state,
     ),
-  resetScenario: () =>
-    set({
-      scenario: createScenarioA(),
-      focusedSurface: null,
-      focusProvenance: null,
-      lastAgentAction: null,
-      snapshotInvocationCount: 0,
-      selectedServiceId: "checkout",
-      tracedFlow: null,
-    }),
+  loadIncidentPack: (packId) => {
+    const pack = get().incidentPacks.find((item) => item.packId === packId);
+    if (!pack) return;
+    set(workspaceReset(pack));
+  },
+  importIncidentPackJson: (json) => {
+    try {
+      const imported = parseIncidentPackJson(json);
+      if (get().incidentPacks.some((pack) => pack.packId === imported.packId)) {
+        throw new IncidentPackValidationError(
+          `pack.packId: ${imported.packId} is already loaded`,
+        );
+      }
+      const localPack = { ...imported, canonical: false };
+      set((state) => ({
+        ...workspaceReset(localPack),
+        incidentPacks: [...state.incidentPacks, localPack],
+      }));
+      return { ok: true, packId: localPack.packId };
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Incident Pack import failed.";
+      set({ importError: message });
+      return { ok: false, error: message };
+    }
+  },
+  dismissImportError: () => set({ importError: null }),
+  resetScenario: () => {
+    const state = get();
+    const pack =
+      state.incidentPacks.find((item) => item.packId === state.activePackId) ??
+      CANONICAL_PACK;
+    set(workspaceReset(pack));
+  },
 }));
