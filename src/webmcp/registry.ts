@@ -111,8 +111,15 @@ const requiredString = (
 const currentScenario = (): ScenarioState =>
   useRunbookStore.getState().scenario;
 
-const commitAgentScenario = (scenario: ScenarioState, action: string) =>
-  useRunbookStore.getState().commitAgentScenario(scenario, action);
+const commitAgentScenario = (
+  scenario: ScenarioState,
+  action: string,
+  focusedSurface:
+    "incident-command" | "telemetry" | "timeline" = "incident-command",
+) =>
+  useRunbookStore
+    .getState()
+    .commitAgentScenario(scenario, action, focusedSurface);
 
 const readOnlyAnnotations = {
   readOnlyHint: true,
@@ -172,7 +179,11 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
       const result = inspectService(currentScenario(), serviceId);
       useRunbookStore
         .getState()
-        .recordAgentInspection(`Agent inspected ${serviceId}.`);
+        .recordAgentInspection(
+          `Agent inspected ${serviceId}.`,
+          "telemetry",
+          serviceId,
+        );
       return result;
     },
   },
@@ -197,7 +208,11 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
       const result = querySignals(currentScenario(), serviceId, window);
       useRunbookStore
         .getState()
-        .recordAgentInspection(`Agent queried ${serviceId} signals.`);
+        .recordAgentInspection(
+          `Agent queried ${serviceId} signals.`,
+          "telemetry",
+          serviceId,
+        );
       return result;
     },
   },
@@ -222,7 +237,12 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
       const result = traceRequestPath(currentScenario(), flow);
       useRunbookStore
         .getState()
-        .recordAgentInspection(`Agent traced the ${flow} request path.`);
+        .recordAgentInspection(
+          `Agent traced the ${flow} request path.`,
+          "topology",
+          undefined,
+          flow,
+        );
       return result;
     },
   },
@@ -246,7 +266,10 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
       );
       useRunbookStore
         .getState()
-        .recordAgentInspection("Agent inspected the change timeline.");
+        .recordAgentInspection(
+          "Agent inspected the change timeline.",
+          "timeline",
+        );
       return changes;
     },
   },
@@ -404,7 +427,7 @@ const toolDefinitions = (): Record<ToolName, WebMCPTool> => ({
     execute: (raw) => {
       const note = requiredString(raw, "note");
       const next = addIncidentNote(currentScenario(), note);
-      commitAgentScenario(next, "Agent added an incident note.");
+      commitAgentScenario(next, "Agent added an incident note.", "timeline");
       return next.timeline.at(-1);
     },
   },

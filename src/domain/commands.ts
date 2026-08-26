@@ -222,6 +222,7 @@ export const approveStagedMitigationAsHuman = (
 
 export const discardStagedMitigation = (
   state: ScenarioState,
+  actor: "human" | "agent" = "agent",
 ): ScenarioState => {
   invariant(
     state.phase === "AWAITING_HUMAN_APPROVAL",
@@ -247,7 +248,7 @@ export const discardStagedMitigation = (
       stagedMitigation: null,
     },
     {
-      actor: "human",
+      actor,
       type: "note",
       title: `${mitigationId} discarded`,
       detail: "Any approval binding was invalidated.",

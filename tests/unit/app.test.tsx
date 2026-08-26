@@ -11,6 +11,8 @@ describe("Gate 1 shared interface", () => {
       focusedSurface: null,
       lastAgentAction: null,
       snapshotInvocationCount: 0,
+      selectedServiceId: "checkout",
+      tracedFlow: null,
     }),
   );
 
@@ -21,7 +23,7 @@ describe("Gate 1 shared interface", () => {
     });
     render(<App />);
     expect(await screen.findByText("WebMCP unavailable")).toBeVisible();
-    expect(screen.getByText("System overview")).toBeVisible();
+    expect(screen.getByText("Incident command")).toBeVisible();
     expect(
       screen.getByRole("button", { name: "Reset Scenario" }),
     ).toBeEnabled();
@@ -45,11 +47,11 @@ describe("Gate 1 shared interface", () => {
       await registeredTool?.execute({});
     });
     expect(screen.getByTestId("system-overview")).toHaveClass(
-      "system-overview--agent-focus",
+      "workspace-panel--agent-focus",
     );
     expect(
       screen.getByText("Agent inspected the live system snapshot."),
     ).toBeVisible();
-    expect(screen.getByText("Invocation 1")).toBeVisible();
+    expect(useRunbookStore.getState().snapshotInvocationCount).toBe(1);
   });
 });

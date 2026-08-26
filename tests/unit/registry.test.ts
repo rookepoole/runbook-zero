@@ -13,6 +13,8 @@ describe("Gate 1 WebMCP registry seam", () => {
       focusedSurface: null,
       lastAgentAction: null,
       snapshotInvocationCount: 0,
+      selectedServiceId: "checkout",
+      tracedFlow: null,
     }),
   );
   it("registers the real tool contract and unregisters through AbortSignal", async () => {
