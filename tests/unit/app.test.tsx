@@ -31,7 +31,7 @@ describe("Gate 1 shared interface", () => {
     let registeredTool: WebMCPTool | undefined;
     const modelContext = {
       registerTool: vi.fn(async (tool: WebMCPTool) => {
-        registeredTool = tool;
+        if (tool.name === "get_system_snapshot") registeredTool = tool;
       }),
     } as unknown as WebMCPModelContext;
     Object.defineProperty(document, "modelContext", {

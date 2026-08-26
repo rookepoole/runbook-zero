@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { useRunbookStore } from "../state/store";
 import { detectWebMCPCapability } from "./capability";
-import { registerGetSystemSnapshot } from "./registry";
+import { registerToolsForPhase } from "./registry";
 
 export type WebMCPConnectionState =
   | { status: "connecting" }
@@ -10,6 +11,7 @@ export type WebMCPConnectionState =
   | { status: "error"; message: string };
 
 export const useWebMCPRegistry = (): WebMCPConnectionState => {
+  const phase = useRunbookStore((state) => state.scenario.phase);
   const [connection, setConnection] = useState<WebMCPConnectionState>(() =>
     detectWebMCPCapability(document).status === "available"
       ? { status: "connecting" }
@@ -23,11 +25,14 @@ export const useWebMCPRegistry = (): WebMCPConnectionState => {
     }
 
     let disposed = false;
-    const handle = registerGetSystemSnapshot(capability.modelContext);
+    const handle = registerToolsForPhase(capability.modelContext, phase);
     void handle.registered
       .then(() => {
         if (!disposed)
-          setConnection({ status: "connected", activeToolCount: 1 });
+          setConnection({
+            status: "connected",
+            activeToolCount: handle.names.length,
+          });
       })
       .catch((error: unknown) => {
         if (!disposed)
@@ -44,7 +49,7 @@ export const useWebMCPRegistry = (): WebMCPConnectionState => {
       disposed = true;
       handle.unregister();
     };
-  }, []);
+  }, [phase]);
 
   return connection;
 };

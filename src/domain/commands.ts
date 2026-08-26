@@ -71,6 +71,26 @@ export const setWorkingHypothesis = (
   );
 };
 
+export const addIncidentNote = (
+  state: ScenarioState,
+  note: string,
+  actor: "human" | "agent" = "agent",
+): ScenarioState => {
+  invariant(
+    state.phase !== "BOOT" && state.phase !== "HEALTHY",
+    "INVALID_PHASE",
+    "Incident notes require an active or resolved incident.",
+  );
+  const trimmed = note.trim();
+  invariant(trimmed.length > 0, "INVALID_PHASE", "A note cannot be empty.");
+  return appendEvent(state, {
+    actor,
+    type: "note",
+    title: "Incident note added",
+    detail: trimmed,
+  });
+};
+
 export const compareMitigations = (
   state: ScenarioState,
   options: {

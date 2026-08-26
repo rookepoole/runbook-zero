@@ -32,11 +32,11 @@ function App() {
       </header>
       <main>
         <div className="gate-label">
-          <span>GATE 1</span>
-          <h1>First real WebMCP round trip</h1>
+          <span>CHALLENGE EDITION</span>
+          <h1>Shared incident command surface</h1>
           <p>
-            One shared domain query, exposed to the agent and rendered for the
-            operator on the same live surface.
+            Live system state and a phase-aware WebMCP tool surface shared by
+            the operator and agent.
           </p>
         </div>
         <SystemOverview />

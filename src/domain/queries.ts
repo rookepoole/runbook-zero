@@ -82,6 +82,35 @@ export const traceRequestPath = (
 export const getRecentChanges = (state: ScenarioState) =>
   [...state.changes].sort((a, b) => b.timestamp.localeCompare(a.timestamp));
 
+export const inspectService = (state: ScenarioState, serviceId: ServiceId) => ({
+  telemetry: { ...state.services[serviceId] },
+  dependencies: [...state.topology[serviceId]],
+  config:
+    serviceId === "inventory"
+      ? { ...state.systemConfig }
+      : ({} satisfies Record<string, never>),
+});
+
+export const querySignals = (
+  state: ScenarioState,
+  serviceId: ServiceId,
+  window: "15m" | "30m" | "60m" = "15m",
+) => {
+  const current = state.services[serviceId];
+  const baseline = state.baselineServices[serviceId];
+  return {
+    serviceId,
+    window,
+    current: { ...current },
+    baseline: { ...baseline },
+    anomalies: {
+      p95LatencyMs: current.p95LatencyMs - baseline.p95LatencyMs,
+      errorRatePct: current.errorRatePct - baseline.errorRatePct,
+      saturationPct: current.saturationPct - baseline.saturationPct,
+    },
+  };
+};
+
 const comparisonValue = (
   option: MitigationOption,
   optimizeFor: "lowest-risk" | "fastest-recovery" | "lowest-latency",

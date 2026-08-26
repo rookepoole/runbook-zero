@@ -11,7 +11,8 @@ export const WebMCPStatus = ({ connection }: WebMCPStatusProps) => {
         <span aria-hidden="true" className="status-dot" />
         <span>WebMCP Connected</span>
         <span className="tool-count">
-          {connection.activeToolCount} tool active
+          {connection.activeToolCount}{" "}
+          {connection.activeToolCount === 1 ? "tool" : "tools"} active
         </span>
       </div>
     );

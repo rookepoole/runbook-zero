@@ -34,6 +34,7 @@ describe("Gate 1 WebMCP registry seam", () => {
       readOnlyHint: true,
       untrustedContentHint: false,
     });
+    expect(handle.names).toEqual([GET_SYSTEM_SNAPSHOT_TOOL_NAME]);
     const result = await registeredTool?.execute({});
     expect(result).toMatchObject({
       incident: { id: "INC-042", severity: "SEV-2" },
