@@ -4,9 +4,9 @@
 
 Status: **IMPLEMENTED / BLOCKED**
 
-Date: 2026-08-25
+Date: 2026-08-26
 
-Deployed source commit: `c635da3a4e9ad6a7f5751ff3e84bff9899a25039`
+Deployed source commit: `1ef0b65fd894e262c7a8628c0aa367c6ac889b33`
 
 ### Verified requirements
 
@@ -331,25 +331,25 @@ Artifact: `docs/evidence/gate-7-execution-receipt.json`
 
 ### Claim boundary
 
-The original Gate 7 reconstruction is live as public Sites version 4. The `e2734ae` agent-handoff correction is locally tested but not yet deployed. Gate 7 remains reopened until the correction is deployed and the required fresh-viewer acceptance is repeated against that public version.
+The Gate 7 reconstruction and `e2734ae` agent-handoff correction are live as public Sites version 5. Gate 7 remains reopened until the required fresh-viewer acceptance is repeated against version 5.
 
 ## Gate 8 — Public deployment
 
 Status: **TESTED**
 
-Date: 2026-08-25
+Date: 2026-08-26
 
-Deployment source commit: `c635da3a4e9ad6a7f5751ff3e84bff9899a25039`
+Deployment source commit: `1ef0b65fd894e262c7a8628c0aa367c6ac889b33`
 
 Live URL: <https://runbook-zero.rookepoole.chatgpt.site>
 
 ### ChatGPT Sites deployment
 
-The reconstructed React/Vite application is deployed on ChatGPT Sites as public version 4. Deployment `appgdep_6a8e4d7a26608191b3891385225da6a5` succeeded from the exact pushed commit above. An anonymous HTTPS request returned `200` directly from the live URL with no sign-in redirect. The production build contains the Cloudflare Worker-compatible Sites entry point plus the same client bundle used by local validation.
+The reconstructed React/Vite application is deployed on ChatGPT Sites as public version 5. Deployment `appgdep_6a8e7eec50d081918925aa27b152ed1f` succeeded from the exact pushed commit above. An anonymous HTTPS request returned `200` directly from the live URL with no sign-in redirect. The production build contains the Cloudflare Worker-compatible Sites entry point plus the same client bundle used by local validation.
 
 ### Real deployed-origin WebMCP evidence
 
-The supported ChatGPT Codex in-app browser loaded version 4 at the production URL and discovered 9 real page-defined `document.modelContext` tools from origin `https://runbook-zero.rookepoole.chatgpt.site`. The initial UI visibly showed the Depth-0 triage strip, connected dependency graph, four telemetry trends, 4/11 unhealthy services, 4,700 ms checkout P95, 17% checkout errors, and `No change staged` authority.
+The supported ChatGPT Codex in-app browser loaded version 5 at the production URL and discovered 9 real page-defined `document.modelContext` tools from origin `https://runbook-zero.rookepoole.chatgpt.site`. The initial UI visibly showed the exact canonical agent-start prompt, shared-workspace behavior, visible-human-approval boundary, Depth-0 triage strip, connected dependency graph, four telemetry trends, 4/11 unhealthy services, 4,700 ms checkout P95, 17% checkout errors, and `No change staged` authority. Selecting the empty Agent provenance filter produced actionable guidance back to the incident brief.
 
 The deployed browser then completed the canonical `INC-042` flow:
 
@@ -373,7 +373,7 @@ The deployed browser then completed the canonical `INC-042` flow:
 npm run typecheck     PASS
 npm run format:check  PASS
 npm run lint          PASS
-npm run test          PASS — 12 files, 42 tests
+npm run test          PASS — 12 files, 43 tests
 npm run test:e2e      PASS — 2 Chromium tests
 npm run build         PASS
 npm audit             PASS — 0 vulnerabilities
@@ -386,7 +386,7 @@ Artifact: `docs/evidence/gate-8-deployment-receipt.json`
 
 ### Claim boundary
 
-Gate 8 establishes a public, direct-link ChatGPT Sites version 4 deployment and real supported-browser WebMCP behavior on that deployed origin. Fresh-viewer Gate 7 acceptance and Gate 9 video, submission confirmation, final SHA/tag, and the immutable `submission-v1.0` freeze remain outstanding.
+Gate 8 establishes a public, direct-link ChatGPT Sites version 5 deployment and real supported-browser WebMCP behavior on that deployed origin. Fresh-viewer Gate 7 acceptance and Gate 9 video, submission confirmation, final SHA/tag, and the immutable `submission-v1.0` freeze remain outstanding.
 
 ## Gate 9 — Submission package and live rehearsal
 
@@ -394,7 +394,7 @@ Status: **IMPLEMENTED / BLOCKED**
 
 Date: 2026-08-25
 
-Deployed source checkpoint: `c635da3a4e9ad6a7f5751ff3e84bff9899a25039`
+Deployed source checkpoint: `1ef0b65fd894e262c7a8628c0aa367c6ac889b33`
 
 ### Implemented and tested
 
@@ -405,8 +405,8 @@ Deployed source checkpoint: `c635da3a4e9ad6a7f5751ff3e84bff9899a25039`
 - four reviewed 1440×900 browser stills for the submission gallery;
 - GitHub metadata with public visibility, live homepage, challenge topics, and detected AGPL-3.0 license;
 - package version `1.0.0` and site-wide Open Graph/X preview metadata;
-- current candidate checks: typecheck, format, lint, 42 Vitest tests, 2 Playwright tests, build, zero npm audit findings, and diff check;
-- public ChatGPT Sites version 4 deployed from the exact source checkpoint and passed deployed-origin WebMCP J1–J4, safety, recovery, console, and reset checks.
+- current candidate checks: typecheck, format, lint, 43 Vitest tests, 2 Playwright tests, build, zero npm audit findings, and diff check;
+- public ChatGPT Sites version 5 deployed from the exact source checkpoint and passed deployed-origin agent-handoff, WebMCP J1–J4, safety, recovery, console, and reset checks.
 
 ### Real deployed-origin rehearsal
 
@@ -421,7 +421,7 @@ On the prior public version 1, the supported in-app browser repeated the full pu
 - final verification returned `recovered: true` and the UI showed `RESOLVED`;
 - post-rehearsal reset restored 4,700 ms checkout P95, 9 tools, and no apply.
 
-The semantic text wait used during that rehearsal timed out once even though a subsequent direct DOM snapshot and `verify_recovery` call proved the incident was resolved. The complete workflow finished well inside the recording budget; this browser-selector timing artifact is retained rather than hidden. Because version 4 reconstructs the interface, its timed rehearsal remains to be repeated before recording.
+The semantic text wait used during that rehearsal timed out once even though a subsequent direct DOM snapshot and `verify_recovery` call proved the incident was resolved. The complete workflow finished well inside the recording budget; this browser-selector timing artifact is retained rather than hidden. Because version 5 is now the submission candidate, its timed rehearsal remains to be repeated before recording.
 
 Artifact: `docs/evidence/gate-9-live-rehearsal-receipt.json`
 
@@ -429,12 +429,12 @@ Artifact: `docs/evidence/gate-9-live-rehearsal-receipt.json`
 
 - record the real live workflow with clear entrant audio;
 - upload the sub-three-minute video publicly to YouTube and insert its URL;
-- repeat the five-question fresh-viewer acceptance test against version 4 and score at least 4/5;
-- rerun the timed rehearsal on version 4 before recording;
+- repeat the five-question fresh-viewer acceptance test against version 5 and score at least 4/5;
+- rerun the timed rehearsal on version 5 before recording;
 - complete Devpost and capture confirmation;
 - record final SHA/deployment and tag `submission-v1.0`;
 - freeze the repository, live site, and submission through judging.
 
 ### Claim boundary
 
-The repository package and public version 4 are ready. Gate 9 is not passed, and no submission/freeze is claimed, until fresh-viewer acceptance, the required public audio video, Devpost confirmation, and the final tag exist.
+The repository package and public version 5 are ready. Gate 9 is not passed, and no submission/freeze is claimed, until fresh-viewer acceptance, the required public audio video, Devpost confirmation, and the final tag exist.

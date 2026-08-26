@@ -1,16 +1,16 @@
 {
   "gate": 8,
   "status": "TESTED",
-  "date": "2026-08-25",
+  "date": "2026-08-26",
   "deployment": {
     "platform": "ChatGPT Sites",
     "url": "https://runbook-zero.rookepoole.chatgpt.site",
     "access": "public",
-    "version": 4,
-    "versionId": "appgprj_6a8e3de05780819199793f7e9957dbec~appgver_c4f6002935108191b16e3d67378c79aa",
-    "deploymentId": "appgdep_6a8e4d7a26608191b3891385225da6a5",
-    "deployedAt": "2026-08-26T02:20:52.444060+00:00",
-    "sourceCommit": "c635da3a4e9ad6a7f5751ff3e84bff9899a25039",
+    "version": 5,
+    "versionId": "appgprj_6a8e3de05780819199793f7e9957dbec~appgver_23bdec6b139081918590f3decc528259",
+    "deploymentId": "appgdep_6a8e7eec50d081918925aa27b152ed1f",
+    "deployedAt": "2026-08-26T05:51:49.044819+00:00",
+    "sourceCommit": "1ef0b65fd894e262c7a8628c0aa367c6ac889b33",
     "anonymousHttp": {
       "status": 200,
       "signInRedirect": false
@@ -22,6 +22,12 @@
     "initialToolCount": 9,
     "initialApplyAvailable": false,
     "canonicalIncident": "INC-042",
+    "agentHandoff": {
+      "canonicalPromptVisible": true,
+      "sharedWorkspaceExplanationVisible": true,
+      "humanApprovalBoundaryVisible": true,
+      "emptyAgentFilterGuidanceVisible": true
+    },
     "initialVisualState": {
       "unhealthyServices": 4,
       "totalServices": 11,
@@ -85,11 +91,11 @@
     "typecheck": "PASS",
     "format": "PASS",
     "lint": "PASS",
-    "unit": "PASS — 12 files, 42 tests",
+    "unit": "PASS — 12 files, 43 tests",
     "browserE2E": "PASS — 2 Chromium tests",
     "build": "PASS",
     "audit": "PASS — 0 vulnerabilities",
     "diffCheck": "PASS"
   },
-  "claimBoundary": "Gate 8 is tested for public version 4. Fresh-viewer Gate 7 acceptance and Gate 9 video, submission confirmation, final SHA/tag, and submission-v1.0 freeze remain outstanding."
+  "claimBoundary": "Gate 8 is tested for public version 5. Fresh-viewer Gate 7 acceptance and Gate 9 video, submission confirmation, final SHA/tag, and submission-v1.0 freeze remain outstanding."
 }

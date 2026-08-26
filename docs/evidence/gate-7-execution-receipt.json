@@ -36,7 +36,7 @@
       "replace dead-end Agent and Human filter messages with next-action guidance"
     ],
     "architectureChanged": false,
-    "browserReview": "PASS — real supported browser exposed the exact nine-tool document.modelContext surface and rendered the cue and filtered guidance"
+    "browserReview": "PASS — public Sites version 5 exposed the exact nine-tool document.modelContext surface and rendered the cue and filtered guidance"
   },
   "browserAutomation": {
     "runner": "Playwright Chromium",
@@ -55,7 +55,7 @@
   },
   "judgeFirstAcceptance": {
     "priorClaim": "WITHDRAWN",
-    "currentStatus": "PENDING_DEPLOYMENT_AND_FRESH_VIEWER_ON_CORRECTED_PUBLIC_VERSION",
+    "currentStatus": "PENDING_FRESH_VIEWER_ON_PUBLIC_VERSION_5",
     "requiredScore": "4/5"
   },
   "checks": {
@@ -68,5 +68,5 @@
     "npmAudit": "PASS — 0 vulnerabilities",
     "diffCheck": "PASS"
   },
-  "claimBoundary": "The original UX reconstruction is deployed as Sites version 4. The agent-handoff correction at e2734ae is locally tested but not yet deployed. Gate 7 remains reopened until that correction is publicly deployed and independent fresh-viewer acceptance is repeated against it."
+  "claimBoundary": "The UX reconstruction and agent-handoff correction at e2734ae are deployed and validated as Sites version 5. Gate 7 remains reopened until independent fresh-viewer acceptance is repeated against version 5."
 }
