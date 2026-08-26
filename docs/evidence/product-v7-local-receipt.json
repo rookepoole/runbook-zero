@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "runbook-zero-product-v7-local-2026-08-26",
+  "recordedAt": "2026-08-26T02:57:54.4101025-05:00",
+  "implementationCommit": "ff32a1f852a86d6547c560ad60ad5d85e857a05e",
+  "classification": "TESTED",
+  "product": {
+    "pluginId": "runbook-zero@runbook-zero",
+    "pluginVersion": "0.7.0",
+    "marketplaceSource": "rookepoole/runbook-zero",
+    "marketplaceRef": "main",
+    "installedMarketplaceCommit": "ff32a1f852a86d6547c560ad60ad5d85e857a05e",
+    "installation": "PASS — installed and enabled from the public GitHub marketplace"
+  },
+  "verification": {
+    "pluginValidator": "PASS",
+    "format": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "unitAndComponent": "PASS — 17 files / 65 tests",
+    "browser": "PASS — 4 Chromium tests",
+    "build": "PASS",
+    "dependencyAudit": "PASS — 0 vulnerabilities",
+    "diffCheck": "PASS"
+  },
+  "testedBehaviors": [
+    "deterministic Site Capture v1 conversion",
+    "safe operator-handoff fallback when no WebMCP action exists",
+    "live-site provenance and observed-capability UI",
+    "apply absent before visible exact human approval",
+    "approval-bound external receipt with exact incident, seed, origin, tool, and input",
+    "apply removal and record_external_execution registration after release",
+    "mismatched external origin rejection",
+    "recovery-threshold requirement before live incident resolution",
+    "unchanged canonical INC-042 reset-to-resolution journey"
+  ],
+  "screenshots": [
+    {
+      "path": "docs/screenshots/submission-live-site-connected.png",
+      "bytes": 206601,
+      "sha256": "b6601f4e75268ecf12b1667889f820f6ea76a297287df8f4647d0b90c6897c51"
+    },
+    {
+      "path": "docs/screenshots/submission-live-site-released.png",
+      "bytes": 219785,
+      "sha256": "6a3e7bde818a0620ebdc77f6b6cd1661d866bacd214997fc803018248a549530"
+    }
+  ],
+  "blocked": [
+    "Chrome-extension live-origin acceptance: no connected Chrome browser was exposed to this session",
+    "Sites version 7 public deployment: explicit public deployment approval has not been obtained in this turn"
+  ],
+  "claimBoundary": "This receipt proves source validation and a clean Codex install from the public GitHub marketplace at the exact implementation commit. It does not claim real Chrome-extension execution, Sites version 7 deployment, fresh-viewer acceptance, video completion, Devpost submission, tagging, or freeze."
+}

@@ -105,7 +105,7 @@ npm audit
 
 The Playwright suite uses a test-only `document.modelContext` harness against the production registry and executors. It validates the browser workflow but does not replace the real supported-browser evidence recorded in [Judging evidence](docs/judging-evidence.md).
 
-Version 7 candidate baseline: 17 Vitest files / 65 tests, 4 Playwright Chromium tests, production build, plugin manifest validation, and a successful local Codex installation. The Chrome-extension live-origin acceptance check remains separate from the Playwright harness and requires a connected extension.
+Version 7 candidate baseline: 17 Vitest files / 65 tests, 4 Playwright Chromium tests, production build, plugin manifest validation, and a successful Codex installation from the public GitHub marketplace. The Chrome-extension live-origin acceptance check remains separate from the Playwright harness and requires a connected extension.
 
 ## Repository map
 

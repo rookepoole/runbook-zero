@@ -506,7 +506,7 @@ Date: 2026-08-26
 
 - repository-hosted marketplace and Codex plugin `runbook-zero@runbook-zero` version `0.7.0`;
 - plugin manifest passed the official local plugin validator;
-- local marketplace add and plugin installation succeeded, with the skill, capture contract, and builder present in the Codex plugin cache;
+- public GitHub marketplace add and plugin installation succeeded at commit `ff32a1f852a86d6547c560ad60ad5d85e857a05e`, with the skill, capture contract, and builder present in the Codex plugin cache;
 - Site Capture v1 distinguishes the target URL/origin, capture method, untrusted evidence, observed WebMCP tools, browser signals, exact candidate actions, and operator-handoff fallback;
 - the deterministic builder produced byte-equivalent domain data for repeated input and generated a valid no-WebMCP operator-handoff pack;
 - live Incident Packs visibly identify the exact origin, observed capability count, capture time/method, and reference-budget versus measured-baseline provenance;
@@ -517,8 +517,8 @@ Date: 2026-08-26
 
 ```text
 plugin validator        PASS
-Codex marketplace add   PASS
-Codex plugin install    PASS — enabled, version 0.7.0
+Codex marketplace add   PASS — rookepoole/runbook-zero@main
+Codex plugin install    PASS — enabled, version 0.7.0, commit ff32a1f
 npm run format:check    PASS
 npm run typecheck       PASS
 npm run lint            PASS
@@ -530,6 +530,8 @@ git diff --check        PASS
 ```
 
 The browser suite includes both the unchanged canonical `INC-042` reset-to-resolution flow and the live-site receipt lifecycle. The Playwright harness is regression evidence for production code, not a substitute for real extension WebMCP evidence.
+
+Artifact: `docs/evidence/product-v7-local-receipt.json`
 
 ### Current claim boundary
 

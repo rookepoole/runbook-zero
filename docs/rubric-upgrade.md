@@ -22,7 +22,7 @@ Estimated total: **35.4/40**, up from **28.5/40** at the start of the product re
 - **IMPLEMENTED:** `external-webmcp` and `operator-handoff` execution modes using the existing incident domain and human approval boundary.
 - **IMPLEMENTED:** exact execution receipts bound to incident, seed, mitigation, origin, tool, and input.
 - **IMPLEMENTED:** dynamic `record_external_execution` registration after release; origin/tool mismatch rejection; failed actions remain unresolved; successful actions still require passing thresholds.
-- **TESTED:** plugin manifest validation; successful local Codex marketplace installation; deterministic WebMCP and no-WebMCP pack generation; 17 Vitest files / 65 tests; 4 Playwright tests; clean typecheck, lint, and build.
+- **TESTED:** plugin manifest validation; successful Codex installation from the public GitHub marketplace at commit `ff32a1f`; deterministic WebMCP and no-WebMCP pack generation; 17 Vitest files / 65 tests; 4 Playwright tests; clean typecheck, lint, and build.
 - **PRESERVED:** the full deterministic `INC-042` reset-to-resolution browser journey and pre-approval apply absence.
 
 ## Evidence boundary
