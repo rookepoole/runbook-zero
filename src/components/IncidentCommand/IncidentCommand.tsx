@@ -148,6 +148,24 @@ export const IncidentCommand = () => {
               mitigation.
             </p>
           )}
+          {scenario.phase === "MITIGATING" && scenario.recovery && (
+            <div className="recovery-progress" aria-live="polite">
+              <span>
+                Recovery frame {scenario.recovery.step} /{" "}
+                {scenario.recovery.totalSteps}
+              </span>
+              <progress
+                aria-label="Deterministic recovery progress"
+                max={scenario.recovery.totalSteps}
+                value={scenario.recovery.step}
+              />
+            </div>
+          )}
+          {scenario.phase === "RESOLVED" && (
+            <p className="resolved-note">
+              ✓ Recovery thresholds satisfied · incident resolved
+            </p>
+          )}
         </article>
       )}
     </section>

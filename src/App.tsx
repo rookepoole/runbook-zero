@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import "./App.css";
 import { IncidentCommand } from "./components/IncidentCommand/IncidentCommand";
 import { TelemetryPanel } from "./components/TelemetryPanel/TelemetryPanel";
@@ -12,6 +14,16 @@ function App() {
   const scenario = useRunbookStore((state) => state.scenario);
   const resetScenario = useRunbookStore((state) => state.resetScenario);
   const lastAgentAction = useRunbookStore((state) => state.lastAgentAction);
+  const advanceRecoveryFrame = useRunbookStore(
+    (state) => state.advanceRecoveryFrame,
+  );
+  const recoveryStep = scenario.recovery?.step;
+
+  useEffect(() => {
+    if (scenario.phase !== "MITIGATING" || recoveryStep === undefined) return;
+    const timeout = window.setTimeout(advanceRecoveryFrame, 1_000);
+    return () => window.clearTimeout(timeout);
+  }, [advanceRecoveryFrame, recoveryStep, scenario.phase]);
 
   return (
     <div className="app-shell">

@@ -585,6 +585,31 @@ main {
   padding-left: 0.65rem;
 }
 
+.recovery-progress {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.recovery-progress span,
+.resolved-note {
+  color: var(--healthy) !important;
+  font-family: var(--mono);
+  font-size: 0.7rem !important;
+}
+
+.recovery-progress progress {
+  accent-color: var(--healthy);
+  height: 0.45rem;
+  width: 100%;
+}
+
+.resolved-note {
+  border-left: 2px solid var(--healthy);
+  margin-top: 0.75rem !important;
+  padding-left: 0.65rem;
+}
+
 .telemetry-panel {
   grid-column: 1;
   grid-row: 2;

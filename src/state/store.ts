@@ -10,6 +10,7 @@ import type {
   ServiceId,
   UserFlow,
 } from "../domain/types";
+import { advanceRecovery } from "../simulation/engine";
 import { createScenarioA } from "../simulation/scenario-a";
 
 export type FocusTarget =
@@ -42,6 +43,7 @@ interface RunbookState {
   selectService: (serviceId: ServiceId) => void;
   approveStagedMitigation: (mitigationId: MitigationId) => void;
   discardStagedMitigationAsHuman: () => void;
+  advanceRecoveryFrame: () => void;
   resetScenario: () => void;
 }
 
@@ -89,6 +91,15 @@ export const useRunbookStore = create<RunbookState>((set) => ({
       focusedSurface: "incident-command",
       lastAgentAction: null,
     })),
+  advanceRecoveryFrame: () =>
+    set((state) =>
+      state.scenario.phase === "MITIGATING"
+        ? {
+            scenario: advanceRecovery(state.scenario),
+            focusedSurface: "telemetry" as const,
+          }
+        : state,
+    ),
   resetScenario: () =>
     set({
       scenario: createScenarioA(),
