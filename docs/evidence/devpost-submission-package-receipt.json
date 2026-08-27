@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-08-27T17:58:34.3387569-05:00",
+  "sourceParentCommit": "002a64defb21ffe7c70b10ae0057b0f843b01533",
+  "submissionCopy": {
+    "file": "docs/submission-copy.md",
+    "titleCharacters": 50,
+    "titleLimit": 60,
+    "elevatorPitchCharacters": 151,
+    "elevatorPitchLimit": 200,
+    "tagCount": 25,
+    "tagLimit": 25
+  },
+  "gallery": {
+    "manifest": "docs/submission-assets.md",
+    "captureTest": "tests/browser/devpost-gallery.e2e.ts",
+    "captureCommand": "$env:CAPTURE_DEVPOST_GALLERY = \"1\"; npx playwright test tests/browser/devpost-gallery.e2e.ts",
+    "result": "PASS — 1 gallery capture journey",
+    "imageCount": 15,
+    "visualInspection": "PASS — all fifteen images inspected at original detail",
+    "claim": "Lossless captures of real Runbook Zero application states; no generative image tool used.",
+    "files": [
+      {
+        "file": "docs/screenshots/devpost-gallery/01-runbook-zero-incident-command.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 198354,
+        "sha256": "44B612581BC2AC6D067E6F95B911667AAF9E5FACB02C8A2D38CCB648F999838F"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/02-checkout-dependency-topology.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 194337,
+        "sha256": "78AC234FDCE3F332BA517A462BB90B7B7109692EA640E155C215ED798500D12E"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/03-live-telemetry-evidence.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 184845,
+        "sha256": "309E29011EE71AE7F8114DB32557C162AD2FADFB5996BF07E3265365B885FE64"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/04-agent-evidence-trail.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 195929,
+        "sha256": "16E3F27678F2CAA7257A63662991FD6949058AC0189BDA92CEF8A284A9C24292"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/05-low-risk-mitigation-comparison.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 197015,
+        "sha256": "2A4427F5EB8397BC7BE24969BCF6ACFBC9AECD07E78465554CB8CE9962C6BB26"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/06-exact-change-awaiting-human.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 196937,
+        "sha256": "C13328BFCD10A8FF0A343E07A7B8C55CCC4370B0ECB574BB10E1122F7BBBBA27"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/07-capability-firewall-locked.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 203566,
+        "sha256": "B5C2FADCFF88EB9DA55D719A605754CA8714A9DF995B93D5865DF0ADBA5D570F"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/08-human-approval-unlocks-apply.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 188739,
+        "sha256": "8A128AA04EF0488B3890D538134260BA968DBD64FF08DB7D68E67DD935E006A6"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/09-verified-deterministic-recovery.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 202679,
+        "sha256": "03AFB70E34DFB85F7C28830125B19CD9DD99320428F9D5E47929A82505E5126E"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/10-generalized-incident-pack-launcher.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 165063,
+        "sha256": "4457904E5EDD3FEE1AADD91535F073DE1329E8B42AF760812C0BEF9C360F4CA9"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/11-payment-queue-incident.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 190643,
+        "sha256": "1255DC8EFA9AC1E2541C16252832CB3680F11CF5E6E8821B3DBBEBD5E051263D"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/12-same-contracts-new-incident.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 192476,
+        "sha256": "FDEBF7F09CC0894EDB426F9965BC9B6F5F908C1F84AFAF5B22D4B311C011C31D"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/13-catalog-cache-stampede.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 193925,
+        "sha256": "77DA7A0032212C6C0378CB04DE8B0DCCA9F0E0EEDDC6FA24E6F2BF7FC0A5EDE9"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/14-live-site-evidence-derived-graph.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 217888,
+        "sha256": "D849544CE3B5F0FA810ED26988CC8DAA591D6903D9B5923CD724522125851ECF"
+      },
+      {
+        "file": "docs/screenshots/devpost-gallery/15-approval-bound-action-receipt.png",
+        "width": 1500,
+        "height": 1000,
+        "ratio": "3:2",
+        "bytes": 216488,
+        "sha256": "00BBA3F36BE542417AC7768D428C3F11751D86C7184CCB4C7B91CEC84BB3C19B"
+      }
+    ]
+  },
+  "evidenceBoundary": {
+    "galleryHarness": "Test-only document.modelContext adapter against production registry and executors.",
+    "realBrowserEvidence": "docs/judging-evidence.md",
+    "deployedApp": "https://runbook-zero.rookepoole.chatgpt.site/"
+  },
+  "remainingSubmissionBlockers": [
+    "Publish the final narrated demo video to a public YouTube URL and add it to the submission copy.",
+    "Confirm the demo contains no third-party trademarks, music, or copyrighted material without permission.",
+    "Complete and submit the Devpost form.",
+    "Record the final submission commit and deployment, then create the submission-v1.0 tag."
+  ]
+}

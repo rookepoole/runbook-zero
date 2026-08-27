@@ -4,7 +4,7 @@
 
 [Open the live Challenge Edition](https://runbook-zero.rookepoole.chatgpt.site) · [Judging evidence](docs/judging-evidence.md) · [Fresh-viewer test](docs/fresh-viewer-acceptance.md) · [Demo script](docs/demo-script.md) · [Submission stills](docs/submission-assets.md)
 
-![Runbook Zero staging an exact mitigation for visible human review](docs/screenshots/submission-staged-not-applied.png)
+![Runbook Zero incident command workspace with a live WebMCP capability firewall](docs/screenshots/devpost-gallery/01-runbook-zero-incident-command.png)
 
 Runbook Zero spans two explicit browser surfaces. Codex or the ChatGPT Chrome extension diagnoses bounded evidence from the website an operator is actually using and derives a new component, dependency, and user-flow graph for that issue. The Runbook Zero workbench then registers real `document.modelContext` tools against that graph, changes the tool surface with state and authority, and renders every agent action into the same evidence, topology, telemetry, mitigation, and audit interface the human sees.
 
@@ -107,7 +107,7 @@ npm audit
 
 The Playwright suite uses a test-only `document.modelContext` harness against the production registry and executors. It validates the browser workflow but does not replace the real supported-browser evidence recorded in [Judging evidence](docs/judging-evidence.md).
 
-Public version 8 is deployed from source checkpoint `222af335c9bb98333cc515d154148154d0e6fa53` and validated by 17 Vitest files / 69 tests, 4 Playwright Chromium tests, clean typecheck/format/lint/build, plugin manifest and skill validation, two materially different evidence-derived live graphs, hostile-reference rejection, and real local plus deployed-origin `document.modelContext` calls returning the generated checkout graph. The public marketplace refresh reports `runbook-zero@runbook-zero` installed and enabled at v0.8.0 with an exact package match; a fresh Codex task is required to load it. Connected Chrome 151 evidence remains separate from the Playwright harness and does not relabel the official demo's built-in agent call as a Codex-to-Runbook invocation.
+Public version 8 is deployed from source checkpoint `222af335c9bb98333cc515d154148154d0e6fa53` and validated by 17 Vitest files / 69 tests, 4 Playwright Chromium regression journeys, clean typecheck/format/lint/build, plugin manifest and skill validation, two materially different evidence-derived live graphs, hostile-reference rejection, and real local plus deployed-origin `document.modelContext` calls returning the generated checkout graph. A separate opt-in Playwright journey reproducibly captures the fifteen exact 3:2 Devpost gallery states. The public marketplace refresh reports `runbook-zero@runbook-zero` installed and enabled at v0.8.0 with an exact package match; a fresh Codex task is required to load it. Connected Chrome 151 evidence remains separate from the Playwright harness and does not relabel the official demo's built-in agent call as a Codex-to-Runbook invocation.
 
 ## Repository map
 
