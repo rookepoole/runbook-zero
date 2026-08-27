@@ -1,6 +1,6 @@
 # Submission copy
 
-Version 7 candidate copy for the WebMCP Challenge submission. Publish and production-revalidate the candidate, then replace the final video URL and complete the submission freeze.
+Version 8 candidate copy for the WebMCP Challenge submission. Publish and production-revalidate the candidate, then replace the final video URL and complete the submission freeze.
 
 ## Title
 
@@ -20,7 +20,7 @@ Operations consoles contain the context needed to resolve incidents, but agents 
 
 ## What it does
 
-Runbook Zero installs into Codex from the public repository. Its live-site skill gathers bounded browser evidence, inventories target-site WebMCP capabilities, and turns that evidence into a locally validated Incident Pack. The workbench visibly identifies the exact URL/origin, capture method, evidence provenance, and available action contract. When the target exposes no applicable WebMCP action, the product produces an operator handoff instead of pretending automation exists.
+Runbook Zero installs into Codex from the public repository. Its live-site skill diagnoses bounded browser evidence, inventories target-site WebMCP capabilities, and derives issue-specific components, dependency edges, user flows, telemetry, changes, and a provisional evidence-bound diagnosis. The deterministic builder turns that model into a locally validated Incident Pack. The workbench visibly identifies the exact URL/origin, capture method, graph provenance, diagnosis confidence/evidence, and available action contract. When the target exposes no applicable WebMCP action, the product produces an operator handoff instead of pretending automation exists.
 
 The deterministic incident lab remains available with three complete packs: the canonical checkout database-pool regression, a payment event queue backlog caused by reduced consumer concurrency, and a catalog cache stampede caused by a TTL regression. These keep the exact judging flow reproducible while the same domain now handles real-site packs.
 
@@ -39,7 +39,7 @@ WebMCP is the product's control plane, not an add-on. Runbook Zero defines 13 re
 - Pure guarded domain commands and queries
 - Validated Incident Pack v1 domain with three bundled scenarios and safe local JSON import
 - Repository-hosted Codex marketplace and installable live-site skill
-- Site Capture v1 contract and deterministic live Incident Pack builder
+- Evidence-derived Site Capture v2 contract, deterministic graph/layout builder, and conservative v1 fallback
 - Origin-bound external WebMCP receipts and operator-handoff fallback
 - Pack-driven deterministic recovery engine with incident-specific thresholds
 - Dynamic AbortController-based tool registration
@@ -62,7 +62,7 @@ The hardest part was preserving human authority as a runtime capability invarian
 - Visible, exact, human-only approval boundary
 - Deterministic recovery and one-click reset
 - Public ChatGPT Sites deployment and AGPL-3.0 repository
-- 65 unit/component tests, 4 browser tests, clean typecheck/lint/build, plugin validation, local Codex installation, and preserved real multi-pack WebMCP evidence
+- 69 unit/component tests, 4 browser tests, clean typecheck/format/lint/build, plugin/skill validation, distinct multi-graph live captures, real local generated-graph WebMCP calls, and preserved installed-product/Chrome evidence
 
 ## What we learned
 

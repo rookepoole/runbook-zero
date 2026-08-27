@@ -24,11 +24,27 @@ export const LiveSiteBridge = ({
           <code>{source.capturedBy.replaceAll("-", " ")}</code>
           <code>{source.observedWebMCPTools.length} observed WebMCP tools</code>
           <code>{source.baselineKind.replaceAll("-", " ")}</code>
+          {source.topologyKind === "evidence-derived" && (
+            <code>EVIDENCE-DERIVED GRAPH</code>
+          )}
         </div>
+        {source.diagnosis && (
+          <div className="live-site-bridge__diagnosis">
+            <span className="section-label">Provisional diagnosis</span>
+            <strong>{source.diagnosis.summary}</strong>
+            <small>
+              {source.diagnosis.confidence.toUpperCase()} confidence ·{" "}
+              {source.components?.length ?? 0} components ·{" "}
+              {source.dependencyCount ?? 0} dependencies ·{" "}
+              {source.flowCount ?? 0} user{" "}
+              {source.flowCount === 1 ? "flow" : "flows"}
+            </small>
+          </div>
+        )}
         <p>
           Captured {new Date(source.capturedAt).toLocaleString()}. Runbook Zero
-          governs the exact action; Codex executes it only on this origin after
-          visible approval.
+          treats the diagnosis as a lead to validate, governs the exact action,
+          and lets Codex execute it only on this origin after visible approval.
         </p>
       </section>
     );
@@ -41,8 +57,8 @@ export const LiveSiteBridge = ({
         <h1>Run this approval workflow on the site open in Codex</h1>
         <p>
           Install the plugin, inspect a real site through Codex or the Chrome
-          extension, and import its evidence as a live incident—not another
-          canned walkthrough.
+          extension. Codex can derive a new incident graph and provisional
+          diagnosis from that site's evidence—not replay a canned walkthrough.
         </p>
       </div>
       <div className="install-command" aria-label="Codex install commands">

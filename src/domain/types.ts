@@ -51,6 +51,33 @@ export interface SiteToolDescriptor {
   destructive: boolean;
 }
 
+export type LiveComponentKind =
+  | "page"
+  | "frontend"
+  | "api"
+  | "worker"
+  | "queue"
+  | "cache"
+  | "database"
+  | "external"
+  | "browser"
+  | "unknown";
+
+export interface LiveComponentDescriptor {
+  id: ServiceId;
+  label: string;
+  kind: LiveComponentKind;
+  confidence: "low" | "medium" | "high";
+  evidenceIds: string[];
+}
+
+export interface LiveDiagnosis {
+  summary: string;
+  confidence: "low" | "medium" | "high";
+  evidenceIds: string[];
+  serviceIds: ServiceId[];
+}
+
 export type IncidentSource =
   | {
       kind: "bundled-simulation" | "imported-simulation";
@@ -65,6 +92,12 @@ export type IncidentSource =
       capturedBy: "codex-browser-extension" | "codex-browser" | "manual";
       baselineKind: "reference-budget" | "measured-baseline";
       observedWebMCPTools: SiteToolDescriptor[];
+      captureSchemaVersion?: 1 | 2;
+      topologyKind?: "generic-browser" | "evidence-derived";
+      components?: LiveComponentDescriptor[];
+      dependencyCount?: number;
+      flowCount?: number;
+      diagnosis?: LiveDiagnosis;
     };
 
 export type MitigationExecution =

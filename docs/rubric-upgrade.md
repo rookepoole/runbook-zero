@@ -1,28 +1,31 @@
 # Official-rubric product assessment
 
-Date: 2026-08-26
+Date: 2026-08-27
 
-Scope: deployed public version 7 compared with the former version 6 baseline.
+Scope: locally validated version 8 candidate compared with deployed public version 7. Deployment status is tracked separately from implementation evidence.
 
 These are evidence-based internal estimates, not predictions of an individual judge's score.
 
-| Official criterion    | v6 estimate | deployed v7 | Evidence for the change                                                                                                                                                                                                                                                    |
-| --------------------- | ----------: | ----------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WebMCP Leverage       |      8.5/10 |  **9.2/10** | The dynamic page registry and visible capability firewall now govern both deterministic packs and external site actions. A released live action exposes a receipt-bound evidence tool while apply disappears; origin/tool mismatches are rejected independently of schema. |
-| Execution             |      7.0/10 |  **8.7/10** | Runbook Zero is now a real Codex plugin installable from its repository marketplace. It includes a capture contract, deterministic builder, live provenance UI, external-action receipts, fallback handoffs, 65 unit/component tests, and 4 browser tests.                 |
-| Potential Impact      |      5.5/10 |  **8.4/10** | The product can now wrap investigation and guarded action around a broad range of browser-visible sites. Automation expands when a target exposes WebMCP while no-tool sites still receive evidence-backed diagnosis and exact operator handoff.                           |
-| Creativity & Ambition |      7.5/10 |  **9.1/10** | The approval firewall now crosses origins without pretending origin isolation does not exist: Codex carries bounded evidence into the workbench and carries only an exact human-approved receipt back to the target.                                                       |
+| Official criterion    | deployed v7 | v8 candidate | Evidence for the change                                                                                                                                                                                                                                                                   |
+| --------------------- | ----------: | -----------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WebMCP Leverage       |      9.2/10 |   **9.5/10** | The same dynamic contracts now bind to every generated service and flow enum. Real local `document.modelContext` calls returned a newly derived checkout graph, while the visible firewall still withheld apply until exact approval.                                                     |
+| Execution             |      8.7/10 |   **9.2/10** | Plugin 0.8.0 includes a validated v2 contract, deterministic graph builder, stable layout, provisional-diagnosis UI, v1 fallback, two unrelated multi-component fixtures, hostile-reference rejection, 69 unit/component tests, 4 browser journeys, clean build, and valid skill package. |
+| Potential Impact      |      8.4/10 |   **9.1/10** | New sites no longer collapse into the same browser-runtime diagram. Bounded evidence can generate issue-specific components, dependencies, flows, telemetry, changes, diagnosis, exact actions, or an honest operator handoff across a much wider range of incidents.                     |
+| Creativity & Ambition |      9.1/10 |   **9.5/10** | Runbook Zero now turns browser evidence into a provisional operational model and then lets WebMCP interrogate that new model, while preserving origin isolation and the human authority firewall.                                                                                         |
 
-Estimated total: **35.4/40**, up from **28.5/40** at the start of the product reset.
+Estimated total: **37.3/40**, up from deployed v7's **35.4/40**. These remain internal estimates, not promises about judging.
 
 ## Meaningful product improvements
 
-- **IMPLEMENTED:** repository marketplace, installable Codex plugin `0.7.0`, triggerable live-site skill, Site Capture v1 contract, and deterministic builder.
+- **IMPLEMENTED:** repository marketplace, installable Codex plugin `0.8.0`, triggerable live-site skill, evidence-derived Site Capture v2 contract, deterministic graph builder, and conservative v1 fallback.
+- **IMPLEMENTED:** issue-specific components, dependencies, flows, telemetry/baselines, changes, stable layouts, provisional diagnosis provenance, candidate targets, and recovery thresholds.
 - **IMPLEMENTED:** live-site origin, URL, title, capture method/time, observed WebMCP tools, and reference-budget provenance in the visible workbench.
 - **IMPLEMENTED:** `external-webmcp` and `operator-handoff` execution modes using the existing incident domain and human approval boundary.
 - **IMPLEMENTED:** exact execution receipts bound to incident, seed, mitigation, origin, tool, and input.
 - **IMPLEMENTED:** dynamic `record_external_execution` registration after release; origin/tool mismatch rejection; failed actions remain unresolved; successful actions still require passing thresholds.
-- **TESTED:** plugin manifest validation; successful Codex installation from the public GitHub marketplace at commit `ff32a1f`; deterministic WebMCP and no-WebMCP pack generation; 17 Vitest files / 65 tests; 4 Playwright tests; clean typecheck, lint, and build.
+- **TESTED:** plugin manifest and skill validation; two unrelated captures produce materially different deterministic graphs and tool results; invalid references and unobserved tools fail closed; 17 Vitest files / 69 tests; 4 Playwright tests; clean typecheck, format, lint, and build.
+- **TESTED:** the local Codex in-app browser discovered the generated five-service/one-flow WebMCP schema, called `get_system_snapshot` and `trace_request_path` through real `document.modelContext`, returned incident-specific results, updated the same topology UI, and recorded zero console errors.
+- **PLANNED:** publish and production-revalidate version 8. Until that receipt exists, version 7 remains the deployed public baseline.
 - **PRESERVED:** the full deterministic `INC-042` reset-to-resolution browser journey and pre-approval apply absence.
 
 ## Evidence boundary

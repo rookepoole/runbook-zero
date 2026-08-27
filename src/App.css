@@ -1404,6 +1404,10 @@ main {
   z-index: 1;
 }
 
+.topology-panel--evidence-derived .topology-node {
+  width: 17%;
+}
+
 .topology-node::after {
   content: none;
 }
@@ -1692,6 +1696,33 @@ main {
 
 .live-site-bridge__facts {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.live-site-bridge__diagnosis {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--agent) 45%, var(--line));
+  background: color-mix(in srgb, var(--agent) 8%, var(--panel));
+}
+
+.live-site-bridge__diagnosis strong {
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.live-site-bridge__diagnosis small {
+  color: var(--muted);
+  font-family: var(--mono);
+  text-transform: uppercase;
+}
+
+.hypothesis-card--captured {
+  margin-bottom: 0.75rem;
+  border-color: color-mix(in srgb, var(--warning) 55%, var(--line));
+  background: color-mix(in srgb, var(--warning) 7%, var(--panel));
 }
 
 .live-site-bridge__facts > span {

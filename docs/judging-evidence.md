@@ -1,5 +1,23 @@
 # Runbook Zero judging evidence
 
+## Product version 8 — evidence-derived live incidents
+
+Status: **IMPLEMENTED / TESTED / DEPLOYMENT PLANNED**
+
+Date: 2026-08-27
+
+Version 8 removes the remaining generic-walkthrough behavior from live captures without changing the Incident Pack v1 domain, page-defined WebMCP contracts, execution receipts, or human approval invariant. Site Capture v2 now models 2–24 evidence-backed components, dependencies, user flows, current/baseline telemetry, changes, a provisional diagnosis, candidate targets, and recovery thresholds. The deterministic builder derives a stable layout and rejects duplicate IDs, dangling references, unevidenced flow edges, false measured-baseline claims, and unobserved action tools.
+
+Two unrelated fixtures prove that new issues generate materially different operational models through the same domain: a five-component checkout database-pool incident with an exact external WebMCP action, and a four-component authentication cookie incident with an honest operator handoff. The existing Site Capture v1 path remains deterministic and valid as a conservative fallback.
+
+Real local in-app-browser evidence imported the checkout capture, rendered **EVIDENCE-DERIVED GRAPH** and **CAPTURED LEAD · NOT YET VALIDATED**, dynamically changed service/flow/mitigation enums to the generated model, and called `get_system_snapshot` plus `trace_request_path` through the page's actual `document.modelContext`. The results returned `SITE-CHECKOUT-POOL-002`, the generated `storefront → checkout-api → orders-db` path, both issue-specific branches, four unhealthy components, and zero console errors or warnings. `apply_approved_mitigation` remained absent.
+
+Validation: 17 Vitest files / 69 tests, 4 Playwright Chromium journeys, clean typecheck/format/lint/build, and valid plugin skill package. The canonical `INC-042` flow remains unchanged and green.
+
+Artifact: `docs/evidence/product-v8-evidence-derived-local-receipt.json`
+
+Claim boundary: this section does not claim production version 8 until Sites publication and deployed-origin WebMCP revalidation are recorded.
+
 ## Product version 7 — public deployment and Chrome acceptance
 
 Status: **IMPLEMENTED / TESTED / DEPLOYED**

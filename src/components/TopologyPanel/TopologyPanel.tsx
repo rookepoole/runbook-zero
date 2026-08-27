@@ -27,11 +27,24 @@ export const TopologyPanel = () => {
     ([from, downstreams]) =>
       downstreams.map((to) => ({ from: from as ServiceId, to })),
   );
+  const liveComponents =
+    scenario.pack.source.kind === "live-site"
+      ? (scenario.pack.source.components ?? [])
+      : [];
+  const componentById = new Map(
+    liveComponents.map((component) => [component.id, component]),
+  );
+  const selectedComponent = componentById.get(selectedServiceId);
+  const isEvidenceDerived =
+    scenario.pack.source.kind === "live-site" &&
+    scenario.pack.source.topologyKind === "evidence-derived";
+  const labelFor = (serviceId: ServiceId) =>
+    componentById.get(serviceId)?.label ?? serviceId;
 
   return (
     <section
       aria-labelledby="topology-heading"
-      className={`workspace-panel topology-panel${isAgentFocused ? " workspace-panel--agent-focus" : ""}`}
+      className={`workspace-panel topology-panel${isEvidenceDerived ? " topology-panel--evidence-derived" : ""}${isAgentFocused ? " workspace-panel--agent-focus" : ""}`}
     >
       <div className="workspace-panel__heading">
         <div>
@@ -115,8 +128,12 @@ export const TopologyPanel = () => {
                 {healthIcon[service.health]}
               </span>
               <span>
-                <strong>{serviceId}</strong>
-                <small>{service.health.toUpperCase()}</small>
+                <strong title={serviceId}>{labelFor(serviceId)}</strong>
+                <small>
+                  {componentById.get(serviceId)?.kind.toUpperCase() ??
+                    "SERVICE"}{" "}
+                  · {service.health.toUpperCase()}
+                </small>
               </span>
             </button>
           );
@@ -125,19 +142,19 @@ export const TopologyPanel = () => {
       <div className="topology-inspector">
         <div>
           <span className="section-label">Selected service</span>
-          <strong>{selectedServiceId}</strong>
+          <strong>{selectedComponent?.label ?? selectedServiceId}</strong>
           <small>
             {healthIcon[selectedService.health]}{" "}
-            {selectedService.health.toUpperCase()}
+            {selectedService.health.toUpperCase()} · {selectedServiceId}
           </small>
         </div>
         <div>
           <span className="section-label">Upstream</span>
-          <code>{upstreams.join(", ") || "entry point"}</code>
+          <code>{upstreams.map(labelFor).join(", ") || "entry point"}</code>
         </div>
         <div>
           <span className="section-label">Dependencies</span>
-          <code>{dependencies.join(", ") || "none"}</code>
+          <code>{dependencies.map(labelFor).join(", ") || "none"}</code>
         </div>
         <div>
           <span className="section-label">Trace evidence</span>

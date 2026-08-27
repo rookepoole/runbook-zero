@@ -7,7 +7,7 @@ Target website ◄──── exact approved action ──── Codex browser 
       │                                                  │
       │ bounded evidence + capability inventory          │
       └──────────────────────────────────────────────────┘
-                                                         │ Site Capture v1
+                                                         │ Site Capture v2
                                                          ▼
                                                 Validated Incident Pack
                                                          │
@@ -56,7 +56,9 @@ Staging and approval both preserve target state. For simulation packs, mutation 
 
 ## Live-site execution
 
-`plugins/runbook-zero` is a repository-hosted Codex package. Its skill gathers bounded browser evidence and its deterministic script converts Site Capture v1 into the same Incident Pack domain used by bundled incidents. The app visibly labels live provenance and reference budgets.
+`plugins/runbook-zero` is a repository-hosted Codex package. Its skill gathers bounded browser evidence and creates Site Capture v2 with 2–24 observed components, evidence-bound dependency edges, named user flows, current and baseline telemetry, relevant changes, a provisional diagnosis, and exact candidate actions. The deterministic builder validates every reference, derives a stable graph layout, and converts the capture into the same Incident Pack v1 domain used by bundled incidents. Site Capture v1 remains a conservative two-surface fallback when the available evidence cannot support a richer graph.
+
+The capture diagnosis is not imported as domain truth. It is shown as **CAPTURED LEAD · NOT YET VALIDATED** and gives the Runbook Zero agent an evidence-bound claim to validate or reject before it records the working hypothesis. Component labels and kinds are presentation metadata; service IDs, flows, evidence, telemetry, changes, candidates, recovery thresholds, and dynamic WebMCP schemas remain governed by the shared pack domain.
 
 After approval, a live mitigation transitions to `MITIGATING` with an `ExternalExecutionReceipt`; it does not run deterministic frames or claim success. The registry removes apply and exposes `record_external_execution`. That tool validates the exact origin and tool, records success or failure, accepts only supported telemetry fields, and transitions to `RESOLVED` only when recovery thresholds pass.
 
@@ -86,7 +88,7 @@ The Worker in `worker/index.ts` serves the Vite client bundle through the Sites-
 - Pure state-machine, query, command, pack-validation, safety, registry, and simulation tests.
 - React workspace and recovery UI tests.
 - Playwright canonical, multi-pack, and live-site receipt journeys, keyboard, reduced-motion, viewport, overflow, import-failure, and console checks.
-- Plugin manifest validation, deterministic builder tests, and local Codex marketplace installation.
+- Plugin manifest/skill validation, deterministic v1/v2 builder tests, multi-graph and hostile-reference tests, and local Codex marketplace installation.
 - Real supported-browser WebMCP discovery and invocation on local and deployed version 6 across all three bundled packs, including the canonical approval-and-recovery transition.
 - Anonymous HTTPS and direct-link deployment checks.
 

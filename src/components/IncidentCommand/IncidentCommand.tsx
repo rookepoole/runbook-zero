@@ -73,19 +73,42 @@ export const IncidentCommand = () => {
             </div>
           </div>
         ) : (
-          <div className="agent-start-card">
-            <div className="agent-start-card__heading">
-              <span className="agent-chip">START WITH YOUR AGENT</span>
-              <span className="mono-label">WEBMCP HANDOFF</span>
+          <>
+            {scenario.pack.source.kind === "live-site" &&
+              scenario.pack.source.diagnosis && (
+                <div className="hypothesis-card hypothesis-card--captured">
+                  <span className="staged-chip">CAPTURED LEAD</span>
+                  <div>
+                    <p>{scenario.pack.source.diagnosis.summary}</p>
+                    <div
+                      className="evidence-chips"
+                      aria-label="Captured diagnosis evidence"
+                    >
+                      <span>
+                        {scenario.pack.source.diagnosis.confidence.toUpperCase()}{" "}
+                        CONFIDENCE · NOT YET VALIDATED
+                      </span>
+                      {scenario.pack.source.diagnosis.evidenceIds.map((id) => (
+                        <code key={id}>{id}</code>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            <div className="agent-start-card">
+              <div className="agent-start-card__heading">
+                <span className="agent-chip">START WITH YOUR AGENT</span>
+                <span className="mono-label">WEBMCP HANDOFF</span>
+              </div>
+              <p>In a WebMCP-capable browser, ask your agent:</p>
+              <blockquote>{scenario.pack.agentPrompt}</blockquote>
+              <small>
+                Agent calls will focus and update this same workspace.
+                Production cannot change before visible human approval of an
+                exact staged mitigation.
+              </small>
             </div>
-            <p>In a WebMCP-capable browser, ask your agent:</p>
-            <blockquote>{scenario.pack.agentPrompt}</blockquote>
-            <small>
-              Agent calls will focus and update this same workspace. Production
-              cannot change before visible human approval of an exact staged
-              mitigation.
-            </small>
-          </div>
+          </>
         )}
       </div>
 

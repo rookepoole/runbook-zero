@@ -1,11 +1,11 @@
 ---
 name: runbook-zero-live-sites
-description: Use Runbook Zero from Codex to investigate the website currently open in the in-app browser or Chrome extension, inventory its WebMCP tools, create a live Incident Pack, stage an exact site action for visible human approval, execute only the approved action, and synchronize verification evidence. Trigger for requests such as "use Runbook Zero on this site", "investigate this website", "audit this site's WebMCP", or "stage this site action".
+description: Use Runbook Zero from Codex to diagnose a new issue on the website currently open in the in-app browser or Chrome extension, derive an evidence-bound component and user-flow graph, inventory its WebMCP tools, and keep exact site actions behind visible human approval. Trigger for requests such as "use Runbook Zero on this site", "diagnose this website", "investigate this issue", "audit this site's WebMCP", or "stage this site action".
 ---
 
 # Runbook Zero for live sites
 
-Use Runbook Zero as an approval workbench around the browser session the user selected. Read [site-capture-v1.md](references/site-capture-v1.md) before creating a live pack.
+Use Runbook Zero as an evidence and approval workbench around the browser session the user selected. For a new issue, read [site-capture-v2.md](references/site-capture-v2.md) before creating a pack. Use the [v1 fallback](references/site-capture-v1.md) only when the available evidence cannot support a multi-component graph.
 
 ## Hard safety boundary
 
@@ -20,19 +20,20 @@ Use Runbook Zero as an approval workbench around the browser session the user se
 
 1. Bind to the browser the user requested. If they said Chrome or browser extension, use that external browser and do not substitute another browser.
 2. Record the target URL, exact origin, title, capture time, visible symptom, and user-stated impact. Inventory current WebMCP tools when the browser exposes them. Record each tool's name, description, and safety annotations.
-3. Gather only decision-relevant evidence available on the selected browser surface: visible state, relevant DOM facts, failed user flow, console or network signals when supported, and read-only WebMCP results. Preserve uncertainty and missing evidence explicitly.
-4. Write one Site Capture v1 JSON file in a task-scoped `work/runbook-zero/` directory. Do not include cookies, tokens, passwords, local storage, or unrelated page content.
-5. Convert the capture into a deterministic Incident Pack:
+3. Gather only decision-relevant evidence available on the selected browser surface: visible state, relevant DOM facts, failed user flow, console or network signals when supported, and read-only WebMCP results. Identify components only when browser, trace, telemetry, configuration, change, or tool evidence supports them. Preserve uncertainty and missing evidence explicitly.
+4. Produce a provisional diagnosis that states the leading explanation, confidence, exact evidence IDs, and implicated components. It is a lead for Runbook Zero's agent to validate or reject, never a proven root cause.
+5. Write one Site Capture v2 JSON file in a task-scoped `work/runbook-zero/` directory. Model the incident's components, evidence-backed dependencies, affected user flow, current and baseline telemetry, relevant changes, and candidate actions. Do not include cookies, tokens, passwords, local storage, or unrelated page content.
+6. Convert the capture into a deterministic Incident Pack:
 
    ```text
    node <plugin-root>/scripts/build-live-incident-pack.mjs --input <capture.json> --output <incident-pack.json>
    ```
 
-6. Open `https://runbook-zero.rookepoole.chatgpt.site/`, open **Incident Packs**, and import the generated JSON. Confirm the workspace shows **LIVE SITE**, the exact origin, capture time, and observed capability count.
-7. Use Runbook Zero's page-defined WebMCP tools to inspect, record a hypothesis, compare candidates, and stage one exact mitigation. Stop after staging and ask the user to review and click the visible approval button.
-8. Only after the user approves and `apply_approved_mitigation` appears, invoke it with the exact staged ID. For a live site, the result is an approval-bound execution receipt rather than a claim that the unrelated origin was already changed.
-9. Return to the target origin. For `external-webmcp`, rediscover the named tool and invoke it with exactly the receipt input. For `operator-handoff`, present the exact steps to the human and wait for their confirmation.
-10. Capture the result and fresh read-only signals. Return to Runbook Zero and invoke `record_external_execution` with the exact origin/tool name, outcome, observation time, summary, and supported service updates. Report whether thresholds passed; never turn missing evidence into a success claim.
+7. Open `https://runbook-zero.rookepoole.chatgpt.site/`, open **Incident Packs**, and import the generated JSON. Confirm the workspace shows **LIVE SITE**, **EVIDENCE-DERIVED GRAPH**, the exact origin, provisional diagnosis, component/dependency/flow counts, and observed capability count.
+8. Use Runbook Zero's page-defined WebMCP tools to inspect the new graph, validate or reject the captured lead, record the working hypothesis, compare candidates, and stage one exact mitigation. Stop after staging and ask the user to review and click the visible approval button.
+9. Only after the user approves and `apply_approved_mitigation` appears, invoke it with the exact staged ID. For a live site, the result is an approval-bound execution receipt rather than a claim that the unrelated origin was already changed.
+10. Return to the target origin. For `external-webmcp`, rediscover the named tool and invoke it with exactly the receipt input. For `operator-handoff`, present the exact steps to the human and wait for their confirmation.
+11. Capture the result and fresh read-only signals. Return to Runbook Zero and invoke `record_external_execution` with the exact origin/tool name, outcome, observation time, summary, and supported service updates. Report whether thresholds passed; never turn missing evidence into a success claim.
 
 ## Negative paths
 

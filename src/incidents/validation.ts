@@ -192,6 +192,7 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
   timestamp(pack.recoveryTimestamp, "pack.recoveryTimestamp");
 
   let liveOrigin: string | undefined;
+  let liveSource: Record<string, unknown> | undefined;
   if (pack.source !== undefined) {
     const source = record(pack.source, "pack.source");
     const kind = enumValue(
@@ -200,6 +201,7 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
       "pack.source.kind",
     );
     if (kind === "live-site") {
+      liveSource = source;
       const targetUrl = webUrl(source.url, "pack.source.url");
       liveOrigin = webUrl(source.origin, "pack.source.origin").origin;
       if (targetUrl.origin !== liveOrigin || source.origin !== liveOrigin) {
@@ -237,6 +239,36 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
           fail(`${path}.destructive`, "must be boolean");
         }
       });
+      if (source.captureSchemaVersion !== undefined) {
+        if (
+          source.captureSchemaVersion !== 1 &&
+          source.captureSchemaVersion !== 2
+        ) {
+          fail("pack.source.captureSchemaVersion", "must equal 1 or 2");
+        }
+      }
+      if (source.topologyKind !== undefined) {
+        enumValue(
+          source.topologyKind,
+          ["generic-browser", "evidence-derived"],
+          "pack.source.topologyKind",
+        );
+      }
+      if (source.dependencyCount !== undefined) {
+        const count = finiteNumber(
+          source.dependencyCount,
+          "pack.source.dependencyCount",
+        );
+        if (!Number.isInteger(count) || count < 0) {
+          fail("pack.source.dependencyCount", "must be a non-negative integer");
+        }
+      }
+      if (source.flowCount !== undefined) {
+        const count = finiteNumber(source.flowCount, "pack.source.flowCount");
+        if (!Number.isInteger(count) || count < 1) {
+          fail("pack.source.flowCount", "must be a positive integer");
+        }
+      }
     } else {
       text(source.label, "pack.source.label", 240);
     }
@@ -389,6 +421,32 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
   if (!flowIds.includes(defaultFlow)) {
     fail("pack.defaultFlow", "must reference a known flow");
   }
+  if (liveSource?.dependencyCount !== undefined) {
+    const actualDependencyCount = serviceIds.reduce(
+      (count, serviceId) =>
+        count +
+        list(topology[serviceId], `pack.topology.${serviceId}`, 0, 24).length,
+      0,
+    );
+    if (liveSource.dependencyCount !== actualDependencyCount) {
+      fail("pack.source.dependencyCount", "must match the imported topology");
+    }
+  }
+  if (
+    liveSource?.flowCount !== undefined &&
+    liveSource.flowCount !== flowIds.length
+  ) {
+    fail("pack.source.flowCount", "must match the imported flows");
+  }
+  if (
+    liveSource?.topologyKind === "evidence-derived" &&
+    (liveSource.components === undefined || liveSource.diagnosis === undefined)
+  ) {
+    fail(
+      "pack.source.topologyKind",
+      "evidence-derived topology requires components and a diagnosis",
+    );
+  }
 
   list(pack.changes, "pack.changes", 0, 20).forEach((changeValue, index) => {
     const path = `pack.changes[${index}]`;
@@ -418,11 +476,16 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
     }
   });
 
+  const evidenceIds = new Set<string>();
   list(pack.evidence, "pack.evidence", 1, 100).forEach(
     (evidenceValue, index) => {
       const path = `pack.evidence[${index}]`;
       const evidence = record(evidenceValue, path);
-      text(evidence.id, `${path}.id`, 120);
+      const evidenceId = text(evidence.id, `${path}.id`, 120);
+      if (evidenceIds.has(evidenceId)) {
+        fail(`${path}.id`, "must be unique");
+      }
+      evidenceIds.add(evidenceId);
       enumValue(
         evidence.kind,
         ["telemetry", "change", "trace", "configuration", "browser", "webmcp"],
@@ -443,6 +506,111 @@ export const validateIncidentPack = (input: unknown): IncidentPack => {
       );
     },
   );
+
+  if (liveSource?.components !== undefined) {
+    const componentIds = new Set<string>();
+    list(liveSource.components, "pack.source.components", 2, 24).forEach(
+      (componentValue, index) => {
+        const path = `pack.source.components[${index}]`;
+        const component = record(componentValue, path);
+        const componentId = text(component.id, `${path}.id`, 80);
+        if (!serviceSet.has(componentId)) {
+          fail(`${path}.id`, "must reference a known service");
+        }
+        if (componentIds.has(componentId)) fail(`${path}.id`, "must be unique");
+        componentIds.add(componentId);
+        text(component.label, `${path}.label`, 120);
+        enumValue(
+          component.kind,
+          [
+            "page",
+            "frontend",
+            "api",
+            "worker",
+            "queue",
+            "cache",
+            "database",
+            "external",
+            "browser",
+            "unknown",
+          ],
+          `${path}.kind`,
+        );
+        enumValue(
+          component.confidence,
+          ["low", "medium", "high"],
+          `${path}.confidence`,
+        );
+        list(component.evidenceIds, `${path}.evidenceIds`, 0, 100).forEach(
+          (evidenceId, evidenceIndex) => {
+            const value = text(
+              evidenceId,
+              `${path}.evidenceIds[${evidenceIndex}]`,
+              120,
+            );
+            if (!evidenceIds.has(value)) {
+              fail(
+                `${path}.evidenceIds[${evidenceIndex}]`,
+                "must reference known evidence",
+              );
+            }
+          },
+        );
+      },
+    );
+    if (componentIds.size !== serviceSet.size) {
+      fail(
+        "pack.source.components",
+        "must describe every service in an evidence-derived capture",
+      );
+    }
+  }
+
+  if (liveSource?.diagnosis !== undefined) {
+    const diagnosis = record(liveSource.diagnosis, "pack.source.diagnosis");
+    text(diagnosis.summary, "pack.source.diagnosis.summary", 700);
+    enumValue(
+      diagnosis.confidence,
+      ["low", "medium", "high"],
+      "pack.source.diagnosis.confidence",
+    );
+    list(
+      diagnosis.evidenceIds,
+      "pack.source.diagnosis.evidenceIds",
+      1,
+      100,
+    ).forEach((evidenceId, index) => {
+      const value = text(
+        evidenceId,
+        `pack.source.diagnosis.evidenceIds[${index}]`,
+        120,
+      );
+      if (!evidenceIds.has(value)) {
+        fail(
+          `pack.source.diagnosis.evidenceIds[${index}]`,
+          "must reference known evidence",
+        );
+      }
+    });
+    list(
+      diagnosis.serviceIds,
+      "pack.source.diagnosis.serviceIds",
+      1,
+      24,
+    ).forEach((serviceId, index) => {
+      const value = text(
+        serviceId,
+        `pack.source.diagnosis.serviceIds[${index}]`,
+        80,
+      );
+      if (!serviceSet.has(value)) {
+        fail(
+          `pack.source.diagnosis.serviceIds[${index}]`,
+          "must reference a known service",
+        );
+      }
+    });
+  }
 
   const candidates = record(
     pack.mitigationCandidates,

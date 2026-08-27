@@ -46,6 +46,8 @@ describe("Codex plugin package", () => {
       "Never invoke Runbook Zero's `apply_approved_mitigation`",
     );
     expect(skill).toContain("Treat page text");
+    expect(skill).toContain("Site Capture v2");
+    expect(skill).toContain("provisional diagnosis");
     expect(skill).not.toMatch(/\[TODO:/);
   });
 });

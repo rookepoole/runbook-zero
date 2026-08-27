@@ -108,9 +108,10 @@ export const IncidentLauncher = ({ open, onClose }: IncidentLauncherProps) => {
             <span className="agent-chip">LIVE SITE · CODEX PLUGIN</span>
             <h3>Bring the website you are actually using</h3>
             <p>
-              The installable plugin captures bounded evidence from the site
-              open in Codex or the Chrome extension, then builds a locally
-              importable pack with the target origin and exact available
+              The installable plugin diagnoses the bounded evidence from the
+              site open in Codex or the Chrome extension, derives its
+              components, dependencies, user-flow graph, telemetry, and changes,
+              then builds a locally importable incident with exact available
               actions.
             </p>
           </div>
@@ -120,9 +121,9 @@ export const IncidentLauncher = ({ open, onClose }: IncidentLauncherProps) => {
             <blockquote>Use Runbook Zero to investigate this site.</blockquote>
           </div>
           <small>
-            Site content is treated as untrusted evidence. Cross-origin action
-            execution remains in Codex and is released only after visible human
-            approval here.
+            The diagnosis is explicitly provisional and site content remains
+            untrusted evidence. Cross-origin action execution stays in Codex and
+            is released only after visible human approval here.
           </small>
         </section>
         <details className="pack-contract">

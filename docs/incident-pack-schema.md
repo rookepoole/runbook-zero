@@ -6,25 +6,25 @@ The easiest way to create a pack is to open **Incident Packs**, download one of 
 
 ## Top-level contract
 
-| Field                                                     | Purpose                                                                                                                  |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `schemaVersion`                                           | Must equal `1`.                                                                                                          |
-| `packId`, `name`, `summary`, `canonical`, `seed`          | Stable identity and launcher metadata. Imported packs are always marked non-canonical.                                   |
-| `agentPrompt`, `impactPath`, `topologyTitle`              | Incident-specific presentation copy supplied as data.                                                                    |
-| `defaultServiceId`, `defaultFlow`                         | Initial human focus and canonical request flow.                                                                          |
-| `eventBaseTimestamp`, `recoveryTimestamp`                 | Fixed clocks for deterministic event and recovery frames.                                                                |
-| `source` (optional)                                       | Bundled/imported simulation identity or live URL, exact origin, capture provenance, baseline kind, and observed tools.   |
-| `incident`                                                | ID, title, severity, start time, affected services, and customer impact. Runtime status is derived by the state machine. |
-| `services`, `baselineServices`                            | Current and known-good telemetry keyed by service ID.                                                                    |
-| `topology`, `topologyLayout`                              | Dependency adjacency lists and normalized node coordinates.                                                              |
-| `flows`                                                   | Named primary paths and branches used by `trace_request_path`.                                                           |
-| `changes`                                                 | Zero or more known deploy/config/flag records with exact before-and-after diffs.                                         |
-| `evidence`                                                | Trace, telemetry, configuration, change, browser, and WebMCP evidence bound to service IDs.                              |
-| `mitigationCandidates`                                    | Candidate actions, predictions, risks, assumptions, exact changes, and optional execution contract.                      |
-| `mitigationEffects`                                       | Resulting configuration and recovery frames. External actions have zero frames and await returned evidence.              |
-| `configTargetServiceId`, `systemConfig`, `baselineConfig` | Active and known-good configuration presented by service inspection.                                                     |
-| `recoveryThresholds`                                      | Pack-specific `lte` or `gte` checks used by `verify_recovery`.                                                           |
-| `timeline`                                                | Initial deterministic incident events.                                                                                   |
+| Field                                                     | Purpose                                                                                                                                                           |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `schemaVersion`                                           | Must equal `1`.                                                                                                                                                   |
+| `packId`, `name`, `summary`, `canonical`, `seed`          | Stable identity and launcher metadata. Imported packs are always marked non-canonical.                                                                            |
+| `agentPrompt`, `impactPath`, `topologyTitle`              | Incident-specific presentation copy supplied as data.                                                                                                             |
+| `defaultServiceId`, `defaultFlow`                         | Initial human focus and canonical request flow.                                                                                                                   |
+| `eventBaseTimestamp`, `recoveryTimestamp`                 | Fixed clocks for deterministic event and recovery frames.                                                                                                         |
+| `source` (optional)                                       | Bundled/imported identity or live URL/origin, capture provenance, baseline kind, observed tools, component labels/kinds, graph counts, and provisional diagnosis. |
+| `incident`                                                | ID, title, severity, start time, affected services, and customer impact. Runtime status is derived by the state machine.                                          |
+| `services`, `baselineServices`                            | Current and known-good telemetry keyed by service ID.                                                                                                             |
+| `topology`, `topologyLayout`                              | Dependency adjacency lists and normalized node coordinates.                                                                                                       |
+| `flows`                                                   | Named primary paths and branches used by `trace_request_path`.                                                                                                    |
+| `changes`                                                 | Zero or more known deploy/config/flag records with exact before-and-after diffs.                                                                                  |
+| `evidence`                                                | Trace, telemetry, configuration, change, browser, and WebMCP evidence bound to service IDs.                                                                       |
+| `mitigationCandidates`                                    | Candidate actions, predictions, risks, assumptions, exact changes, and optional execution contract.                                                               |
+| `mitigationEffects`                                       | Resulting configuration and recovery frames. External actions have zero frames and await returned evidence.                                                       |
+| `configTargetServiceId`, `systemConfig`, `baselineConfig` | Active and known-good configuration presented by service inspection.                                                                                              |
+| `recoveryThresholds`                                      | Pack-specific `lte` or `gte` checks used by `verify_recovery`.                                                                                                    |
+| `timeline`                                                | Initial deterministic incident events.                                                                                                                            |
 
 ## Validation and safety
 
@@ -34,6 +34,7 @@ Runbook Zero rejects a pack before activation when any of these checks fail:
 - required strings, timestamps, finite non-negative telemetry values, enums, or arrays are invalid;
 - the pack contains fewer than two or more than 24 services;
 - service, topology, flow, evidence, mitigation, recovery-frame, or threshold references do not resolve;
+- live component or provisional-diagnosis metadata references an unknown service or evidence ID;
 - topology coordinates fall outside the supported canvas;
 - a change has no exact diff or a candidate has no exact action;
 - a simulation effect has no recovery frame;

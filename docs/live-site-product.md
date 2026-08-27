@@ -14,14 +14,15 @@ Start a new Codex task after installation. The plugin's `runbook-zero-live-sites
 ## Use on a site
 
 1. Open the target in Codex's in-app browser or a connected ChatGPT Chrome extension.
-2. Ask: **“Use Runbook Zero to investigate this site.”**
-3. Codex captures a bounded Site Capture v1 file. Page content and target-provided tool text are treated as untrusted evidence, and browser secrets are excluded.
-4. The bundled builder converts that capture into a validated live Incident Pack with the exact target origin, evidence provenance, observed WebMCP capabilities, candidate action inputs, and recovery thresholds.
-5. Codex opens the public Runbook Zero workbench and imports the pack locally. The page shows **LIVE SITE**, the origin, capture method, time, observed capability count, and reference-budget or measured-baseline status.
-6. Codex uses Runbook Zero's page-defined tools to investigate, compare, and stage. The workflow stops for the human to inspect and approve the exact action in the visible UI.
-7. After approval, `apply_approved_mitigation` releases an execution receipt bound to the incident, seed, mitigation, origin, tool name, and JSON input.
-8. Codex returns to the target site and invokes only that exact capability. If the tool changed or disappeared, execution stops and the mitigation must be restaged.
-9. Codex returns result evidence through `record_external_execution`. Runbook Zero rejects a different origin or tool, preserves failures, and resolves only if updated signals meet the pack's thresholds.
+2. Ask: **“Use Runbook Zero to diagnose this issue and derive its incident graph.”**
+3. Codex captures a bounded Site Capture v2 file. Page content and target-provided tool text are treated as untrusted evidence, browser secrets are excluded, and every modeled component/dependency is tied to browser, trace, telemetry, change, configuration, or WebMCP evidence.
+4. Codex records a provisional diagnosis with confidence, exact evidence IDs, and implicated components. It is a lead to validate or reject, not a proven root cause.
+5. The bundled builder validates every reference, derives a deterministic layout, and converts the capture into a live Incident Pack with the exact target origin, issue-specific service graph and flows, telemetry/baselines, changes, evidence provenance, observed WebMCP capabilities, candidate action inputs, and recovery thresholds.
+6. Codex opens the public Runbook Zero workbench and imports the pack locally. The page shows **LIVE SITE**, **EVIDENCE-DERIVED GRAPH**, the origin, capture method/time, component/dependency/flow counts, provisional diagnosis, observed capability count, and reference-budget or measured-baseline status.
+7. Codex uses Runbook Zero's page-defined tools to inspect the generated graph, validate or reject the captured lead, record a working hypothesis, compare, and stage. The workflow stops for the human to inspect and approve the exact action in the visible UI.
+8. After approval, `apply_approved_mitigation` releases an execution receipt bound to the incident, seed, mitigation, origin, tool name, and JSON input.
+9. Codex returns to the target site and invokes only that exact capability. If the tool changed or disappeared, execution stops and the mitigation must be restaged.
+10. Codex returns result evidence through `record_external_execution`. Runbook Zero rejects a different origin or tool, preserves failures, and resolves only if updated signals meet the pack's thresholds.
 
 ## Capability boundary
 
@@ -37,7 +38,7 @@ Observation can work across a broad range of sites. Automatic remediation is int
 
 ## Build a pack directly
 
-The capture contract is documented inside the plugin at `plugins/runbook-zero/skills/runbook-zero-live-sites/references/site-capture-v1.md`.
+The evidence-derived contract is documented inside the plugin at `plugins/runbook-zero/skills/runbook-zero-live-sites/references/site-capture-v2.md`. The adjacent v1 contract is the low-evidence fallback.
 
 ```bash
 node plugins/runbook-zero/scripts/build-live-incident-pack.mjs \

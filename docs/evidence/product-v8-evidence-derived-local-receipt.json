@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "receipt": "product-v8-evidence-derived-live-incidents",
+  "recordedAt": "2026-08-27T14:01:54.3238175-05:00",
+  "status": "TESTED",
+  "scope": "local candidate before Sites version 8 publication",
+  "implementation": {
+    "pluginVersion": "0.8.0",
+    "captureContracts": [1, 2],
+    "incidentPackSchema": 1,
+    "sharedWebMcpContracts": true,
+    "approvalInvariantChanged": false
+  },
+  "generatedCaptures": [
+    {
+      "incidentId": "SITE-CHECKOUT-POOL-002",
+      "components": 5,
+      "dependencies": 4,
+      "flows": 1,
+      "candidateMode": "external-webmcp"
+    },
+    {
+      "incidentId": "SITE-AUTH-COOKIE-003",
+      "components": 4,
+      "dependencies": 3,
+      "flows": 1,
+      "candidateMode": "operator-handoff"
+    }
+  ],
+  "realBrowser": {
+    "surface": "Codex in-app browser",
+    "origin": "http://127.0.0.1:5173",
+    "documentModelContext": "native page-defined runtime",
+    "activeToolCount": 9,
+    "calledTools": ["get_system_snapshot", "trace_request_path"],
+    "returnedIncidentId": "SITE-CHECKOUT-POOL-002",
+    "returnedPrimaryPath": ["storefront", "checkout-api", "orders-db"],
+    "returnedBranches": [
+      ["checkout-api", "payment-api"],
+      ["checkout-api", "fulfillment-queue"]
+    ],
+    "consoleErrorsOrWarnings": 0,
+    "applyAvailableBeforeApproval": false
+  },
+  "validation": {
+    "typecheck": "PASS",
+    "formatCheck": "PASS after formatting",
+    "lint": "PASS",
+    "vitest": "PASS — 17 files / 69 tests",
+    "playwright": "PASS — 4 Chromium tests",
+    "build": "PASS",
+    "skillQuickValidate": "PASS",
+    "hostileUnknownGraphReference": "REJECTED",
+    "v1BackwardCompatibility": "PASS"
+  },
+  "claimBoundary": [
+    "The captured diagnosis is a provisional lead and is not imported as the domain working hypothesis.",
+    "The local in-app-browser run is real document.modelContext evidence, not Chrome-extension evidence.",
+    "Sites version 8 deployment is not claimed by this receipt."
+  ]
+}

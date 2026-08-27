@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 2,
+  "sessionId": "SITE-CHECKOUT-POOL-002",
+  "capturedAt": "2026-08-27T16:00:00.000Z",
+  "capturedBy": "codex-browser-extension",
+  "baselineKind": "measured-baseline",
+  "target": {
+    "url": "https://shop.example.test/checkout",
+    "title": "Shop checkout",
+    "symptom": "Checkout requests time out after payment authorization.",
+    "customerImpact": "Customers are charged but do not receive an order confirmation.",
+    "severity": "SEV-1"
+  },
+  "signals": {
+    "pageLoadMs": 5200,
+    "resourceP95Ms": 2400,
+    "failedRequests": 9,
+    "resourceCount": 48,
+    "consoleErrorCount": 3,
+    "interactiveElementCount": 24
+  },
+  "components": [
+    {
+      "id": "storefront",
+      "label": "Storefront",
+      "kind": "frontend",
+      "health": "degraded",
+      "confidence": "high",
+      "telemetry": {
+        "p95LatencyMs": 5200,
+        "errorRatePct": 6.2,
+        "requestsPerSecond": 42,
+        "saturationPct": 74
+      },
+      "baseline": {
+        "p95LatencyMs": 1300,
+        "errorRatePct": 0.2,
+        "requestsPerSecond": 46,
+        "saturationPct": 41
+      }
+    },
+    {
+      "id": "checkout-api",
+      "label": "Checkout API",
+      "kind": "api",
+      "health": "critical",
+      "confidence": "high",
+      "telemetry": {
+        "p95LatencyMs": 6100,
+        "errorRatePct": 14.8,
+        "requestsPerSecond": 38,
+        "saturationPct": 97
+      },
+      "baseline": {
+        "p95LatencyMs": 620,
+        "errorRatePct": 0.1,
+        "requestsPerSecond": 44,
+        "saturationPct": 48
+      }
+    },
+    {
+      "id": "orders-db",
+      "label": "Orders database",
+      "kind": "database",
+      "health": "critical",
+      "confidence": "high",
+      "telemetry": {
+        "p95LatencyMs": 5900,
+        "errorRatePct": 12.5,
+        "requestsPerSecond": 36,
+        "saturationPct": 100
+      },
+      "baseline": {
+        "p95LatencyMs": 210,
+        "errorRatePct": 0,
+        "requestsPerSecond": 43,
+        "saturationPct": 52
+      }
+    },
+    {
+      "id": "payment-api",
+      "label": "Payment provider",
+      "kind": "external",
+      "health": "healthy",
+      "confidence": "high",
+      "telemetry": {
+        "p95LatencyMs": 390,
+        "errorRatePct": 0.1,
+        "requestsPerSecond": 39,
+        "saturationPct": 33
+      },
+      "baseline": {
+        "p95LatencyMs": 400,
+        "errorRatePct": 0.1,
+        "requestsPerSecond": 44,
+        "saturationPct": 35
+      }
+    },
+    {
+      "id": "fulfillment-queue",
+      "label": "Fulfillment queue",
+      "kind": "queue",
+      "health": "degraded",
+      "confidence": "medium",
+      "telemetry": {
+        "p95LatencyMs": 1800,
+        "errorRatePct": 0.8,
+        "requestsPerSecond": 21,
+        "saturationPct": 81
+      },
+      "baseline": {
+        "p95LatencyMs": 340,
+        "errorRatePct": 0.1,
+        "requestsPerSecond": 42,
+        "saturationPct": 38
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-CHECKOUT-TRACE",
+      "kind": "trace",
+      "summary": "Failed checkout traces enter checkout-api, authorize successfully, and stall on orders-db writes.",
+      "componentIds": ["storefront", "checkout-api", "payment-api", "orders-db"]
+    },
+    {
+      "id": "E-POOL-SATURATION",
+      "kind": "telemetry",
+      "summary": "Orders database connection usage is pinned at 100% while payment latency remains within baseline.",
+      "componentIds": ["checkout-api", "orders-db", "payment-api"]
+    },
+    {
+      "id": "E-POOL-CHANGE",
+      "kind": "change",
+      "summary": "The latest checkout-api deployment reduced the orders pool limit from 40 to 8.",
+      "componentIds": ["checkout-api", "orders-db"]
+    },
+    {
+      "id": "E-QUEUE-LAG",
+      "kind": "telemetry",
+      "summary": "Fulfillment publish lag rose only after order writes began stalling.",
+      "componentIds": ["checkout-api", "fulfillment-queue"]
+    }
+  ],
+  "dependencies": [
+    {
+      "from": "storefront",
+      "to": "checkout-api",
+      "confidence": "high",
+      "evidenceIds": ["E-CHECKOUT-TRACE"]
+    },
+    {
+      "from": "checkout-api",
+      "to": "payment-api",
+      "confidence": "high",
+      "evidenceIds": ["E-CHECKOUT-TRACE", "E-POOL-SATURATION"]
+    },
+    {
+      "from": "checkout-api",
+      "to": "orders-db",
+      "confidence": "high",
+      "evidenceIds": ["E-CHECKOUT-TRACE", "E-POOL-SATURATION"]
+    },
+    {
+      "from": "checkout-api",
+      "to": "fulfillment-queue",
+      "confidence": "medium",
+      "evidenceIds": ["E-QUEUE-LAG"]
+    }
+  ],
+  "flows": [
+    {
+      "id": "checkout-confirmation",
+      "label": "Checkout confirmation",
+      "primaryPath": ["storefront", "checkout-api", "orders-db"],
+      "branches": [
+        ["checkout-api", "payment-api"],
+        ["checkout-api", "fulfillment-queue"]
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "E-POOL-CHANGE",
+      "timestamp": "2026-08-27T15:42:00.000Z",
+      "componentId": "checkout-api",
+      "category": "config",
+      "summary": "Orders pool limit reduced during checkout-api deploy.",
+      "version": "checkout-api@4.18.0",
+      "author": "deploy-bot",
+      "risk": "high",
+      "diff": { "ordersPoolLimit": { "from": 40, "to": 8 } }
+    }
+  ],
+  "diagnosis": {
+    "summary": "A reduced checkout-api database pool is the leading explanation for saturated order writes and downstream confirmation timeouts; payment is healthy and is not the current lead.",
+    "confidence": "high",
+    "evidenceIds": ["E-CHECKOUT-TRACE", "E-POOL-SATURATION", "E-POOL-CHANGE"],
+    "componentIds": ["checkout-api", "orders-db"]
+  },
+  "webMcpTools": [
+    {
+      "name": "restore_checkout_pool_limit",
+      "title": "Restore checkout pool limit",
+      "description": "Restore the checkout database pool to a previously observed limit.",
+      "readOnly": false,
+      "destructive": true
+    }
+  ],
+  "candidateActions": [
+    {
+      "id": "M-RESTORE-CHECKOUT-POOL",
+      "title": "Restore the checkout pool to 40",
+      "description": "Invoke the site's exact pool restoration capability for checkout-api.",
+      "risk": "medium",
+      "reversible": true,
+      "targetComponentId": "checkout-api",
+      "webMcp": {
+        "toolName": "restore_checkout_pool_limit",
+        "input": { "service": "checkout-api", "poolLimit": 40 }
+      },
+      "expected": { "p95LatencyMs": 700, "errorRatePct": 0.2 },
+      "estimatedRecoverySeconds": 90,
+      "assumptions": [
+        "The observed pool reduction is causal rather than merely correlated.",
+        "Fresh checkout traces can verify recovery without creating a duplicate charge."
+      ]
+    }
+  ],
+  "recoveryThresholds": [
+    {
+      "componentId": "checkout-api",
+      "metric": "p95LatencyMs",
+      "operator": "lte",
+      "threshold": 900
+    },
+    {
+      "componentId": "checkout-api",
+      "metric": "errorRatePct",
+      "operator": "lte",
+      "threshold": 1
+    },
+    {
+      "componentId": "orders-db",
+      "metric": "saturationPct",
+      "operator": "lte",
+      "threshold": 70
+    }
+  ]
+}

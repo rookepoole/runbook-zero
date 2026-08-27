@@ -28,6 +28,11 @@ const builder = resolve(
   "plugins/runbook-zero/scripts/build-live-incident-pack.mjs",
 );
 const capture = resolve(root, "tests/fixtures/site-capture-webmcp.json");
+const checkoutCapture = resolve(
+  root,
+  "tests/fixtures/site-capture-checkout-v2.json",
+);
+const authCapture = resolve(root, "tests/fixtures/site-capture-auth-v2.json");
 const outputs: string[] = [];
 
 const build = (input = capture): IncidentPack => {
@@ -72,6 +77,110 @@ describe("installable live-site product", () => {
     expect(
       first.mitigationEffects["M-RETRY-CONFIRMATION"].recoveryFrames,
     ).toEqual([]);
+  });
+
+  it("derives a new component graph and provisional diagnosis from v2 evidence", () => {
+    const pack = build(checkoutCapture);
+
+    expect(Object.keys(pack.services)).toEqual([
+      "storefront",
+      "checkout-api",
+      "orders-db",
+      "payment-api",
+      "fulfillment-queue",
+    ]);
+    expect(pack.topology).toEqual({
+      storefront: ["checkout-api"],
+      "checkout-api": ["fulfillment-queue", "orders-db", "payment-api"],
+      "orders-db": [],
+      "payment-api": [],
+      "fulfillment-queue": [],
+    });
+    expect(pack.impactPath).toBe("Storefront → Checkout API → Orders database");
+    expect(pack.source).toMatchObject({
+      kind: "live-site",
+      captureSchemaVersion: 2,
+      topologyKind: "evidence-derived",
+      dependencyCount: 4,
+      flowCount: 1,
+      diagnosis: {
+        confidence: "high",
+        serviceIds: ["checkout-api", "orders-db"],
+      },
+    });
+    expect(pack.mitigationCandidates["M-RESTORE-CHECKOUT-POOL"]).toMatchObject({
+      targetService: "checkout-api",
+      execution: {
+        mode: "external-webmcp",
+        toolName: "restore_checkout_pool_limit",
+        input: { service: "checkout-api", poolLimit: 40 },
+      },
+    });
+  });
+
+  it("generates materially different deterministic graphs for different new issues", () => {
+    const checkout = build(checkoutCapture);
+    const checkoutAgain = build(checkoutCapture);
+    const authentication = build(authCapture);
+
+    expect(checkoutAgain).toEqual(checkout);
+    expect(authentication.packId).not.toBe(checkout.packId);
+    expect(authentication.topology).not.toEqual(checkout.topology);
+    expect(Object.keys(authentication.services)).toEqual([
+      "login-page",
+      "auth-callback",
+      "identity-provider",
+      "session-store",
+    ]);
+    expect(
+      authentication.mitigationCandidates["M-OPERATOR-HANDOFF"],
+    ).toMatchObject({
+      targetService: "auth-callback",
+      execution: { mode: "operator-handoff" },
+    });
+  });
+
+  it("rejects invented graph references and unobserved actions before pack creation", () => {
+    const invalid = JSON.parse(readFileSync(checkoutCapture, "utf8")) as Record<
+      string,
+      unknown
+    >;
+    const dependencies = invalid.dependencies as Array<Record<string, unknown>>;
+    dependencies[0] = { ...dependencies[0], to: "invented-backend" };
+    const input = resolve(
+      tmpdir(),
+      `runbook-zero-invalid-graph-${process.pid}.json`,
+    );
+    outputs.push(input);
+    writeFileSync(input, JSON.stringify(invalid));
+
+    expect(() => build(input)).toThrow(/references unknown invented-backend/i);
+
+    const falseBaseline = JSON.parse(
+      readFileSync(checkoutCapture, "utf8"),
+    ) as Record<string, unknown>;
+    const components = falseBaseline.components as Array<
+      Record<string, unknown>
+    >;
+    components[0] = { ...components[0], baseline: {} };
+    const baselineInput = resolve(
+      tmpdir(),
+      `runbook-zero-invalid-baseline-${process.pid}.json`,
+    );
+    outputs.push(baselineInput);
+    writeFileSync(baselineInput, JSON.stringify(falseBaseline));
+
+    expect(() => build(baselineInput)).toThrow(
+      /baseline\.p95LatencyMs is required/i,
+    );
+
+    const mismatchedMetadata = build(checkoutCapture);
+    if (mismatchedMetadata.source?.kind === "live-site") {
+      mismatchedMetadata.source.dependencyCount = 99;
+    }
+    expect(() => validateIncidentPack(mismatchedMetadata)).toThrow(
+      /dependencyCount.*must match the imported topology/i,
+    );
   });
 
   it("degrades safely to an operator handoff on sites without WebMCP", () => {
@@ -212,5 +321,24 @@ describe("installable live-site product", () => {
     expect(screen.getByText("https://shop.example.test")).toBeVisible();
     expect(screen.getByText(/1 observed WebMCP tools/i)).toBeVisible();
     expect(screen.getAllByText(/reference budget/i)).not.toHaveLength(0);
+  });
+
+  it("renders an evidence-derived graph and labels the captured lead as provisional", () => {
+    Object.defineProperty(document, "modelContext", {
+      configurable: true,
+      value: undefined,
+    });
+    const pack = build(checkoutCapture);
+    expect(
+      useRunbookStore.getState().importIncidentPackJson(JSON.stringify(pack)),
+    ).toMatchObject({ ok: true });
+
+    render(createElement(App));
+
+    expect(screen.getByText("EVIDENCE-DERIVED GRAPH")).toBeVisible();
+    expect(screen.getAllByText("Checkout API").length).toBeGreaterThan(0);
+    expect(screen.getByText("CAPTURED LEAD")).toBeVisible();
+    expect(screen.getByText(/NOT YET VALIDATED/i)).toBeVisible();
+    expect(screen.getByText(/5 components · 4 dependencies/i)).toBeVisible();
   });
 });

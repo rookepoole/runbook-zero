@@ -73,7 +73,7 @@ test("a live site uses an approval-bound external execution receipt", async ({
   execFileSync(process.execPath, [
     resolve(root, "plugins/runbook-zero/scripts/build-live-incident-pack.mjs"),
     "--input",
-    resolve(root, "tests/fixtures/site-capture-webmcp.json"),
+    resolve(root, "tests/fixtures/site-capture-checkout-v2.json"),
     "--output",
     packPath,
   ]);
@@ -89,20 +89,26 @@ test("a live site uses an approval-bound external execution receipt", async ({
       page.getByRole("link", { name: "https://shop.example.test" }),
     ).toBeVisible();
     await expect(page.getByText("1 observed WebMCP tools")).toBeVisible();
+    await expect(page.getByText("EVIDENCE-DERIVED GRAPH")).toBeVisible();
+    await expect(page.getByText("CAPTURED LEAD")).toBeVisible();
+    await expect(
+      page.getByText("Checkout API", { exact: true }).first(),
+    ).toBeVisible();
     await expect.poll(() => toolNames(page)).toHaveLength(9);
     await captureProductAsset(page, "submission-live-site-connected");
 
     await callTool(page, "get_system_snapshot", {});
     await callTool(page, "set_working_hypothesis", {
-      summary: "The captured confirmation path failed on the target origin.",
-      confidence: "medium",
-      evidenceIds: ["E-PENDING", "E-WEBMCP-SURFACE"],
+      summary:
+        "The reduced checkout database pool explains the saturated order-write path.",
+      confidence: "high",
+      evidenceIds: ["E-CHECKOUT-TRACE", "E-POOL-SATURATION", "E-POOL-CHANGE"],
     });
     await callTool(page, "compare_mitigations", {
       optimizeFor: "lowest-risk",
     });
     await callTool(page, "stage_mitigation", {
-      mitigationId: "M-RETRY-CONFIRMATION",
+      mitigationId: "M-RESTORE-CHECKOUT-POOL",
     });
 
     await expect(page.getByText("STAGED — NOT APPLIED")).toBeVisible();
@@ -122,15 +128,15 @@ test("a live site uses an approval-bound external execution receipt", async ({
         receiptId: string;
         targetOrigin: string;
         toolName: string;
-        input: { orderId: string };
+        input: { service: string; poolLimit: number };
       };
     }>(page, "apply_approved_mitigation", {
-      mitigationId: "M-RETRY-CONFIRMATION",
+      mitigationId: "M-RESTORE-CHECKOUT-POOL",
     });
     expect(release.externalExecution).toMatchObject({
       targetOrigin: "https://shop.example.test",
-      toolName: "retry_order_confirmation",
-      input: { orderId: "123" },
+      toolName: "restore_checkout_pool_limit",
+      input: { service: "checkout-api", poolLimit: 40 },
     });
 
     await expect(
@@ -149,15 +155,20 @@ test("a live site uses an approval-bound external execution receipt", async ({
       "record_external_execution",
       {
         origin: "https://shop.example.test",
-        toolName: "retry_order_confirmation",
+        toolName: "restore_checkout_pool_limit",
         outcome: "succeeded",
-        summary: "The retry succeeded and the order is visibly confirmed.",
+        summary:
+          "The pool restoration succeeded and new checkout traces completed.",
         observedAt: "2026-08-26T14:01:00.000Z",
         serviceUpdates: {
-          "page-runtime": {
+          "checkout-api": {
             health: "healthy",
-            p95LatencyMs: 1200,
-            errorRatePct: 0,
+            p95LatencyMs: 700,
+            errorRatePct: 0.2,
+          },
+          "orders-db": {
+            health: "healthy",
+            saturationPct: 58,
           },
         },
       },

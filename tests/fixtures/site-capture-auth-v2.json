@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 2,
+  "sessionId": "SITE-AUTH-COOKIE-003",
+  "capturedAt": "2026-08-27T17:00:00.000Z",
+  "capturedBy": "codex-browser-extension",
+  "target": {
+    "url": "https://console.example.test/login/callback",
+    "title": "Operations console login",
+    "symptom": "Users return to the login screen after successful identity-provider authentication.",
+    "customerImpact": "Operators cannot enter the console even though credentials are accepted.",
+    "severity": "SEV-2"
+  },
+  "signals": {
+    "pageLoadMs": 1700,
+    "resourceP95Ms": 680,
+    "failedRequests": 0,
+    "resourceCount": 31,
+    "consoleErrorCount": 0,
+    "interactiveElementCount": 8
+  },
+  "components": [
+    {
+      "id": "login-page",
+      "label": "Login page",
+      "kind": "frontend",
+      "health": "degraded",
+      "telemetry": { "p95LatencyMs": 1700, "errorRatePct": 0 },
+      "baseline": { "p95LatencyMs": 1200, "errorRatePct": 0 }
+    },
+    {
+      "id": "auth-callback",
+      "label": "Auth callback",
+      "kind": "api",
+      "health": "critical",
+      "telemetry": { "p95LatencyMs": 720, "errorRatePct": 42 },
+      "baseline": { "p95LatencyMs": 400, "errorRatePct": 0.1 }
+    },
+    {
+      "id": "identity-provider",
+      "label": "Identity provider",
+      "kind": "external",
+      "health": "healthy",
+      "telemetry": { "p95LatencyMs": 510, "errorRatePct": 0 },
+      "baseline": { "p95LatencyMs": 520, "errorRatePct": 0.1 }
+    },
+    {
+      "id": "session-store",
+      "label": "Session store",
+      "kind": "cache",
+      "health": "healthy",
+      "telemetry": { "p95LatencyMs": 24, "errorRatePct": 0 },
+      "baseline": { "p95LatencyMs": 25, "errorRatePct": 0 }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-AUTH-REDIRECT",
+      "kind": "trace",
+      "summary": "The callback receives a valid identity-provider response and redirects without a session cookie.",
+      "componentIds": ["login-page", "auth-callback", "identity-provider"]
+    },
+    {
+      "id": "E-COOKIE-CONFIG",
+      "kind": "configuration",
+      "summary": "The callback cookie is marked Secure but its Domain does not match the console host.",
+      "componentIds": ["auth-callback"]
+    },
+    {
+      "id": "E-SESSION-HEALTH",
+      "kind": "telemetry",
+      "summary": "Session-store reads and writes remain healthy during failed logins.",
+      "componentIds": ["auth-callback", "session-store"]
+    }
+  ],
+  "dependencies": [
+    {
+      "from": "login-page",
+      "to": "identity-provider",
+      "confidence": "high",
+      "evidenceIds": ["E-AUTH-REDIRECT"]
+    },
+    {
+      "from": "identity-provider",
+      "to": "auth-callback",
+      "confidence": "high",
+      "evidenceIds": ["E-AUTH-REDIRECT"]
+    },
+    {
+      "from": "auth-callback",
+      "to": "session-store",
+      "confidence": "high",
+      "evidenceIds": ["E-SESSION-HEALTH"]
+    }
+  ],
+  "flows": [
+    {
+      "id": "operator-login",
+      "label": "Operator login",
+      "primaryPath": [
+        "login-page",
+        "identity-provider",
+        "auth-callback",
+        "session-store"
+      ],
+      "branches": []
+    }
+  ],
+  "changes": [],
+  "diagnosis": {
+    "summary": "A callback cookie-domain mismatch is the provisional cause of the authentication loop; the identity provider and session store are healthy.",
+    "confidence": "high",
+    "evidenceIds": ["E-AUTH-REDIRECT", "E-COOKIE-CONFIG", "E-SESSION-HEALTH"],
+    "componentIds": ["auth-callback"]
+  },
+  "webMcpTools": [],
+  "candidateActions": [],
+  "operatorHandoff": [
+    "Have the site owner compare the callback cookie Domain with console.example.test.",
+    "Stage the exact cookie-domain change in the site's own deployment workflow and retest one non-production login."
+  ]
+}

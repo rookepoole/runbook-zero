@@ -1,7 +1,7 @@
 {
   "name": "runbook-zero",
-  "version": "0.7.0",
-  "description": "Investigate live websites in Codex, stage exact actions in Runbook Zero, and keep consequential execution behind visible human approval.",
+  "version": "0.8.0",
+  "description": "Diagnose new live-site issues in Codex, derive evidence-bound incident graphs, and keep consequential execution behind visible human approval.",
   "author": {
     "name": "Rooke Poole",
     "url": "https://github.com/rookepoole"
@@ -13,8 +13,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Runbook Zero",
-    "shortDescription": "Guarded incident response for live websites.",
-    "longDescription": "Capture evidence from the site open in Codex or the Chrome extension, turn it into a Runbook Zero incident, and carry an exact approved action back to that site.",
+    "shortDescription": "Evidence-derived incident response for live websites.",
+    "longDescription": "Diagnose the site open in Codex or the Chrome extension, derive its component and user-flow graph from evidence, and carry only an exact visibly approved action back to that site.",
     "developerName": "Rooke Poole",
     "category": "Developer Tools",
     "capabilities": [
@@ -24,7 +24,7 @@
     ],
     "websiteURL": "https://runbook-zero.rookepoole.chatgpt.site/",
     "defaultPrompt": [
-      "Use Runbook Zero to investigate this site.",
+      "Use Runbook Zero to diagnose this issue and derive its incident graph.",
       "Audit this site's WebMCP capabilities safely.",
       "Stage this site action for my approval."
     ],
