@@ -12,13 +12,13 @@ Two unrelated fixtures prove that new issues generate materially different opera
 
 Real local and deployed-origin in-app-browser evidence imported the checkout capture, rendered **EVIDENCE-DERIVED GRAPH** and **CAPTURED LEAD · NOT YET VALIDATED**, dynamically changed service/flow/mitigation enums to the generated model, and called the page's actual `document.modelContext`. The public deployment registered nine incident-dependent tools and returned `SITE-CHECKOUT-POOL-002`, the generated `storefront → checkout-api → orders-db` path, both issue-specific branches, four unhealthy components, and checkout-specific signal deltas. `apply_approved_mitigation` remained absent, and the deployed console recorded zero errors or warnings.
 
-Validation: 17 Vitest files / 69 tests, 4 Playwright Chromium journeys, clean typecheck/format/lint/build, and valid plugin skill package. The canonical `INC-042` flow remains unchanged and green.
+Validation: 17 Vitest files / 69 tests, 4 Playwright Chromium journeys, clean typecheck/format/lint/build, and valid plugin skill package. The public `runbook-zero` marketplace refreshed to commit `08e8efb53d6970a5fe89a13bb9d67cad5473f3d0`; Codex reports `runbook-zero@runbook-zero` installed and enabled at v0.8.0, and the installed directory exactly matches the repository package. The canonical `INC-042` flow remains unchanged and green.
 
 Sites version 8 deployment `appgdep_6a909f7cf6fc8191bdce65fbc0d5b3f1` succeeded from source checkpoint `222af335c9bb98333cc515d154148154d0e6fa53` and saved version `appgprj_6a8e3de05780819199793f7e9957dbec~appgver_f8d09f8674588191b954e158002bae85`. An unauthenticated HTTPS request returned `200`, and the served JavaScript contains the evidence-derived graph and captured-lead surfaces.
 
-Artifacts: `docs/evidence/product-v8-evidence-derived-local-receipt.json`, `docs/evidence/product-v8-deployment-receipt.json`
+Artifacts: `docs/evidence/product-v8-evidence-derived-local-receipt.json`, `docs/evidence/product-v8-deployment-receipt.json`, `docs/evidence/product-v8-plugin-install-receipt.json`
 
-Claim boundary: deployed verification used the deterministic checkout capture fixture and did not execute a target-site action. Fresh installed-plugin acceptance, the public video, Devpost confirmation, final tag, and immutable freeze remain outstanding.
+Claim boundary: deployed verification used the deterministic checkout capture fixture and did not execute a target-site action. The marketplace installation is verified, but the already-running task cannot hot-load the new skill; fresh-task plugin acceptance, the public video, Devpost confirmation, final tag, and immutable freeze remain outstanding.
 
 ## Product version 7 — public deployment and Chrome acceptance
 

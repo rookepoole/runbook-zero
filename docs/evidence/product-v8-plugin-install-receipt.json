@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "runbook-zero-plugin-v0.8.0-install-2026-08-27",
+  "recordedAt": "2026-08-27T21:13:09.5109934Z",
+  "classification": "TESTED",
+  "marketplace": {
+    "name": "runbook-zero",
+    "sourceCommit": "08e8efb53d6970a5fe89a13bb9d67cad5473f3d0",
+    "refresh": "PASS",
+    "errors": []
+  },
+  "installation": {
+    "selector": "runbook-zero@runbook-zero",
+    "status": "installed, enabled",
+    "version": "0.8.0",
+    "path": "C:\\Users\\rookp\\.codex\\.tmp\\marketplaces\\runbook-zero\\plugins\\runbook-zero"
+  },
+  "verification": {
+    "manifestVersion": "0.8.0",
+    "skillContract": "Site Capture v2 with Site Capture v1 fallback",
+    "installedPackageMatchesRepositoryPackage": true,
+    "comparison": "git diff --no-index --exit-code",
+    "codexPluginList": "PASS — installed, enabled, version 0.8.0"
+  },
+  "sessionBoundary": {
+    "currentTaskLoadedVersion": "0.7.0",
+    "freshTaskRequired": true,
+    "reason": "Plugin skills and tools are loaded when a Codex session starts."
+  },
+  "claimBoundary": [
+    "This receipt proves marketplace refresh, local installation state, and package identity.",
+    "It does not claim that the already-running Codex task hot-reloaded plugin v0.8.0.",
+    "A fresh Codex task must perform the live-site functional acceptance journey."
+  ]
+}
