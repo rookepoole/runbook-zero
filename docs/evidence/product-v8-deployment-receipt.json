@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "runbook-zero-product-v8-deployment-2026-08-27",
+  "recordedAt": "2026-08-27T20:37:44.9061328Z",
+  "classification": "TESTED / DEPLOYED",
+  "source": {
+    "commit": "222af335c9bb98333cc515d154148154d0e6fa53",
+    "versionId": "appgprj_6a8e3de05780819199793f7e9957dbec~appgver_f8d09f8674588191b954e158002bae85",
+    "versionNumber": 8
+  },
+  "deployment": {
+    "id": "appgdep_6a909f7cf6fc8191bdce65fbc0d5b3f1",
+    "providerDeploymentId": "site---6a8e3de05780819199793f7e9957dbec",
+    "status": "succeeded",
+    "succeededAt": "2026-08-27T20:35:19.223698+00:00",
+    "url": "https://runbook-zero.rookepoole.chatgpt.site",
+    "httpsStatus": 200,
+    "htmlBytes": 2401,
+    "javascriptAsset": "/assets/index-Qs0VP0QW.js",
+    "javascriptBytes": 285201,
+    "bundleMarkers": [
+      "EVIDENCE-DERIVED GRAPH",
+      "CAPTURED LEAD",
+      "captureSchemaVersion",
+      "apply_approved_mitigation"
+    ]
+  },
+  "deployedWebMcp": {
+    "surface": "Codex in-app browser against the public deployed origin",
+    "origin": "https://runbook-zero.rookepoole.chatgpt.site",
+    "documentModelContext": "native page-defined runtime",
+    "activeToolCount": 9,
+    "activeTools": [
+      "get_system_snapshot",
+      "inspect_service",
+      "query_signals",
+      "trace_request_path",
+      "get_recent_changes",
+      "set_working_hypothesis",
+      "compare_mitigations",
+      "stage_mitigation",
+      "add_incident_note"
+    ],
+    "applyAvailableBeforeApproval": false,
+    "dynamicSchemas": {
+      "serviceIds": [
+        "storefront",
+        "checkout-api",
+        "orders-db",
+        "payment-api",
+        "fulfillment-queue"
+      ],
+      "flows": ["checkout-confirmation"],
+      "mitigationIds": ["M-RESTORE-CHECKOUT-POOL"]
+    },
+    "calledTools": [
+      "get_system_snapshot",
+      "trace_request_path",
+      "query_signals"
+    ],
+    "returnedIncidentId": "SITE-CHECKOUT-POOL-002",
+    "returnedPrimaryPath": ["storefront", "checkout-api", "orders-db"],
+    "returnedBranches": [
+      ["checkout-api", "payment-api"],
+      ["checkout-api", "fulfillment-queue"]
+    ],
+    "returnedUnhealthyServiceCount": 4,
+    "returnedCheckoutAnomalies": {
+      "errorRatePct": 14.7,
+      "p95LatencyMs": 5480,
+      "saturationPct": 49
+    },
+    "consoleErrorsOrWarnings": 0
+  },
+  "validation": {
+    "typecheck": "PASS",
+    "formatCheck": "PASS",
+    "lint": "PASS",
+    "vitest": "PASS — 17 files / 69 tests",
+    "playwright": "PASS — 4 Chromium tests",
+    "build": "PASS",
+    "npmAudit": "PASS — 0 vulnerabilities",
+    "skillQuickValidate": "PASS",
+    "publicBundleInspection": "PASS",
+    "deployedOriginWebMcp": "PASS"
+  },
+  "claimBoundary": [
+    "The deployed verification imported the deterministic checkout Site Capture v2 fixture; it does not claim a fresh capture of an external production site.",
+    "No target-site action or mitigation was staged, approved, or applied during deployed verification.",
+    "The deployed WebMCP calls used the Codex in-app browser, not the Chrome extension.",
+    "Fresh installed-plugin acceptance, the public demo video, Devpost confirmation, and submission-v1.0 freeze remain outstanding."
+  ]
+}

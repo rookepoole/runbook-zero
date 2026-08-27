@@ -107,7 +107,7 @@ npm audit
 
 The Playwright suite uses a test-only `document.modelContext` harness against the production registry and executors. It validates the browser workflow but does not replace the real supported-browser evidence recorded in [Judging evidence](docs/judging-evidence.md).
 
-The version 8 candidate is validated by 17 Vitest files / 69 tests, 4 Playwright Chromium tests, clean typecheck/format/lint/build, plugin manifest and skill validation, two materially different evidence-derived live graphs, hostile-reference rejection, and real local `document.modelContext` calls returning the generated checkout graph. Production version 7 remains the public baseline until version 8 publication is recorded. Connected Chrome 151 evidence remains separate from the Playwright harness and does not relabel the official demo's built-in agent call as a Codex-to-Runbook invocation.
+Public version 8 is deployed from source checkpoint `222af335c9bb98333cc515d154148154d0e6fa53` and validated by 17 Vitest files / 69 tests, 4 Playwright Chromium tests, clean typecheck/format/lint/build, plugin manifest and skill validation, two materially different evidence-derived live graphs, hostile-reference rejection, and real local plus deployed-origin `document.modelContext` calls returning the generated checkout graph. Connected Chrome 151 evidence remains separate from the Playwright harness and does not relabel the official demo's built-in agent call as a Codex-to-Runbook invocation.
 
 ## Repository map
 

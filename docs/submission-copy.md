@@ -1,6 +1,6 @@
 # Submission copy
 
-Version 8 candidate copy for the WebMCP Challenge submission. Publish and production-revalidate the candidate, then replace the final video URL and complete the submission freeze.
+Version 8 public-candidate copy for the WebMCP Challenge submission. Production revalidation is recorded; replace the final video URL and complete the submission freeze.
 
 ## Title
 
